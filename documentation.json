@@ -721,6 +721,44 @@
             "extends": []
         },
         {
+            "name": "LoginPageComponent",
+            "id": "component-LoginPageComponent-fc92ffc7c553b4321c034e2ad0faa49f3efe488dc22315b438ced30e9ed8bde54ba43d2a97205a4cf6b1fb78cd97ab3fb50e867e6604587e211085b627dbb381",
+            "file": "src/app/login-page/login-page.component.ts",
+            "encapsulation": [],
+            "entryComponents": [],
+            "inputs": [],
+            "outputs": [],
+            "providers": [],
+            "selector": "app-login-page",
+            "styleUrls": [],
+            "styles": [],
+            "templateUrl": [
+                "./login-page.component.html"
+            ],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [],
+            "outputsClass": [],
+            "propertiesClass": [],
+            "methodsClass": [],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": true,
+            "imports": [],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import { Component } from '@angular/core';\n\n@Component({\n  selector: 'app-login-page',\n  standalone: true,\n  imports: [],\n  templateUrl: './login-page.component.html',\n  styleUrl: './login-page.component.css'\n})\nexport class LoginPageComponent {\n\n}\n",
+            "styleUrl": "./login-page.component.css",
+            "assetsDirs": [],
+            "styleUrlsData": "",
+            "stylesData": "",
+            "extends": [],
+            "templateData": "<div class=\"login__container\">\n  <div class=\"login__header\">\n    <h1>Login To Expense Tracker app</h1>\n  </div>\n\n  <div class=\"login__text\">\n    <p>\n      Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam similique\n      ducimus id, adipisci eveniet cum facere enim, sint delectus voluptate\n      reprehenderit rerum fugit vitae illo! Quis cupiditate eum dignissimos\n      sint?\n    </p>\n  </div>\n\n  <div class=\"login__form-container\">\n    <form>\n      <div class=\"input-group\">\n        <label class=\"form-label\">Email</label>\n        <input type=\"email\" class=\"form-control\" />\n      </div>\n\n      <div class=\"input-group\">\n        <label class=\"form-label\">Password</label>\n        <input type=\"password\" class=\"form-control\" />\n      </div>\n        \n              <button type=\"submit\" class=\"btn btn--primary\">Submit</button>\n\n    </form>\n  </div>\n</div>\n"
+        },
+        {
             "name": "NavbarComponent",
             "id": "component-NavbarComponent-ba7f0d0f7e9b69f8450bbc35686212178d51246909b7bd778da939b8edcda3d3092719e2ff6c9cc9ae0d98a4b5ec8c8dcf84c335fffd5a42cfd96449c0cca7fb",
             "file": "src/app/navbar/navbar.component.ts",
@@ -890,7 +928,7 @@
     },
     "routes": [],
     "coverage": {
-        "count": 8,
+        "count": 7,
         "status": "low",
         "files": [
             {
@@ -919,6 +957,15 @@
                 "name": "ExpenseListComponent",
                 "coveragePercent": 0,
                 "coverageCount": "0/12",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/login-page/login-page.component.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "LoginPageComponent",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
                 "status": "low"
             },
             {
