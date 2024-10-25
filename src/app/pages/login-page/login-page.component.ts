@@ -7,6 +7,4 @@ import { LoginFormComponent } from "../../components/login-form/login-form.compo
   imports: [LoginFormComponent],
   templateUrl: './login-page.component.html'
 })
-export class LoginPageComponent {
-
-}
+export class LoginPageComponent {}

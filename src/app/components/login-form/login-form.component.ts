@@ -1,6 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { take } from 'rxjs';
+import { AuthService } from '../../auth/auth.service';
 
 interface LoginFormType {
   email: FormControl<string>;
@@ -15,6 +18,9 @@ interface LoginFormType {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginFormComponent {
+  private readonly authService = inject(AuthService);
+  private router = inject(Router);
+
   loginForm = new FormGroup<LoginFormType>({
     email: new FormControl<string>('', {
       nonNullable: true,
@@ -50,7 +56,15 @@ export class LoginFormComponent {
 
   submitForm() {
     if (this.loginForm.valid && this.loginForm.dirty) {
-      console.log(this.loginForm.value);
+      const { email, password } = this.loginForm.getRawValue();
+      this.authService.loginUser({ email, password }).pipe(take(1)).subscribe({
+        next: () => {
+          this.router.navigate(['/expenses']);
+        },
+        error: (err) => {
+          console.error(`[LoginFormComponent] submitForm - error: ${err?.message}`);
+        }
+      });
     }
   }
 }
