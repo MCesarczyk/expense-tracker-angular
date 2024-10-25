@@ -6,7 +6,7 @@ const meta: Meta<LoginPageComponent> = {
   title: 'Pages/LoginPage',
   component: LoginPageComponent,
   decorators: [
-    componentWrapperDecorator((story) => `<div style="padding: 3rem">${story}</div>`),
+    componentWrapperDecorator((story) => `<div style="width: 100%; height: 100vh">${story}</div>`),
   ],
   parameters: {
     layout: 'fullscreen',
