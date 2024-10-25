@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ExpenseService } from '../services/expense.service';
+import { ExpenseService } from '../../expense/expense.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { NavbarComponent } from "../navbar/navbar.component"
+import { NavbarComponent } from "../../components/navbar/navbar.component"
 @Component({
     selector: 'app-expense-list',
     standalone: true,
