@@ -4,7 +4,7 @@
         {
             "name": "Expense",
             "id": "interface-Expense-96cec9403b2d02eefa7dabff0ada8802306f9911340d67088d63af10b87e7883453331852fdec20c3b81b651b7af74f871452230439074707d586ecf4c72dd54",
-            "file": "src/app/services/expense.service.ts",
+            "file": "src/app/expense/expense.service.ts",
             "deprecated": false,
             "deprecationMessage": "",
             "type": "interface",
@@ -57,6 +57,152 @@
             "extends": []
         },
         {
+            "name": "IAccessTokenPayload",
+            "id": "interface-IAccessTokenPayload-7ec54f2e0f247f495497ac72c8f227bad55fd1a91f02d0d471021478883f759f435d89d329313a9287b3f8b605521c8797c5275aa3c38bb7bde42fc7ff46ef95",
+            "file": "src/app/auth/interfaces/token-payload.interface.ts",
+            "deprecated": false,
+            "deprecationMessage": "",
+            "type": "interface",
+            "sourceCode": "export interface IAccessTokenPayload {\n  email: string;\n  sub: string;\n  [key: string]: string | number | boolean | unknown;\n}\n",
+            "properties": [
+                {
+                    "name": "email",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 2
+                },
+                {
+                    "name": "sub",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 3
+                }
+            ],
+            "indexSignatures": [
+                {
+                    "id": "index-declaration-7ec54f2e0f247f495497ac72c8f227bad55fd1a91f02d0d471021478883f759f435d89d329313a9287b3f8b605521c8797c5275aa3c38bb7bde42fc7ff46ef95",
+                    "args": [
+                        {
+                            "name": "key",
+                            "type": "string",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "returnType": "string | number | boolean | ",
+                    "line": 3,
+                    "deprecated": false,
+                    "deprecationMessage": ""
+                }
+            ],
+            "kind": 181,
+            "methods": [],
+            "extends": []
+        },
+        {
+            "name": "ILoginPayload",
+            "id": "interface-ILoginPayload-d2362d5df4f38931f48d796506f589a83a4d1fc0c97d21c1da9e3268e8c6e54a2a135bc70c9358088192ea05a3b4bfda19982346804102069f5ffbeb1bd4753e",
+            "file": "src/app/auth/interfaces/login-payload.interface.ts",
+            "deprecated": false,
+            "deprecationMessage": "",
+            "type": "interface",
+            "sourceCode": "export interface ILoginPayload {\n  email: string;\n  password: string;\n}\n",
+            "properties": [
+                {
+                    "name": "email",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 2
+                },
+                {
+                    "name": "password",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 3
+                }
+            ],
+            "indexSignatures": [],
+            "kind": 171,
+            "methods": [],
+            "extends": []
+        },
+        {
+            "name": "ITokenResponse",
+            "id": "interface-ITokenResponse-3384a38619d1596108fbffb15d7e9a0f6adf1f3833d47965a53ffcc13156f92d259860c8b1406e2b29efc4f4d3a3afe6219f4d9cb16f5336eeafd771e6d99dff",
+            "file": "src/app/auth/interfaces/token-response.interface.ts",
+            "deprecated": false,
+            "deprecationMessage": "",
+            "type": "interface",
+            "sourceCode": "export interface ITokenResponse {\n  access_token: string;\n}\n",
+            "properties": [
+                {
+                    "name": "access_token",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 2
+                }
+            ],
+            "indexSignatures": [],
+            "kind": 171,
+            "methods": [],
+            "extends": []
+        },
+        {
+            "name": "LoginFormType",
+            "id": "interface-LoginFormType-2b014c815692714eb8c11092844a5316ad14241040425be36bbf1e2a9b83ddc2713375ced46675e3c746fa113b828389cad856d95a85ecc341d4a53b5bc44fac",
+            "file": "src/app/components/login-form/login-form.component.ts",
+            "deprecated": false,
+            "deprecationMessage": "",
+            "type": "interface",
+            "sourceCode": "import { CommonModule } from '@angular/common';\nimport { ChangeDetectionStrategy, Component, inject } from '@angular/core';\nimport { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';\nimport { Router } from '@angular/router';\nimport { take } from 'rxjs';\nimport { AuthService } from '../../auth/auth.service';\n\ninterface LoginFormType {\n  email: FormControl<string>;\n  password: FormControl<string>;\n}\n\n@Component({\n  selector: 'app-login-form',\n  standalone: true,\n  imports: [CommonModule, FormsModule, ReactiveFormsModule],\n  templateUrl: './login-form.component.html',\n  changeDetection: ChangeDetectionStrategy.OnPush,\n})\nexport class LoginFormComponent {\n  private readonly authService = inject(AuthService);\n  private router = inject(Router);\n\n  loginForm = new FormGroup<LoginFormType>({\n    email: new FormControl<string>('', {\n      nonNullable: true,\n      validators: [Validators.required, Validators.email],\n    }),\n    password: new FormControl<string>('', {\n      nonNullable: true,\n      validators: [Validators.required, Validators.minLength(6)],\n    }),\n  })\n\n  get emailInvalidAndTouched(): boolean {\n    return (\n      this.loginForm.controls.email.invalid &&\n      this.loginForm.controls.email.touched\n    )\n  }\n\n  get fEmail(): FormControl {\n    return this.loginForm.controls.email;\n  }\n\n  get passwordInvalidAndTouched(): boolean {\n    return (\n      this.loginForm.controls.password.invalid &&\n      this.loginForm.controls.password.touched\n    )\n  }\n\n  get fPassword(): FormControl {\n    return this.loginForm.controls.password;\n  }\n\n  submitForm() {\n    if (this.loginForm.valid && this.loginForm.dirty) {\n      const { email, password } = this.loginForm.getRawValue();\n      this.authService.loginUser({ email, password }).pipe(take(1)).subscribe({\n        next: () => {\n          this.router.navigate(['/expenses']);\n        },\n        error: (err) => {\n          console.error(`[LoginFormComponent] submitForm - error: ${err?.message}`);\n        }\n      });\n    }\n  }\n}\n",
+            "properties": [
+                {
+                    "name": "email",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "FormControl<string>",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 9
+                },
+                {
+                    "name": "password",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "FormControl<string>",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 10
+                }
+            ],
+            "indexSignatures": [],
+            "kind": 171,
+            "methods": [],
+            "extends": []
+        },
+        {
             "name": "User",
             "id": "interface-User-d4821beac0e4a852e513391b7470981c4353fdd95a18628bb68136c8695b489ee15b926e2e5031bc26cf30e1508e0a362c3ee13a06734702b4d15af140e485d5",
             "file": "src/stories/user.ts",
@@ -84,9 +230,232 @@
     ],
     "injectables": [
         {
+            "name": "AuthService",
+            "id": "injectable-AuthService-096e2ccfebb8633eeab409122ea84c6948d6a3b14c2c10a2083553b604a55aa92ae0a9647bd9cc990ecb50faaa2e1af48149fe50e8ee1bae65b5045887eca99b",
+            "file": "src/app/auth/auth.service.ts",
+            "properties": [
+                {
+                    "name": "accessToken$",
+                    "defaultValue": "this.accessToken$$.pipe()",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 19
+                },
+                {
+                    "name": "accessToken$$",
+                    "defaultValue": "new BehaviorSubject<string | null>(null)",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 16,
+                    "modifierKind": [
+                        123
+                    ]
+                },
+                {
+                    "name": "baseUrl",
+                    "defaultValue": "envs.getApiUrl()",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 14,
+                    "modifierKind": [
+                        123,
+                        148
+                    ]
+                },
+                {
+                    "name": "http",
+                    "defaultValue": "inject(HttpClient)",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 13,
+                    "modifierKind": [
+                        123,
+                        148
+                    ]
+                },
+                {
+                    "name": "userData$",
+                    "defaultValue": "this.userData$$.pipe()",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 20
+                },
+                {
+                    "name": "userData$$",
+                    "defaultValue": "new BehaviorSubject<IAccessTokenPayload | null>(null)",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 17,
+                    "modifierKind": [
+                        123
+                    ]
+                }
+            ],
+            "methods": [
+                {
+                    "name": "decodeToken",
+                    "args": [
+                        {
+                            "name": "token",
+                            "type": "string",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "IAccessTokenPayload | null",
+                    "typeParameters": [],
+                    "line": 61,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "modifierKind": [
+                        123
+                    ],
+                    "jsdoctags": [
+                        {
+                            "name": "token",
+                            "type": "string",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "isTokenExpired",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "boolean",
+                    "typeParameters": [],
+                    "line": 53,
+                    "deprecated": false,
+                    "deprecationMessage": ""
+                },
+                {
+                    "name": "loadToken",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 32,
+                    "deprecated": false,
+                    "deprecationMessage": ""
+                },
+                {
+                    "name": "loginUser",
+                    "args": [
+                        {
+                            "name": "data",
+                            "type": "ILoginPayload",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "Observable<ITokenResponse>",
+                    "typeParameters": [],
+                    "line": 41,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "jsdoctags": [
+                        {
+                            "name": "data",
+                            "type": "ILoginPayload",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "logoutUser",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 48,
+                    "deprecated": false,
+                    "deprecationMessage": ""
+                },
+                {
+                    "name": "removeToken",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 27,
+                    "deprecated": false,
+                    "deprecationMessage": ""
+                },
+                {
+                    "name": "setToken",
+                    "args": [
+                        {
+                            "name": "val",
+                            "type": "string",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 22,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "jsdoctags": [
+                        {
+                            "name": "val",
+                            "type": "string",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "description": "",
+            "rawdescription": "\n",
+            "sourceCode": "import { HttpClient } from '@angular/common/http';\nimport { inject, Injectable } from '@angular/core';\nimport { BehaviorSubject, Observable, tap } from 'rxjs';\nimport * as jwt_decode from 'jwt-decode';\nimport { TOKEN_STORAGE_KEY } from './constants';\nimport { IAccessTokenPayload, ILoginPayload, ITokenResponse } from './interfaces';\nimport { envs } from '../shared/envs';\n\n@Injectable({\n  providedIn: 'root'\n})\nexport class AuthService {\n  private readonly http = inject(HttpClient);\n  private readonly baseUrl = envs.getApiUrl();\n\n  private accessToken$$ = new BehaviorSubject<string | null>(null);\n  private userData$$ = new BehaviorSubject<IAccessTokenPayload | null>(null);\n\n  accessToken$ = this.accessToken$$.pipe();\n  userData$ = this.userData$$.pipe();\n\n  setToken(val: string) {\n    this.accessToken$$.next(null);\n    localStorage.setItem(TOKEN_STORAGE_KEY, val);\n  }\n\n  removeToken() {\n    this.accessToken$$.next(null);\n    localStorage.removeItem(TOKEN_STORAGE_KEY);\n  }\n\n  loadToken() {\n    console.log(`JwtTokenService#loadToken`);\n    const token = localStorage.getItem(TOKEN_STORAGE_KEY);\n    console.log(`JwtTokenService#loadToken - token: ${token}`);\n    if (token) {\n      this.accessToken$$.next(token);\n    }\n  }\n\n  loginUser(data: ILoginPayload): Observable<ITokenResponse> {\n    return this.http.post<ITokenResponse>(`${this.baseUrl}/auth/login`, data).pipe(tap(({access_token}) => {\n      this.setToken(access_token);\n      this.userData$$.next(this.decodeToken(access_token));\n    }));\n  }\n\n  logoutUser() {\n    this.removeToken();\n    this.userData$$.next(null);\n  }\n\n  isTokenExpired(): boolean {\n    const expiryTime = this.userData$$.value?.['exp'];\n    if (expiryTime) {\n      return 1000 * +expiryTime - new Date().getTime() < 5000;\n    }\n    return false;\n  }\n\n  private decodeToken(token: string): IAccessTokenPayload | null {\n    if (token) {\n      return jwt_decode.jwtDecode<IAccessTokenPayload>(token);\n    }\n    return null;\n  }\n}\n",
+            "extends": [],
+            "type": "injectable"
+        },
+        {
             "name": "ExpenseService",
             "id": "injectable-ExpenseService-96cec9403b2d02eefa7dabff0ada8802306f9911340d67088d63af10b87e7883453331852fdec20c3b81b651b7af74f871452230439074707d586ecf4c72dd54",
-            "file": "src/app/services/expense.service.ts",
+            "file": "src/app/expense/expense.service.ts",
             "properties": [
                 {
                     "name": "expenses",
@@ -237,6 +606,28 @@
             "sourceCode": "import { Injectable } from '@angular/core';\nimport { BehaviorSubject } from 'rxjs';\n\ninterface Expense {\n    name: string;\n    amount: number;\n    category: string;\n    account: string;\n}\n\n@Injectable({\n    providedIn: 'root'\n})\nexport class ExpenseService {\n    private expensesKey = 'expenses';\n    private expenses = new BehaviorSubject<Expense[]>(this.getExpenses());\n    expenses$ = this.expenses.asObservable();\n\n    private getExpenses(): Expense[] {\n        try {\n            const savedExpenses = localStorage.getItem(this.expensesKey);\n            return savedExpenses ? JSON.parse(savedExpenses) : [];\n        } catch (error) {\n            console.error('Failed to parse expenses from localStorage', error);\n            return [];\n        }\n    }\n\n    private saveExpenses(expenses: Expense[]) {\n        try {\n            localStorage.setItem(this.expensesKey, JSON.stringify(expenses));\n        } catch (error) {\n            console.error('Failed to save expenses to localStorage', error);\n        }\n    }\n\n    addExpense(expense: Expense) {\n        const currentExpenses = this.expenses.value;\n        currentExpenses.push(expense);\n        this.saveExpenses(currentExpenses);\n        this.expenses.next([...currentExpenses]);\n    }\n\n\n    deleteExpense(index: number) {\n        const currentExpenses = this.expenses.value;\n        if (index >= 0 && index < currentExpenses.length) {\n            currentExpenses.splice(index, 1);\n            this.saveExpenses(currentExpenses);\n            this.expenses.next([...currentExpenses]);\n        } else {\n            console.error('Invalid index for deletion');\n        }\n    }\n}\n",
             "extends": [],
             "type": "injectable"
+        },
+        {
+            "name": "UserService",
+            "id": "injectable-UserService-bef24bb4c35271eb0bfed0f41cdc82f8c3d9ebe2501181377c84364ff6b001ac8e870bc5822aca55be3a13c7ee7180dc8e71bcf8de4810297736e4edb77fa817",
+            "file": "src/app/user/user.service.ts",
+            "properties": [],
+            "methods": [],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "description": "",
+            "rawdescription": "\n",
+            "sourceCode": "import { Injectable } from '@angular/core';\n\n@Injectable({\n  providedIn: 'root'\n})\nexport class UserService {\n\n  constructor() { }\n}\n",
+            "constructorObj": {
+                "name": "constructor",
+                "description": "",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "args": [],
+                "line": 6
+            },
+            "extends": [],
+            "type": "injectable"
         }
     ],
     "guards": [],
@@ -246,7 +637,7 @@
     "components": [
         {
             "name": "AppComponent",
-            "id": "component-AppComponent-fdeac5d33132e5ab1ca16e57fedf78012781b6d6e4df707b340df148dd51aa8e69c38cdc075e743389020268e47f3b46a98546008207ed072e03374d20aed1b8",
+            "id": "component-AppComponent-fc79be78bbc05a9bad7ed035424ec49665be441a556226877d99698508c38790b96df30bf5c134428198e3b86fe2716b903b1d86024166aab2c375ce7b276870",
             "file": "src/app/app.component.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -273,7 +664,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 12
+                    "line": 11
                 }
             ],
             "methodsClass": [],
@@ -290,8 +681,7 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { Component } from '@angular/core';\nimport { RouterOutlet } from '@angular/router';\n\n@Component({\n    selector: 'app-root',\n    standalone: true,\n    imports: [RouterOutlet],\n    templateUrl: './app.component.html',\n    styleUrl: './app.component.less'\n})\nexport class AppComponent {\n    title = 'expense-tracker';\n}\n",
-            "styleUrl": "./app.component.less",
+            "sourceCode": "import { Component } from '@angular/core';\nimport { RouterOutlet } from '@angular/router';\n\n@Component({\n    selector: 'app-root',\n    standalone: true,\n    imports: [RouterOutlet],\n    templateUrl: './app.component.html',\n})\nexport class AppComponent {\n    title = 'expense-tracker';\n}\n",
             "assetsDirs": [],
             "styleUrlsData": "",
             "stylesData": "",
@@ -434,8 +824,8 @@
         },
         {
             "name": "ExpenseListComponent",
-            "id": "component-ExpenseListComponent-ff7a1c58a2a33ff303b19231692ca8297cabe391ce587171b7aee3ea67b2dcd66bbda673219231b56460b956d1b603745d58c158b92dbfd57749ba19a684ee26",
-            "file": "src/app/expense-list/expense-list.component.ts",
+            "id": "component-ExpenseListComponent-e52076757968a750045869edfd260146338bcbd3495ca53f6f0a5c93e401a2264ff348c65ec9e5a3dc9f8a0b1a6828af3cee46b571906e8101872e15c69eda5d",
+            "file": "src/app/pages/expense-list/expense-list.component.ts",
             "encapsulation": [],
             "entryComponents": [],
             "inputs": [],
@@ -600,7 +990,7 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { Component, OnInit } from '@angular/core';\nimport { ExpenseService } from '../services/expense.service';\nimport { CommonModule } from '@angular/common';\nimport { FormsModule } from '@angular/forms';\nimport { NavbarComponent } from \"../navbar/navbar.component\"\n@Component({\n    selector: 'app-expense-list',\n    standalone: true,\n    imports: [CommonModule, FormsModule, NavbarComponent],\n    templateUrl: './expense-list.component.html',\n    styleUrl: './expense-list.component.less'\n})\nexport class ExpenseListComponent {\n    expenses: any[] = [];\n    isFormVisible = false;\n    newExpense = { name: '', amount: 0, category: '', account: '' };\n    categories = ['Baby', 'Beauty', 'Bills', 'Car', 'Clothing', 'Education',\n    'Electronic', 'Entertainment', 'Food', 'Health', 'Home', 'Insurance',\n    'Shopping', 'Social', 'Sport', 'Tax', 'Telephone', 'Transportation'];\n    // Example categories\n    accounts = ['Savings', 'Cash', 'Card']\n    constructor(private expenseService: ExpenseService) { }\n\n    ngOnInit() {\n        // Subscribe to the expenses observable\n        this.expenseService.expenses$.subscribe(expenses => {\n            this.expenses = expenses;\n        });\n    }\n\n    openExpenseForm() {\n        this.isFormVisible = true;\n    }\n\n    closeExpenseForm() {\n        this.isFormVisible = false;\n        this.newExpense = { name: '', amount: 0, category: '', account: '' };\n    }\n\n    addExpense() {\n        if (this.newExpense.name && this.newExpense.amount && this.newExpense.category\n        && this.newExpense.account) {\n            this.expenseService.addExpense(this.newExpense);\n            this.closeExpenseForm();\n        }\n    }\n\n    deleteExpense(expense: any) {\n        const index = this.expenses.findIndex(e => e === expense);\n        // Find index based on the expense object\n        if (index >= 0) {\n            this.expenseService.deleteExpense(index);\n        } else {\n            console.error('Expense not found for deletion');\n        }\n    }\n\n}\n",
+            "sourceCode": "import { Component, OnInit } from '@angular/core';\nimport { ExpenseService } from '../../expense/expense.service';\nimport { CommonModule } from '@angular/common';\nimport { FormsModule } from '@angular/forms';\nimport { NavbarComponent } from \"../../components/navbar/navbar.component\"\n@Component({\n    selector: 'app-expense-list',\n    standalone: true,\n    imports: [CommonModule, FormsModule, NavbarComponent],\n    templateUrl: './expense-list.component.html',\n    styleUrl: './expense-list.component.less'\n})\nexport class ExpenseListComponent {\n    expenses: any[] = [];\n    isFormVisible = false;\n    newExpense = { name: '', amount: 0, category: '', account: '' };\n    categories = ['Baby', 'Beauty', 'Bills', 'Car', 'Clothing', 'Education',\n    'Electronic', 'Entertainment', 'Food', 'Health', 'Home', 'Insurance',\n    'Shopping', 'Social', 'Sport', 'Tax', 'Telephone', 'Transportation'];\n    // Example categories\n    accounts = ['Savings', 'Cash', 'Card']\n    constructor(private expenseService: ExpenseService) { }\n\n    ngOnInit() {\n        // Subscribe to the expenses observable\n        this.expenseService.expenses$.subscribe(expenses => {\n            this.expenses = expenses;\n        });\n    }\n\n    openExpenseForm() {\n        this.isFormVisible = true;\n    }\n\n    closeExpenseForm() {\n        this.isFormVisible = false;\n        this.newExpense = { name: '', amount: 0, category: '', account: '' };\n    }\n\n    addExpense() {\n        if (this.newExpense.name && this.newExpense.amount && this.newExpense.category\n        && this.newExpense.account) {\n            this.expenseService.addExpense(this.newExpense);\n            this.closeExpenseForm();\n        }\n    }\n\n    deleteExpense(expense: any) {\n        const index = this.expenses.findIndex(e => e === expense);\n        // Find index based on the expense object\n        if (index >= 0) {\n            this.expenseService.deleteExpense(index);\n        } else {\n            console.error('Expense not found for deletion');\n        }\n    }\n\n}\n",
             "styleUrl": "./expense-list.component.less",
             "assetsDirs": [],
             "styleUrlsData": "",
@@ -632,7 +1022,7 @@
                 ]
             },
             "extends": [],
-            "templateData": "<app-navbar></app-navbar>\n<!-- Add button to trigger expense form -->\n<button (click)=\"openExpenseForm()\" class=\"add-expense-button\">\n    <i class=\"fas fa-plus\"></i>\n</button>\n\n<!-- Display list of expenses -->\n<div class=\"p-4  flex justify-center\" *ngIf=\"expenses.length  > 0; else noExpenses\">\n    <div *ngIf=\"!isFormVisible\">\n        <div class=\" mt-20 grid grid-cols-5 gap-10 bg-orange-500 p-4 text-white rounded-md shadow-md\">\n            <span>Account</span>\n            <span>Category</span>\n            <span>Expense</span>\n            <span>Amount</span>\n            <span>Action</span>\n        </div>\n        <div class=\"bg-gray-100   shadow-md p-4  \" style=\"border-bottom-left-radius:6px;\n                                                          border-bottom-right-radius:6px\">\n            <div *ngFor=\"let expense of expenses\">\n                <div class=\"grid grid-cols-5 gap-10 \">\n                    <span>{{ expense.account }}</span>\n                    <span>{{ expense.category }}</span>\n                    <span> {{ expense.name }}</span>\n                    <span class=\"text-red-500\">- ₹ {{ expense.amount}}</span>\n                    <span>\n                        <button (click)=\"deleteExpense(expense)\">\n                            <svg xmlns=\"http://www.w3.org/2000/svg\" x=\"0px\" y=\"0px\" width=\"28\" \n                               height=\"28\"  viewBox=\"0 0 48 48\">\n                                <linearGradient id=\"nyvBozV7VK1PdF3LtMmOna_pre7LivdxKxJ_gr1\"\n                                                x1=\"18.405\" x2=\"33.814\"\n                                    y1=\"10.91\" y2=\"43.484\" gradientUnits=\"userSpaceOnUse\">\n                                    <stop offset=\"0\" stop-color=\"#32bdef\"></stop>\n                                    <stop offset=\"1\" stop-color=\"#1ea2e4\"></stop>\n                                </linearGradient>\n                                <path fill=\"url(#nyvBozV7VK1PdF3LtMmOna_pre7LivdxKxJ_gr1)\"\n                                    d=\"M39,10l-2.835,31.181C36.072,42.211,35.208,43,34.174,43H13.826\n                                       c-1.034,0-1.898-0.789-1.992-1.819L9,10H39z\">\n                                </path>\n                                <path fill=\"#0176d0\"\n                                    d=\"M32,7c0-1.105-0.895-2-2-2H18c-1.105,0-2,0.895-2,2c0,0,0,0.634,\n                                       0,1h16C32,7.634,32,7,32,7z\">\n                                </path>\n                                <path fill=\"#007ad9\"\n                                    d=\"M7,9.886L7,9.886C7,9.363,7.358,8.912,7.868,8.8C10.173,8.293,16\n                                       .763,7,24,7s13.827,1.293,16.132,1.8\tC40.642,8.912,41,9.363,41,\n                                       9.886v0C41,10.501,40.501,11,39.886,11H8.114C7.499,11,7,10.501,\n                                       7,9.886z\">\n                                </path>\n                            </svg>\n                        </button>\n                    </span>\n\n\n\n                </div>\n                <div class=\"mt-2 mb-2\">\n                    <hr>\n                </div>\n            </div>\n        </div>\n\n    </div>\n</div>\n<ng-template #noExpenses>\n    <div class=\"fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]  \">\n        <div>\n            <img src=\"https://media.geeksforgeeks.org/wp-content/uploads/20240814111356/download.png\">\n        </div>\n    </div>\n\n</ng-template>\n\n<!-- Expense form -->\n<div *ngIf=\"isFormVisible\" class=\"expense-form shadow-md bg-white\">\n    <div>\n\n        <div class=\"flex justify-center font-bold text-gray-400\">\n            <h3>EXPENSE</h3>\n        </div>\n        <form (ngSubmit)=\"addExpense()\">\n\n            <div class=\"flex justify-between p-2\">\n                <label class=\"font-bold text-gray-400\">\n                    Expense Name:\n                </label>\n                <div>\n                    <input type=\"text\" [(ngModel)]=\"newExpense.name\" name=\"name\"\n                        placeholder=\"Enter your expense name...\" class=\"p-2 border rounded ml-2 w-full\">\n                </div>\n\n            </div>\n            <div class=\"flex justify-between p-2\">\n                <label class=\"font-bold text-gray-400\">\n                    Amount:\n                </label>\n                <div>\n                    <input type=\"number\" [(ngModel)]=\"newExpense.amount\" name=\"amount\"\n                           placeholder=\"Enter amount\"\n                        class=\"p-2 border rounded ml-2 w-full\" required>\n                </div>\n            </div>\n            <div class=\"flex justify-between p-2 w-full\">\n                <label class=\"font-bold text-gray-400\">\n                    Category:\n                </label>\n                <div>\n                    <select [(ngModel)]=\"newExpense.category\" name=\"category\" class=\"p-2 border\n                                                                                     rounded  \" required>\n\n                        <option *ngFor=\"let cat of categories\" [value]=\"cat\">{{ cat }}</option>\n                    </select>\n\n\n                </div>\n            </div>\n            <div class=\"flex justify-between p-2\">\n                <label class=\"font-bold text-gray-400\">\n                    Account:\n                </label>\n                <div>\n                    <select [(ngModel)]=\"newExpense.account\" name=\"account\" class=\"p-2 border\n                                                                                   rounded w-[100%]\"\n                        required>\n\n                        <option *ngFor=\"let acc of accounts\" [value]=\"acc\">{{ acc }}</option>\n                    </select>\n\n\n                </div>\n            </div>\n\n            <div class=\"flex justify-between p-4 gap-4\">\n                <button type=\"button\" (click)=\"closeExpenseForm() \"\n                    class=\"bg-red-600 shadow-md rounded-md text-white p-2 w-full\">Cancel</button>\n\n                <button type=\"submit\" class=\"bg-blue-600 shadow-md rounded-md text-white \n                                             p-2 w-full \">Save</button>\n\n            </div>\n\n        </form>\n    </div>\n</div>\n"
+            "templateData": "<app-navbar></app-navbar>\n<!-- Add button to trigger expense form -->\n<button (click)=\"openExpenseForm()\" class=\"add-expense-button\">\n    <i class=\"fas fa-plus\"></i>\n</button>\n\n<!-- Display list of expenses -->\n<div class=\"p-4  flex justify-center\" *ngIf=\"expenses.length  > 0; else noExpenses\">\n    <div *ngIf=\"!isFormVisible\">\n        <div class=\" mt-20 grid grid-cols-5 gap-10 bg-orange-500 p-4 text-white rounded-md shadow-md\">\n            <span>Account</span>\n            <span>Category</span>\n            <span>Expense</span>\n            <span>Amount</span>\n            <span>Action</span>\n        </div>\n        <div class=\"bg-gray-100   shadow-md p-4  \" style=\"border-bottom-left-radius:6px;\n                                                          border-bottom-right-radius:6px\">\n            <div *ngFor=\"let expense of expenses\">\n                <div class=\"grid grid-cols-5 gap-10 \">\n                    <span>{{ expense.account }}</span>\n                    <span>{{ expense.category }}</span>\n                    <span> {{ expense.name }}</span>\n                    <span class=\"text-red-500\">- ₹ {{ expense.amount}}</span>\n                    <span>\n                        <button (click)=\"deleteExpense(expense)\">\n                            <svg xmlns=\"http://www.w3.org/2000/svg\" x=\"0px\" y=\"0px\" width=\"28\" height=\"28\"\n                                viewBox=\"0 0 48 48\">\n                                <linearGradient id=\"nyvBozV7VK1PdF3LtMmOna_pre7LivdxKxJ_gr1\" x1=\"18.405\" x2=\"33.814\"\n                                    y1=\"10.91\" y2=\"43.484\" gradientUnits=\"userSpaceOnUse\">\n                                    <stop offset=\"0\" stop-color=\"#32bdef\"></stop>\n                                    <stop offset=\"1\" stop-color=\"#1ea2e4\"></stop>\n                                </linearGradient>\n                                <path fill=\"url(#nyvBozV7VK1PdF3LtMmOna_pre7LivdxKxJ_gr1)\" d=\"M39,10l-2.835,31.181C36.072,42.211,35.208,43,34.174,43H13.826\n                                       c-1.034,0-1.898-0.789-1.992-1.819L9,10H39z\">\n                                </path>\n                                <path fill=\"#0176d0\" d=\"M32,7c0-1.105-0.895-2-2-2H18c-1.105,0-2,0.895-2,2c0,0,0,0.634,\n                                       0,1h16C32,7.634,32,7,32,7z\">\n                                </path>\n                                <path fill=\"#007ad9\" d=\"M7,9.886L7,9.886C7,9.363,7.358,8.912,7.868,8.8C10.173,8.293,16\n                                       .763,7,24,7s13.827,1.293,16.132,1.8\tC40.642,8.912,41,9.363,41,\n                                       9.886v0C41,10.501,40.501,11,39.886,11H8.114C7.499,11,7,10.501,\n                                       7,9.886z\">\n                                </path>\n                            </svg>\n                        </button>\n                    </span>\n\n\n\n                </div>\n                <div class=\"mt-2 mb-2\">\n                    <hr>\n                </div>\n            </div>\n        </div>\n\n    </div>\n</div>\n<ng-template #noExpenses>\n    <div class=\"fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]  \">\n        <div>\n            <img src=\"https://media.geeksforgeeks.org/wp-content/uploads/20240814111356/download.png\">\n        </div>\n    </div>\n\n</ng-template>\n\n<!-- Expense form -->\n<div *ngIf=\"isFormVisible\" class=\"expense-form shadow-md bg-white\">\n    <div>\n\n        <div class=\"flex justify-center font-bold text-gray-400\">\n            <h3>EXPENSE</h3>\n        </div>\n        <form (ngSubmit)=\"addExpense()\">\n\n            <div class=\"flex justify-between p-2\">\n                <label class=\"font-bold text-gray-400\">\n                    Expense Name:\n                </label>\n                <div>\n                    <input type=\"text\" [(ngModel)]=\"newExpense.name\" name=\"name\"\n                        placeholder=\"Enter your expense name...\" class=\"p-2 border rounded ml-2 w-full\">\n                </div>\n\n            </div>\n            <div class=\"flex justify-between p-2\">\n                <label class=\"font-bold text-gray-400\">\n                    Amount:\n                </label>\n                <div>\n                    <input type=\"number\" [(ngModel)]=\"newExpense.amount\" name=\"amount\" placeholder=\"Enter amount\"\n                        class=\"p-2 border rounded ml-2 w-full\" required>\n                </div>\n            </div>\n            <div class=\"flex justify-between p-2 w-full\">\n                <label class=\"font-bold text-gray-400\">\n                    Category:\n                </label>\n                <div>\n                    <select [(ngModel)]=\"newExpense.category\" name=\"category\" class=\"p-2 border\n                                                                                     rounded  \" required>\n\n                        <option *ngFor=\"let cat of categories\" [value]=\"cat\">{{ cat }}</option>\n                    </select>\n\n\n                </div>\n            </div>\n            <div class=\"flex justify-between p-2\">\n                <label class=\"font-bold text-gray-400\">\n                    Account:\n                </label>\n                <div>\n                    <select [(ngModel)]=\"newExpense.account\" name=\"account\" class=\"p-2 border\n                                                                                   rounded w-[100%]\" required>\n\n                        <option *ngFor=\"let acc of accounts\" [value]=\"acc\">{{ acc }}</option>\n                    </select>\n\n\n                </div>\n            </div>\n\n            <div class=\"flex justify-between p-4 gap-4\">\n                <button type=\"button\" (click)=\"closeExpenseForm() \"\n                    class=\"bg-red-600 shadow-md rounded-md text-white p-2 w-full\">Cancel</button>\n\n                <button type=\"submit\" class=\"bg-blue-600 shadow-md rounded-md text-white\n                                             p-2 w-full \">Save</button>\n\n            </div>\n\n        </form>\n    </div>\n</div>"
         },
         {
             "name": "HeaderComponent",
@@ -721,9 +1111,150 @@
             "extends": []
         },
         {
+            "name": "LoginFormComponent",
+            "id": "component-LoginFormComponent-2b014c815692714eb8c11092844a5316ad14241040425be36bbf1e2a9b83ddc2713375ced46675e3c746fa113b828389cad856d95a85ecc341d4a53b5bc44fac",
+            "file": "src/app/components/login-form/login-form.component.ts",
+            "changeDetection": "ChangeDetectionStrategy.OnPush",
+            "encapsulation": [],
+            "entryComponents": [],
+            "inputs": [],
+            "outputs": [],
+            "providers": [],
+            "selector": "app-login-form",
+            "styleUrls": [],
+            "styles": [],
+            "templateUrl": [
+                "./login-form.component.html"
+            ],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [],
+            "outputsClass": [],
+            "propertiesClass": [
+                {
+                    "name": "authService",
+                    "defaultValue": "inject(AuthService)",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 21,
+                    "modifierKind": [
+                        123,
+                        148
+                    ]
+                },
+                {
+                    "name": "loginForm",
+                    "defaultValue": "new FormGroup<LoginFormType>({\n    email: new FormControl<string>('', {\n      nonNullable: true,\n      validators: [Validators.required, Validators.email],\n    }),\n    password: new FormControl<string>('', {\n      nonNullable: true,\n      validators: [Validators.required, Validators.minLength(6)],\n    }),\n  })",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 24
+                },
+                {
+                    "name": "router",
+                    "defaultValue": "inject(Router)",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 22,
+                    "modifierKind": [
+                        123
+                    ]
+                }
+            ],
+            "methodsClass": [
+                {
+                    "name": "submitForm",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 57,
+                    "deprecated": false,
+                    "deprecationMessage": ""
+                }
+            ],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": true,
+            "imports": [
+                {
+                    "name": "CommonModule",
+                    "type": "module"
+                },
+                {
+                    "name": "FormsModule",
+                    "type": "module"
+                },
+                {
+                    "name": "ReactiveFormsModule",
+                    "type": "module"
+                }
+            ],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import { CommonModule } from '@angular/common';\nimport { ChangeDetectionStrategy, Component, inject } from '@angular/core';\nimport { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';\nimport { Router } from '@angular/router';\nimport { take } from 'rxjs';\nimport { AuthService } from '../../auth/auth.service';\n\ninterface LoginFormType {\n  email: FormControl<string>;\n  password: FormControl<string>;\n}\n\n@Component({\n  selector: 'app-login-form',\n  standalone: true,\n  imports: [CommonModule, FormsModule, ReactiveFormsModule],\n  templateUrl: './login-form.component.html',\n  changeDetection: ChangeDetectionStrategy.OnPush,\n})\nexport class LoginFormComponent {\n  private readonly authService = inject(AuthService);\n  private router = inject(Router);\n\n  loginForm = new FormGroup<LoginFormType>({\n    email: new FormControl<string>('', {\n      nonNullable: true,\n      validators: [Validators.required, Validators.email],\n    }),\n    password: new FormControl<string>('', {\n      nonNullable: true,\n      validators: [Validators.required, Validators.minLength(6)],\n    }),\n  })\n\n  get emailInvalidAndTouched(): boolean {\n    return (\n      this.loginForm.controls.email.invalid &&\n      this.loginForm.controls.email.touched\n    )\n  }\n\n  get fEmail(): FormControl {\n    return this.loginForm.controls.email;\n  }\n\n  get passwordInvalidAndTouched(): boolean {\n    return (\n      this.loginForm.controls.password.invalid &&\n      this.loginForm.controls.password.touched\n    )\n  }\n\n  get fPassword(): FormControl {\n    return this.loginForm.controls.password;\n  }\n\n  submitForm() {\n    if (this.loginForm.valid && this.loginForm.dirty) {\n      const { email, password } = this.loginForm.getRawValue();\n      this.authService.loginUser({ email, password }).pipe(take(1)).subscribe({\n        next: () => {\n          this.router.navigate(['/expenses']);\n        },\n        error: (err) => {\n          console.error(`[LoginFormComponent] submitForm - error: ${err?.message}`);\n        }\n      });\n    }\n  }\n}\n",
+            "assetsDirs": [],
+            "styleUrlsData": "",
+            "stylesData": "",
+            "extends": [],
+            "accessors": {
+                "emailInvalidAndTouched": {
+                    "name": "emailInvalidAndTouched",
+                    "getSignature": {
+                        "name": "emailInvalidAndTouched",
+                        "type": "boolean",
+                        "returnType": "boolean",
+                        "line": 35
+                    }
+                },
+                "fEmail": {
+                    "name": "fEmail",
+                    "getSignature": {
+                        "name": "fEmail",
+                        "type": "",
+                        "returnType": "FormControl",
+                        "line": 42
+                    }
+                },
+                "passwordInvalidAndTouched": {
+                    "name": "passwordInvalidAndTouched",
+                    "getSignature": {
+                        "name": "passwordInvalidAndTouched",
+                        "type": "boolean",
+                        "returnType": "boolean",
+                        "line": 46
+                    }
+                },
+                "fPassword": {
+                    "name": "fPassword",
+                    "getSignature": {
+                        "name": "fPassword",
+                        "type": "",
+                        "returnType": "FormControl",
+                        "line": 53
+                    }
+                }
+            },
+            "templateData": "<form [formGroup]=\"loginForm\" (ngSubmit)=\"submitForm()\">\n  <fieldset class=\"mb-4\">\n    <label for=\"email-input\" id=\"email-label\" class=\"flex flex-col gap-2 py-2\">\n      Email\n      <input type=\"email\" formControlName=\"email\" autocomplete=\"email\" id=\"email-input\" aria-labelledby=\"email-label\"\n        class=\"px-4 py-2 border border-slate-500 rounded-lg\" [ngClass]=\"{'border-red-500': emailInvalidAndTouched}\" />\n        <small *ngIf=\"fEmail.hasError('email') && fEmail.touched\" class=\"text-red-500\">Not a valid email address</small>\n        <small *ngIf=\"fEmail.hasError('required') && fEmail.touched\" class=\"text-red-500\">Email address is required</small>\n    </label>\n    <label for=\"password-input\" id=\"password-label\" class=\"flex flex-col gap-2 py-2\">\n      Password\n      <input type=\"password\" formControlName=\"password\" autocomplete=\"current-password\" id=\"password-input\"\n        aria-labelledby=\"password-label\" class=\"px-4 py-2 border border-slate-500 rounded-lg\"\n        [ngClass]=\"{'border-red-500': passwordInvalidAndTouched}\" />\n        <small *ngIf=\"fPassword.hasError('required') && fPassword.touched\" class=\"text-red-500\">Password is required</small>\n        <small *ngIf=\"fPassword.hasError('minlength') && fPassword.touched\" class=\"text-red-500\">Password must be at least 6 characters</small>\n    </label>\n  </fieldset>\n\n  <button type=\"submit\" class=\"text-slate-950 bg-blue-300 hover:bg-blue-400 active:bg-blue-300 px-4 py-2 rounded-lg border-none\">Submit</button>\n</form>"
+        },
+        {
             "name": "LoginPageComponent",
-            "id": "component-LoginPageComponent-fc92ffc7c553b4321c034e2ad0faa49f3efe488dc22315b438ced30e9ed8bde54ba43d2a97205a4cf6b1fb78cd97ab3fb50e867e6604587e211085b627dbb381",
-            "file": "src/app/login-page/login-page.component.ts",
+            "id": "component-LoginPageComponent-2d12e215ac40bfa64bcff8ef8c34ba3315944fef25f8a07733e36ba9548ed43d0e3c5e1fa01d846473365187a69890f9dfda03f2b9e28d01db96802e40a5ae3b",
+            "file": "src/app/pages/login-page/login-page.component.ts",
             "encapsulation": [],
             "entryComponents": [],
             "inputs": [],
@@ -746,22 +1277,26 @@
             "hostBindings": [],
             "hostListeners": [],
             "standalone": true,
-            "imports": [],
+            "imports": [
+                {
+                    "name": "LoginFormComponent",
+                    "type": "component"
+                }
+            ],
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { Component } from '@angular/core';\n\n@Component({\n  selector: 'app-login-page',\n  standalone: true,\n  imports: [],\n  templateUrl: './login-page.component.html',\n  styleUrl: './login-page.component.css'\n})\nexport class LoginPageComponent {\n\n}\n",
-            "styleUrl": "./login-page.component.css",
+            "sourceCode": "import { Component } from '@angular/core';\nimport { LoginFormComponent } from \"../../components/login-form/login-form.component\";\n\n@Component({\n  selector: 'app-login-page',\n  standalone: true,\n  imports: [LoginFormComponent],\n  templateUrl: './login-page.component.html'\n})\nexport class LoginPageComponent {}\n",
             "assetsDirs": [],
             "styleUrlsData": "",
             "stylesData": "",
             "extends": [],
-            "templateData": "<div class=\"login__container\">\n  <div class=\"login__header\">\n    <h1>Login To Expense Tracker app</h1>\n  </div>\n\n  <div class=\"login__text\">\n    <p>\n      Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam similique\n      ducimus id, adipisci eveniet cum facere enim, sint delectus voluptate\n      reprehenderit rerum fugit vitae illo! Quis cupiditate eum dignissimos\n      sint?\n    </p>\n  </div>\n\n  <div class=\"login__form-container\">\n    <form>\n      <div class=\"input-group\">\n        <label class=\"form-label\">Email</label>\n        <input type=\"email\" class=\"form-control\" />\n      </div>\n\n      <div class=\"input-group\">\n        <label class=\"form-label\">Password</label>\n        <input type=\"password\" class=\"form-control\" />\n      </div>\n        \n              <button type=\"submit\" class=\"btn btn--primary\">Submit</button>\n\n    </form>\n  </div>\n</div>\n"
+            "templateData": "<main class=\"p-16 max-w-7xl mx-auto\">\n  <section>\n    <h1 class=\"text-3xl my-4\">Login To Expense Tracker app</h1>\n  </section>\n\n  <section>\n    <p>\n      Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam similique\n      ducimus id, adipisci eveniet cum facere enim, sint delectus voluptate\n      reprehenderit rerum fugit vitae illo! Quis cupiditate eum dignissimos\n      sint?\n    </p>\n  </section>\n\n  <section>\n    <app-login-form></app-login-form>\n  </section>\n</main>"
         },
         {
             "name": "NavbarComponent",
-            "id": "component-NavbarComponent-ba7f0d0f7e9b69f8450bbc35686212178d51246909b7bd778da939b8edcda3d3092719e2ff6c9cc9ae0d98a4b5ec8c8dcf84c335fffd5a42cfd96449c0cca7fb",
-            "file": "src/app/navbar/navbar.component.ts",
+            "id": "component-NavbarComponent-46325602a7c2fb93a881a7b9ef8c5e774fd2117e9df7a7abe2af10884d388ea9c9c69716889b124b12d132c0a0079bf11c1a624714fd559b83097694527bc4fd",
+            "file": "src/app/components/navbar/navbar.component.ts",
             "encapsulation": [],
             "entryComponents": [],
             "inputs": [],
@@ -788,13 +1323,12 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { Component } from '@angular/core';\n\n@Component({\n    selector: 'app-navbar',\n    standalone: true,\n    imports: [],\n    templateUrl: './navbar.component.html',\n    styleUrl: './navbar.component.less'\n})\nexport class NavbarComponent {\n\n}\n",
-            "styleUrl": "./navbar.component.less",
+            "sourceCode": "import { Component } from '@angular/core';\n\n@Component({\n    selector: 'app-navbar',\n    standalone: true,\n    imports: [],\n    templateUrl: './navbar.component.html'\n})\nexport class NavbarComponent {\n\n}\n",
             "assetsDirs": [],
             "styleUrlsData": "",
             "stylesData": "",
             "extends": [],
-            "templateData": "<nav class=\"bg-black p-2 fixed left-[20%] right-[20%]  shadow-md  rounded-md\">\n  <div class=\"flex justify-center  font-bold text-white py-4\">\n      EXPENSE TRACKER\n  </div>\n</nav>\n"
+            "templateData": "<nav class=\"bg-slate-800 p-4 w-full shadow-md\">\n  <h1 class=\"flex justify-center capitalize text-white text-2xl\">\n      expense tracker\n  </h1>\n</nav>\n"
         },
         {
             "name": "PageComponent",
@@ -902,11 +1436,93 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "ApplicationConfig",
-                "defaultValue": "{\n  providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes)]\n}"
+                "defaultValue": "{\n  providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes), provideHttpClient(withInterceptors([jtwInterceptor]))]\n}"
+            },
+            {
+                "name": "authGuard",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/auth/auth.guard.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "CanActivateFn",
+                "defaultValue": "(route, state) => {\n  const authService = inject(AuthService);\n  const router = inject(Router);\n  const expired = authService.isTokenExpired();\n  console.log(`[AuthGuard] canActivate - expired: ${expired}`);\n  if (expired) {\n    router.navigate(['/login'], { queryParams: { returnUrl: state.url } });\n    return false;\n  }\n  return true;\n}"
+            },
+            {
+                "name": "envs",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/shared/envs.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "object",
+                "defaultValue": "{\ngetApiUrl: () => 'http://localhost:4000/api/v1',\n}"
+            },
+            {
+                "name": "jtwInterceptor",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/auth/jwt-interceptor.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "HttpInterceptorFn",
+                "defaultValue": "(req, next) => {\n  const authService = inject(AuthService);\n  return authService.accessToken$.pipe(\n    map((token) => {\n      if (token) {\n        return req.clone({\n          url: req.url,\n          setHeaders: {\n            Authorization: `Bearer ${token}`\n          }\n        });\n      }\n      return req;\n    }),\n    switchMap((req) => next(req))\n  )\n}"
+            },
+            {
+                "name": "LoggedIn",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/pages/login-page/login-page.storiesy.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Story",
+                "defaultValue": "{}"
+            },
+            {
+                "name": "LoggedOut",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/pages/login-page/login-page.storiesy.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Story",
+                "defaultValue": "{}"
+            },
+            {
+                "name": "meta",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/pages/login-page/login-page.storiesy.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Meta<LoginPageComponent>",
+                "defaultValue": "{\n  title: 'Pages/LoginPage',\n  component: LoginPageComponent,\n  decorators: [\n    componentWrapperDecorator((story) => `<div style=\"width: 100%; height: 100vh\">${story}</div>`),\n    applicationConfig({\n      providers: [importProvidersFrom(HttpClient)],\n    }),\n  ],\n  parameters: {\n    layout: 'fullscreen',\n  },\n}"
+            },
+            {
+                "name": "TOKEN_STORAGE_KEY",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/auth/constants.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "string",
+                "defaultValue": "'et-token-storage'"
             }
         ],
         "functions": [],
-        "typealiases": [],
+        "typealiases": [
+            {
+                "name": "Story",
+                "ctype": "miscellaneous",
+                "subtype": "typealias",
+                "rawtype": "StoryObj<LoginPageComponent>",
+                "file": "src/app/pages/login-page/login-page.storiesy.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "description": "",
+                "kind": 183
+            }
+        ],
         "enumerations": [],
         "groupedVariables": {
             "src/app/app.config.ts": [
@@ -918,17 +1534,111 @@
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "ApplicationConfig",
-                    "defaultValue": "{\n  providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes)]\n}"
+                    "defaultValue": "{\n  providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes), provideHttpClient(withInterceptors([jtwInterceptor]))]\n}"
+                }
+            ],
+            "src/app/auth/auth.guard.ts": [
+                {
+                    "name": "authGuard",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/auth/auth.guard.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "CanActivateFn",
+                    "defaultValue": "(route, state) => {\n  const authService = inject(AuthService);\n  const router = inject(Router);\n  const expired = authService.isTokenExpired();\n  console.log(`[AuthGuard] canActivate - expired: ${expired}`);\n  if (expired) {\n    router.navigate(['/login'], { queryParams: { returnUrl: state.url } });\n    return false;\n  }\n  return true;\n}"
+                }
+            ],
+            "src/app/shared/envs.ts": [
+                {
+                    "name": "envs",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/shared/envs.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "object",
+                    "defaultValue": "{\ngetApiUrl: () => 'http://localhost:4000/api/v1',\n}"
+                }
+            ],
+            "src/app/auth/jwt-interceptor.ts": [
+                {
+                    "name": "jtwInterceptor",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/auth/jwt-interceptor.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "HttpInterceptorFn",
+                    "defaultValue": "(req, next) => {\n  const authService = inject(AuthService);\n  return authService.accessToken$.pipe(\n    map((token) => {\n      if (token) {\n        return req.clone({\n          url: req.url,\n          setHeaders: {\n            Authorization: `Bearer ${token}`\n          }\n        });\n      }\n      return req;\n    }),\n    switchMap((req) => next(req))\n  )\n}"
+                }
+            ],
+            "src/app/pages/login-page/login-page.storiesy.ts": [
+                {
+                    "name": "LoggedIn",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/pages/login-page/login-page.storiesy.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Story",
+                    "defaultValue": "{}"
+                },
+                {
+                    "name": "LoggedOut",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/pages/login-page/login-page.storiesy.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Story",
+                    "defaultValue": "{}"
+                },
+                {
+                    "name": "meta",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/pages/login-page/login-page.storiesy.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Meta<LoginPageComponent>",
+                    "defaultValue": "{\n  title: 'Pages/LoginPage',\n  component: LoginPageComponent,\n  decorators: [\n    componentWrapperDecorator((story) => `<div style=\"width: 100%; height: 100vh\">${story}</div>`),\n    applicationConfig({\n      providers: [importProvidersFrom(HttpClient)],\n    }),\n  ],\n  parameters: {\n    layout: 'fullscreen',\n  },\n}"
+                }
+            ],
+            "src/app/auth/constants.ts": [
+                {
+                    "name": "TOKEN_STORAGE_KEY",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/auth/constants.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "defaultValue": "'et-token-storage'"
                 }
             ]
         },
         "groupedFunctions": {},
         "groupedEnumerations": {},
-        "groupedTypeAliases": {}
+        "groupedTypeAliases": {
+            "src/app/pages/login-page/login-page.storiesy.ts": [
+                {
+                    "name": "Story",
+                    "ctype": "miscellaneous",
+                    "subtype": "typealias",
+                    "rawtype": "StoryObj<LoginPageComponent>",
+                    "file": "src/app/pages/login-page/login-page.storiesy.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "description": "",
+                    "kind": 183
+                }
+            ]
+        }
     },
     "routes": [],
     "coverage": {
-        "count": 7,
+        "count": 3,
         "status": "low",
         "files": [
             {
@@ -951,25 +1661,91 @@
                 "status": "low"
             },
             {
-                "filePath": "src/app/expense-list/expense-list.component.ts",
-                "type": "component",
-                "linktype": "component",
-                "name": "ExpenseListComponent",
-                "coveragePercent": 0,
-                "coverageCount": "0/12",
-                "status": "low"
-            },
-            {
-                "filePath": "src/app/login-page/login-page.component.ts",
-                "type": "component",
-                "linktype": "component",
-                "name": "LoginPageComponent",
+                "filePath": "src/app/auth/auth.guard.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "authGuard",
                 "coveragePercent": 0,
                 "coverageCount": "0/1",
                 "status": "low"
             },
             {
-                "filePath": "src/app/navbar/navbar.component.ts",
+                "filePath": "src/app/auth/auth.service.ts",
+                "type": "injectable",
+                "linktype": "injectable",
+                "name": "AuthService",
+                "coveragePercent": 0,
+                "coverageCount": "0/14",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/auth/constants.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "TOKEN_STORAGE_KEY",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/auth/interfaces/login-payload.interface.ts",
+                "type": "interface",
+                "linktype": "interface",
+                "name": "ILoginPayload",
+                "coveragePercent": 0,
+                "coverageCount": "0/3",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/auth/interfaces/token-payload.interface.ts",
+                "type": "interface",
+                "linktype": "interface",
+                "name": "IAccessTokenPayload",
+                "coveragePercent": 0,
+                "coverageCount": "0/3",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/auth/interfaces/token-response.interface.ts",
+                "type": "interface",
+                "linktype": "interface",
+                "name": "ITokenResponse",
+                "coveragePercent": 0,
+                "coverageCount": "0/2",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/auth/jwt-interceptor.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "jtwInterceptor",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/components/login-form/login-form.component.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "LoginFormComponent",
+                "coveragePercent": 0,
+                "coverageCount": "0/5",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/components/login-form/login-form.component.ts",
+                "type": "interface",
+                "linktype": "interface",
+                "name": "LoginFormType",
+                "coveragePercent": 0,
+                "coverageCount": "0/3",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/components/navbar/navbar.component.ts",
                 "type": "component",
                 "linktype": "component",
                 "name": "NavbarComponent",
@@ -978,7 +1754,7 @@
                 "status": "low"
             },
             {
-                "filePath": "src/app/services/expense.service.ts",
+                "filePath": "src/app/expense/expense.service.ts",
                 "type": "injectable",
                 "linktype": "injectable",
                 "name": "ExpenseService",
@@ -987,12 +1763,89 @@
                 "status": "low"
             },
             {
-                "filePath": "src/app/services/expense.service.ts",
+                "filePath": "src/app/expense/expense.service.ts",
                 "type": "interface",
                 "linktype": "interface",
                 "name": "Expense",
                 "coveragePercent": 0,
                 "coverageCount": "0/5",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/pages/expense-list/expense-list.component.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "ExpenseListComponent",
+                "coveragePercent": 0,
+                "coverageCount": "0/12",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/pages/login-page/login-page.component.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "LoginPageComponent",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/pages/login-page/login-page.storiesy.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "LoggedIn",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/pages/login-page/login-page.storiesy.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "LoggedOut",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/pages/login-page/login-page.storiesy.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "meta",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/pages/login-page/login-page.storiesy.ts",
+                "type": "type alias",
+                "linktype": "miscellaneous",
+                "linksubtype": "typealias",
+                "name": "Story",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/shared/envs.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "envs",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/user/user.service.ts",
+                "type": "injectable",
+                "linktype": "injectable",
+                "name": "UserService",
+                "coveragePercent": 0,
+                "coverageCount": "0/2",
                 "status": "low"
             },
             {
