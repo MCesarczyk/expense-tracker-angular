@@ -16,6 +16,6 @@
         <small *ngIf="fPassword.hasError('minlength') && fPassword.touched" class="text-red-500">Password must be at least 6 characters</small>
     </label>
   </fieldset>
-
+  <p *ngIf="errorMessage$ | async as err" class="text-red-500">{{ err }}</p>
   <button type="submit" class="text-slate-950 bg-blue-300 hover:bg-blue-400 active:bg-blue-300 px-4 py-2 rounded-lg border-none">Submit</button>
 </form>

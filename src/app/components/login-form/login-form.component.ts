@@ -2,8 +2,9 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { take } from 'rxjs';
+import { BehaviorSubject, take } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 interface LoginFormType {
   email: FormControl<string>;
@@ -32,6 +33,8 @@ export class LoginFormComponent {
     }),
   })
 
+  errorMessage$ = new BehaviorSubject<string | null>(null);
+
   get emailInvalidAndTouched(): boolean {
     return (
       this.loginForm.controls.email.invalid &&
@@ -56,12 +59,19 @@ export class LoginFormComponent {
 
   submitForm() {
     if (this.loginForm.valid && this.loginForm.dirty) {
+      this.errorMessage$.next(null);
       const { email, password } = this.loginForm.getRawValue();
       this.authService.loginUser({ email, password }).pipe(take(1)).subscribe({
         next: () => {
+          console.log(`[LoginFormComponent] submitForm - success`);
           this.router.navigate(['/expenses']);
         },
         error: (err) => {
+          if (err instanceof HttpErrorResponse) {
+            this.errorMessage$.next(err.error.message);
+          } else {
+            this.errorMessage$.next('An error occurred. Please try again later.');
+          }
           console.error(`[LoginFormComponent] submitForm - error: ${err?.message}`);
         }
       });
