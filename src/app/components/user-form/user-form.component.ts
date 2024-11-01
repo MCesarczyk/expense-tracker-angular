@@ -1,14 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BehaviorSubject, take } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { MatchingPasswords } from '../../pages/register-page/matching-passwords.validator';
 
 interface UserFormType {
   email: FormControl<string>;
   password: FormControl<string>;
+  passwordConfirm: FormControl<string>;
 }
 
 @Component({
@@ -22,6 +24,11 @@ export class UserFormComponent {
   private readonly authService = inject(AuthService);
   private router = inject(Router);
 
+  @Input() variant: 'login' | 'register' = 'login'
+  get isRegisterForm() {
+    return this.variant === 'register'
+  }
+
   userForm = new FormGroup<UserFormType>({
     email: new FormControl<string>('', {
       nonNullable: true,
@@ -31,6 +38,13 @@ export class UserFormComponent {
       nonNullable: true,
       validators: [Validators.required, Validators.minLength(6)],
     }),
+    passwordConfirm: new FormControl<string>('', {
+      nonNullable: true,
+      validators: [Validators.required],
+    })
+  }, {
+    validators: MatchingPasswords('password', 'passwordConfirm'),
+    updateOn: 'blur'
   })
 
   errorMessage$ = new BehaviorSubject<string | null>(null);
@@ -55,6 +69,17 @@ export class UserFormComponent {
 
   get fPassword(): FormControl {
     return this.userForm.controls.password;
+  }
+
+  get passwordConfirmInvalidAndTouched(): boolean {
+    return (
+      this.userForm.controls.passwordConfirm.invalid &&
+      this.userForm.controls.passwordConfirm.touched
+    )
+  }
+
+  get fPasswordConfirm(): FormControl {
+    return this.userForm.controls.passwordConfirm;
   }
 
   submitForm() {

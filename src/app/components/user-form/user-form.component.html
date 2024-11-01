@@ -4,18 +4,32 @@
       Email
       <input type="email" formControlName="email" autocomplete="email" id="email-input" aria-labelledby="email-label"
         class="px-4 py-2 border border-slate-500 rounded-lg" [ngClass]="{'border-red-500': emailInvalidAndTouched}" />
-        <small *ngIf="fEmail.hasError('email') && fEmail.touched" class="text-red-500">Not a valid email address</small>
-        <small *ngIf="fEmail.hasError('required') && fEmail.touched" class="text-red-500">Email address is required</small>
+      <small *ngIf="fEmail.hasError('email') && fEmail.touched" class="text-red-500">Not a valid email address</small>
+      <small *ngIf="fEmail.hasError('required') && fEmail.touched" class="text-red-500">Email address is
+        required</small>
     </label>
     <label for="password-input" id="password-label" class="flex flex-col gap-2 py-2">
       Password
       <input type="password" formControlName="password" autocomplete="current-password" id="password-input"
         aria-labelledby="password-label" class="px-4 py-2 border border-slate-500 rounded-lg"
         [ngClass]="{'border-red-500': passwordInvalidAndTouched}" />
-        <small *ngIf="fPassword.hasError('required') && fPassword.touched" class="text-red-500">Password is required</small>
-        <small *ngIf="fPassword.hasError('minlength') && fPassword.touched" class="text-red-500">Password must be at least 6 characters</small>
+      <small *ngIf="fPassword.hasError('required') && fPassword.touched" class="text-red-500">Password is
+        required</small>
+      <small *ngIf="fPassword.hasError('minlength') && fPassword.touched" class="text-red-500">Password must be at least
+        6 characters</small>
+    </label>
+    <label *ngIf="isRegisterForm" for="password-confirm-input" id="password-confirm-label"
+      class="flex flex-col gap-2 py-2">
+      Confirm password
+      <input type="password" formControlName="passwordConfirm" id="password-confirm-input"
+        aria-labelledby="password-confirm-label" class="px-4 py-2 border border-slate-500 rounded-lg"
+        [ngClass]="{'border-red-500': passwordConfirmInvalidAndTouched}" />
+      <small *ngIf="fPasswordConfirm.hasError('required') && fPasswordConfirm.touched" class="text-red-500">Password is
+        required</small>
+      <small *ngIf="userForm.hasError('passwordsMatch')" class="text-red-500">Passwords do not match!</small>
     </label>
   </fieldset>
   <p *ngIf="errorMessage$ | async as err" class="text-red-500">{{ err }}</p>
-  <button type="submit" class="text-slate-950 bg-blue-300 hover:bg-blue-400 active:bg-blue-300 px-4 py-2 rounded-lg border-none">Submit</button>
+  <button type="submit"
+    class="text-slate-950 bg-blue-300 hover:bg-blue-400 active:bg-blue-300 px-4 py-2 rounded-lg border-none">Submit</button>
 </form>

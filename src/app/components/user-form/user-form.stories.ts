@@ -15,9 +15,24 @@ const meta: Meta<UserFormComponent> = {
   parameters: {
     layout: 'fullscreen',
   },
+  tags: ['autodocs'],
+  argTypes: {
+    variant: {
+      control: 'radio',
+      options: ['login', 'register']
+    }
+  },
 };
 
 export default meta;
 type Story = StoryObj<UserFormComponent>;
 
 export const LoginForm: Story = {};
+LoginForm.args = {
+  variant: 'login'
+}
+
+export const RegisterForm: Story = {};
+RegisterForm.args = {
+  variant: 'register'
+}
