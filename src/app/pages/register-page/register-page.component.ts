@@ -3,9 +3,9 @@ import { UserFormComponent } from "../../components/user-form/user-form.componen
 import { RouterLink } from '@angular/router';
 
 @Component({
-  selector: 'app-login-page',
+  selector: 'app-register-page',
   standalone: true,
   imports: [UserFormComponent, RouterLink],
-  templateUrl: './login-page.component.html'
+  templateUrl: './register-page.component.html'
 })
-export class LoginPageComponent {}
+export class RegisterPageComponent { }
