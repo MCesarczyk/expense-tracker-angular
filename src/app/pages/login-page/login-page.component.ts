@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { LoginFormComponent } from "../../components/login-form/login-form.component";
+import { UserFormComponent } from "../../components/user-form/user-form.component";
 
 @Component({
   selector: 'app-login-page',
   standalone: true,
-  imports: [LoginFormComponent],
+  imports: [UserFormComponent],
   templateUrl: './login-page.component.html'
 })
 export class LoginPageComponent {}

@@ -6,23 +6,23 @@ import { BehaviorSubject, take } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { HttpErrorResponse } from '@angular/common/http';
 
-interface LoginFormType {
+interface UserFormType {
   email: FormControl<string>;
   password: FormControl<string>;
 }
 
 @Component({
-  selector: 'app-login-form',
+  selector: 'app-user-form',
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule],
-  templateUrl: './login-form.component.html',
+  templateUrl: './user-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LoginFormComponent {
+export class UserFormComponent {
   private readonly authService = inject(AuthService);
   private router = inject(Router);
 
-  loginForm = new FormGroup<LoginFormType>({
+  userForm = new FormGroup<UserFormType>({
     email: new FormControl<string>('', {
       nonNullable: true,
       validators: [Validators.required, Validators.email],
@@ -37,30 +37,30 @@ export class LoginFormComponent {
 
   get emailInvalidAndTouched(): boolean {
     return (
-      this.loginForm.controls.email.invalid &&
-      this.loginForm.controls.email.touched
+      this.userForm.controls.email.invalid &&
+      this.userForm.controls.email.touched
     )
   }
 
   get fEmail(): FormControl {
-    return this.loginForm.controls.email;
+    return this.userForm.controls.email;
   }
 
   get passwordInvalidAndTouched(): boolean {
     return (
-      this.loginForm.controls.password.invalid &&
-      this.loginForm.controls.password.touched
+      this.userForm.controls.password.invalid &&
+      this.userForm.controls.password.touched
     )
   }
 
   get fPassword(): FormControl {
-    return this.loginForm.controls.password;
+    return this.userForm.controls.password;
   }
 
   submitForm() {
-    if (this.loginForm.valid && this.loginForm.dirty) {
+    if (this.userForm.valid && this.userForm.dirty) {
       this.errorMessage$.next(null);
-      const { email, password } = this.loginForm.getRawValue();
+      const { email, password } = this.userForm.getRawValue();
       this.authService.loginUser({ email, password }).pipe(take(1)).subscribe({
         next: () => {
           console.log(`[LoginFormComponent] submitForm - success`);

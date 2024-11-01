@@ -1,11 +1,11 @@
 import { applicationConfig, componentWrapperDecorator, type Meta, type StoryObj } from '@storybook/angular';
 
-import { LoginFormComponent } from './login-form.component';
+import { UserFormComponent } from './user-form.component';
 import { provideHttpClient } from '@angular/common/http';
 
-const meta: Meta<LoginFormComponent> = {
-  title: 'Components/LoginForm',
-  component: LoginFormComponent,
+const meta: Meta<UserFormComponent> = {
+  title: 'Components/UserForm',
+  component: UserFormComponent,
   decorators: [
     componentWrapperDecorator((story) => `<div style="width: 100%; height: 100vh; padding: 3rem">${story}</div>`),
     applicationConfig({
@@ -18,6 +18,6 @@ const meta: Meta<LoginFormComponent> = {
 };
 
 export default meta;
-type Story = StoryObj<LoginFormComponent>;
+type Story = StoryObj<UserFormComponent>;
 
 export const LoginForm: Story = {};
