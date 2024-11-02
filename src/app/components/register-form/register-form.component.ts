@@ -4,7 +4,7 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { Router } from '@angular/router';
 import { BehaviorSubject, take } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
-import { MatchingPasswords } from '../../pages/register-page/matching-passwords.validator';
+import { MatchingPasswords } from './matching-passwords.validator';
 import { UserService } from '../../user/user.service';
 
 interface RegisterFormType {
