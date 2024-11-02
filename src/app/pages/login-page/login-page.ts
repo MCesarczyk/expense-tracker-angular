@@ -6,6 +6,6 @@ import { LoginFormComponent } from "../../components/login-form/login-form.compo
   selector: 'app-login-page',
   standalone: true,
   imports: [LoginFormComponent, RouterLink],
-  templateUrl: './login-page.component.html'
+  templateUrl: './login-page.html'
 })
-export class LoginPageComponent {}
+export class LoginPage {}

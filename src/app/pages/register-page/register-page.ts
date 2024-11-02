@@ -6,6 +6,6 @@ import { RegisterFormComponent } from "../../components/register-form/register-f
   selector: 'app-register-page',
   standalone: true,
   imports: [RouterLink, RegisterFormComponent],
-  templateUrl: './register-page.component.html'
+  templateUrl: './register-page.html'
 })
-export class RegisterPageComponent { }
+export class RegisterPage { }
