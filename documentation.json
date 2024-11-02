@@ -168,38 +168,13 @@
             "extends": []
         },
         {
-            "name": "User",
-            "id": "interface-User-d4821beac0e4a852e513391b7470981c4353fdd95a18628bb68136c8695b489ee15b926e2e5031bc26cf30e1508e0a362c3ee13a06734702b4d15af140e485d5",
-            "file": "src/stories/user.ts",
+            "name": "LoginFormType",
+            "id": "interface-LoginFormType-1fd7788d548de8a646bf0af6f8c4a1b09e5c6b0532ba2669776306fcc5210754385222960ab801cb63a9894adc0c94860b28d880f94ed46b0834f5bb27662bde",
+            "file": "src/app/components/login-form/login-form.component.ts",
             "deprecated": false,
             "deprecationMessage": "",
             "type": "interface",
-            "sourceCode": "export interface User {\n  name: string;\n}\n",
-            "properties": [
-                {
-                    "name": "name",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "string",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 2
-                }
-            ],
-            "indexSignatures": [],
-            "kind": 171,
-            "methods": [],
-            "extends": []
-        },
-        {
-            "name": "UserFormType",
-            "id": "interface-UserFormType-cfd36b296a6a397e5dbb56e980814e7c69557d7dc79fd29824e5885552107c022a17519f3628ad237a4136ca6843c12ee2215a695792723175060ce7c34a093e",
-            "file": "src/app/components/user-form/user-form.component.ts",
-            "deprecated": false,
-            "deprecationMessage": "",
-            "type": "interface",
-            "sourceCode": "import { CommonModule } from '@angular/common';\nimport { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core';\nimport { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';\nimport { Router } from '@angular/router';\nimport { BehaviorSubject, take } from 'rxjs';\nimport { AuthService } from '../../auth/auth.service';\nimport { HttpErrorResponse } from '@angular/common/http';\nimport { matchingPasswords } from '../../pages/register-page/matching-passwords.validator';\n\ninterface UserFormType {\n  email: FormControl<string>;\n  password: FormControl<string>;\n  passwordConfirm: FormControl<string | null>;\n}\n\n@Component({\n  selector: 'app-user-form',\n  standalone: true,\n  imports: [CommonModule, FormsModule, ReactiveFormsModule],\n  templateUrl: './user-form.component.html',\n  changeDetection: ChangeDetectionStrategy.OnPush,\n})\nexport class UserFormComponent {\n  private readonly authService = inject(AuthService);\n  private router = inject(Router);\n\n  @Input() variant: 'login' | 'register' = 'login'\n  get isRegisterForm() {\n    return this.variant === 'register'\n  }\n\n  userForm = new FormGroup<UserFormType>({\n    email: new FormControl<string>('', {\n      nonNullable: true,\n      validators: [Validators.required, Validators.email],\n    }),\n    password: new FormControl<string>('', {\n      nonNullable: true,\n      validators: [Validators.required, Validators.minLength(6)],\n    }),\n    passwordConfirm: new FormControl<string | null>('', {\n      nonNullable: this.isRegisterForm,\n      validators: [Validators.required],\n    })\n  },{\n    validators: matchingPasswords('password', 'passwordConfirm'),\n    updateOn: 'blur'\n  })\n\n  errorMessage$ = new BehaviorSubject<string | null>(null);\n\n  get emailInvalidAndTouched(): boolean {\n    return (\n      this.userForm.controls.email.invalid &&\n      this.userForm.controls.email.touched\n    )\n  }\n\n  get fEmail(): FormControl {\n    return this.userForm.controls.email;\n  }\n\n  get passwordInvalidAndTouched(): boolean {\n    return (\n      this.userForm.controls.password.invalid &&\n      this.userForm.controls.password.touched\n    )\n  }\n\n  get fPassword(): FormControl {\n    return this.userForm.controls.password;\n  }\n\n  // get passwordConfirmInvalidAndTouched(): boolean { }\n\n  submitForm() {\n    if (this.userForm.valid && this.userForm.dirty) {\n      this.errorMessage$.next(null);\n      const { email, password } = this.userForm.getRawValue();\n      this.authService.loginUser({ email, password }).pipe(take(1)).subscribe({\n        next: () => {\n          console.log(`[LoginFormComponent] submitForm - success`);\n          this.router.navigate(['/expenses']);\n        },\n        error: (err) => {\n          if (err instanceof HttpErrorResponse) {\n            this.errorMessage$.next(err.error.message);\n          } else {\n            this.errorMessage$.next('An error occurred. Please try again later.');\n          }\n          console.error(`[LoginFormComponent] submitForm - error: ${err?.message}`);\n        }\n      });\n    }\n  }\n}\n",
+            "sourceCode": "import { CommonModule } from '@angular/common';\nimport { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core';\nimport { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';\nimport { Router } from '@angular/router';\nimport { BehaviorSubject, take } from 'rxjs';\nimport { AuthService } from '../../auth/auth.service';\nimport { HttpErrorResponse } from '@angular/common/http';\nimport { MatchingPasswords } from '../../pages/register-page/matching-passwords.validator';\n\ninterface LoginFormType {\n  email: FormControl<string>;\n  password: FormControl<string>;\n  // passwordConfirm: FormControl<string>;\n}\n\n@Component({\n  selector: 'app-login-form',\n  standalone: true,\n  imports: [CommonModule, FormsModule, ReactiveFormsModule],\n  templateUrl: './login-form.component.html',\n  changeDetection: ChangeDetectionStrategy.OnPush,\n})\nexport class LoginFormComponent {\n  private readonly authService = inject(AuthService);\n  private router = inject(Router);\n\n  loginForm = new FormGroup<LoginFormType>({\n    email: new FormControl<string>('', {\n      nonNullable: true,\n      validators: [Validators.required, Validators.email],\n    }),\n    password: new FormControl<string>('', {\n      nonNullable: true,\n      validators: [Validators.required, Validators.minLength(6)],\n    }),\n    // passwordConfirm: new FormControl<string>('', {\n    //   nonNullable: true,\n    //   validators: [Validators.required],\n    // })\n  }, {\n    validators: MatchingPasswords('password', 'passwordConfirm'),\n    updateOn: 'blur'\n  })\n\n  errorMessage$ = new BehaviorSubject<string | null>(null);\n\n  get emailInvalidAndTouched(): boolean {\n    return (\n      this.loginForm.controls.email.invalid &&\n      this.loginForm.controls.email.touched\n    )\n  }\n\n  get fEmail(): FormControl {\n    return this.loginForm.controls.email;\n  }\n\n  get passwordInvalidAndTouched(): boolean {\n    return (\n      this.loginForm.controls.password.invalid &&\n      this.loginForm.controls.password.touched\n    )\n  }\n\n  get fPassword(): FormControl {\n    return this.loginForm.controls.password;\n  }\n\n  // get passwordConfirmInvalidAndTouched(): boolean {\n  //   return (\n  //     this.loginForm.controls.passwordConfirm.invalid &&\n  //     this.loginForm.controls.passwordConfirm.touched\n  //   )\n  // }\n\n  // get fPasswordConfirm(): FormControl {\n  //   return this.loginForm.controls.passwordConfirm;\n  // }\n\n  submitForm() {\n    if (this.loginForm.valid && this.loginForm.dirty) {\n      this.errorMessage$.next(null);\n      const { email, password } = this.loginForm.getRawValue();\n      this.authService.loginUser({ email, password }).pipe(take(1)).subscribe({\n        next: () => {\n          console.log(`[LoginFormComponent] submitForm - success`);\n          this.router.navigate(['/expenses']);\n        },\n        error: (err) => {\n          if (err instanceof HttpErrorResponse) {\n            this.errorMessage$.next(err.error.message);\n          } else {\n            this.errorMessage$.next('An error occurred. Please try again later.');\n          }\n          console.error(`[LoginFormComponent] submitForm - error: ${err?.message}`);\n        }\n      });\n    }\n  }\n}\n",
             "properties": [
                 {
                     "name": "email",
@@ -220,16 +195,31 @@
                     "optional": false,
                     "description": "",
                     "line": 12
-                },
+                }
+            ],
+            "indexSignatures": [],
+            "kind": 171,
+            "methods": [],
+            "extends": []
+        },
+        {
+            "name": "User",
+            "id": "interface-User-d4821beac0e4a852e513391b7470981c4353fdd95a18628bb68136c8695b489ee15b926e2e5031bc26cf30e1508e0a362c3ee13a06734702b4d15af140e485d5",
+            "file": "src/stories/user.ts",
+            "deprecated": false,
+            "deprecationMessage": "",
+            "type": "interface",
+            "sourceCode": "export interface User {\n  name: string;\n}\n",
+            "properties": [
                 {
-                    "name": "passwordConfirm",
+                    "name": "name",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "FormControl<string | null>",
+                    "type": "string",
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 13
+                    "line": 2
                 }
             ],
             "indexSignatures": [],
@@ -1121,8 +1111,160 @@
             "extends": []
         },
         {
+            "name": "LoginFormComponent",
+            "id": "component-LoginFormComponent-1fd7788d548de8a646bf0af6f8c4a1b09e5c6b0532ba2669776306fcc5210754385222960ab801cb63a9894adc0c94860b28d880f94ed46b0834f5bb27662bde",
+            "file": "src/app/components/login-form/login-form.component.ts",
+            "changeDetection": "ChangeDetectionStrategy.OnPush",
+            "encapsulation": [],
+            "entryComponents": [],
+            "inputs": [],
+            "outputs": [],
+            "providers": [],
+            "selector": "app-login-form",
+            "styleUrls": [],
+            "styles": [],
+            "templateUrl": [
+                "./login-form.component.html"
+            ],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [],
+            "outputsClass": [],
+            "propertiesClass": [
+                {
+                    "name": "authService",
+                    "defaultValue": "inject(AuthService)",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 24,
+                    "modifierKind": [
+                        123,
+                        148
+                    ]
+                },
+                {
+                    "name": "errorMessage$",
+                    "defaultValue": "new BehaviorSubject<string | null>(null)",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 45
+                },
+                {
+                    "name": "loginForm",
+                    "defaultValue": "new FormGroup<LoginFormType>({\n    email: new FormControl<string>('', {\n      nonNullable: true,\n      validators: [Validators.required, Validators.email],\n    }),\n    password: new FormControl<string>('', {\n      nonNullable: true,\n      validators: [Validators.required, Validators.minLength(6)],\n    }),\n    // passwordConfirm: new FormControl<string>('', {\n    //   nonNullable: true,\n    //   validators: [Validators.required],\n    // })\n  }, {\n    validators: MatchingPasswords('password', 'passwordConfirm'),\n    updateOn: 'blur'\n  })",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 27
+                },
+                {
+                    "name": "router",
+                    "defaultValue": "inject(Router)",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 25,
+                    "modifierKind": [
+                        123
+                    ]
+                }
+            ],
+            "methodsClass": [
+                {
+                    "name": "submitForm",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 80,
+                    "deprecated": false,
+                    "deprecationMessage": ""
+                }
+            ],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": true,
+            "imports": [
+                {
+                    "name": "CommonModule",
+                    "type": "module"
+                },
+                {
+                    "name": "FormsModule",
+                    "type": "module"
+                },
+                {
+                    "name": "ReactiveFormsModule",
+                    "type": "module"
+                }
+            ],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import { CommonModule } from '@angular/common';\nimport { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core';\nimport { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';\nimport { Router } from '@angular/router';\nimport { BehaviorSubject, take } from 'rxjs';\nimport { AuthService } from '../../auth/auth.service';\nimport { HttpErrorResponse } from '@angular/common/http';\nimport { MatchingPasswords } from '../../pages/register-page/matching-passwords.validator';\n\ninterface LoginFormType {\n  email: FormControl<string>;\n  password: FormControl<string>;\n  // passwordConfirm: FormControl<string>;\n}\n\n@Component({\n  selector: 'app-login-form',\n  standalone: true,\n  imports: [CommonModule, FormsModule, ReactiveFormsModule],\n  templateUrl: './login-form.component.html',\n  changeDetection: ChangeDetectionStrategy.OnPush,\n})\nexport class LoginFormComponent {\n  private readonly authService = inject(AuthService);\n  private router = inject(Router);\n\n  loginForm = new FormGroup<LoginFormType>({\n    email: new FormControl<string>('', {\n      nonNullable: true,\n      validators: [Validators.required, Validators.email],\n    }),\n    password: new FormControl<string>('', {\n      nonNullable: true,\n      validators: [Validators.required, Validators.minLength(6)],\n    }),\n    // passwordConfirm: new FormControl<string>('', {\n    //   nonNullable: true,\n    //   validators: [Validators.required],\n    // })\n  }, {\n    validators: MatchingPasswords('password', 'passwordConfirm'),\n    updateOn: 'blur'\n  })\n\n  errorMessage$ = new BehaviorSubject<string | null>(null);\n\n  get emailInvalidAndTouched(): boolean {\n    return (\n      this.loginForm.controls.email.invalid &&\n      this.loginForm.controls.email.touched\n    )\n  }\n\n  get fEmail(): FormControl {\n    return this.loginForm.controls.email;\n  }\n\n  get passwordInvalidAndTouched(): boolean {\n    return (\n      this.loginForm.controls.password.invalid &&\n      this.loginForm.controls.password.touched\n    )\n  }\n\n  get fPassword(): FormControl {\n    return this.loginForm.controls.password;\n  }\n\n  // get passwordConfirmInvalidAndTouched(): boolean {\n  //   return (\n  //     this.loginForm.controls.passwordConfirm.invalid &&\n  //     this.loginForm.controls.passwordConfirm.touched\n  //   )\n  // }\n\n  // get fPasswordConfirm(): FormControl {\n  //   return this.loginForm.controls.passwordConfirm;\n  // }\n\n  submitForm() {\n    if (this.loginForm.valid && this.loginForm.dirty) {\n      this.errorMessage$.next(null);\n      const { email, password } = this.loginForm.getRawValue();\n      this.authService.loginUser({ email, password }).pipe(take(1)).subscribe({\n        next: () => {\n          console.log(`[LoginFormComponent] submitForm - success`);\n          this.router.navigate(['/expenses']);\n        },\n        error: (err) => {\n          if (err instanceof HttpErrorResponse) {\n            this.errorMessage$.next(err.error.message);\n          } else {\n            this.errorMessage$.next('An error occurred. Please try again later.');\n          }\n          console.error(`[LoginFormComponent] submitForm - error: ${err?.message}`);\n        }\n      });\n    }\n  }\n}\n",
+            "assetsDirs": [],
+            "styleUrlsData": "",
+            "stylesData": "",
+            "extends": [],
+            "accessors": {
+                "emailInvalidAndTouched": {
+                    "name": "emailInvalidAndTouched",
+                    "getSignature": {
+                        "name": "emailInvalidAndTouched",
+                        "type": "boolean",
+                        "returnType": "boolean",
+                        "line": 47
+                    }
+                },
+                "fEmail": {
+                    "name": "fEmail",
+                    "getSignature": {
+                        "name": "fEmail",
+                        "type": "",
+                        "returnType": "FormControl",
+                        "line": 54
+                    }
+                },
+                "passwordInvalidAndTouched": {
+                    "name": "passwordInvalidAndTouched",
+                    "getSignature": {
+                        "name": "passwordInvalidAndTouched",
+                        "type": "boolean",
+                        "returnType": "boolean",
+                        "line": 58
+                    }
+                },
+                "fPassword": {
+                    "name": "fPassword",
+                    "getSignature": {
+                        "name": "fPassword",
+                        "type": "",
+                        "returnType": "FormControl",
+                        "line": 65
+                    }
+                }
+            },
+            "templateData": "<form [formGroup]=\"loginForm\" (ngSubmit)=\"submitForm()\">\n  <fieldset class=\"mb-4\">\n    <label for=\"email-input\" id=\"email-label\" class=\"flex flex-col gap-2 py-2\">\n      Email\n      <input type=\"email\" formControlName=\"email\" autocomplete=\"email\" id=\"email-input\" aria-labelledby=\"email-label\"\n        class=\"px-4 py-2 border border-slate-500 rounded-lg\" [ngClass]=\"{'border-red-500': emailInvalidAndTouched}\" />\n      <small *ngIf=\"fEmail.hasError('email') && fEmail.touched\" class=\"text-red-500\">Not a valid email address</small>\n      <small *ngIf=\"fEmail.hasError('required') && fEmail.touched\" class=\"text-red-500\">Email address is\n        required</small>\n    </label>\n    <label for=\"password-input\" id=\"password-label\" class=\"flex flex-col gap-2 py-2\">\n      Password\n      <input type=\"password\" formControlName=\"password\" autocomplete=\"current-password\" id=\"password-input\"\n        aria-labelledby=\"password-label\" class=\"px-4 py-2 border border-slate-500 rounded-lg\"\n        [ngClass]=\"{'border-red-500': passwordInvalidAndTouched}\" />\n      <small *ngIf=\"fPassword.hasError('required') && fPassword.touched\" class=\"text-red-500\">Password is\n        required</small>\n      <small *ngIf=\"fPassword.hasError('minlength') && fPassword.touched\" class=\"text-red-500\">Password must be at least\n        6 characters</small>\n    </label>\n    <!-- <label for=\"password-confirm-input\" id=\"password-confirm-label\"\n      class=\"flex flex-col gap-2 py-2\">\n      Confirm password\n      <input type=\"password\" formControlName=\"passwordConfirm\" id=\"password-confirm-input\"\n        aria-labelledby=\"password-confirm-label\" class=\"px-4 py-2 border border-slate-500 rounded-lg\"\n        [ngClass]=\"{'border-red-500': passwordConfirmInvalidAndTouched}\" />\n      <small *ngIf=\"fPasswordConfirm.hasError('required') && fPasswordConfirm.touched\" class=\"text-red-500\">Password is\n        required</small>\n      <small *ngIf=\"loginForm.hasError('passwordsMatch')\" class=\"text-red-500\">Passwords do not match!</small>\n    </label> -->\n  </fieldset>\n  <p *ngIf=\"errorMessage$ | async as err\" class=\"text-red-500\">{{ err }}</p>\n  <button type=\"submit\"\n    class=\"text-slate-950 bg-blue-300 hover:bg-blue-400 active:bg-blue-300 px-4 py-2 rounded-lg border-none\">Submit</button>\n</form>"
+        },
+        {
             "name": "LoginPageComponent",
-            "id": "component-LoginPageComponent-d30025fe9798acefa8b134931e1b8fc91e722d5dff42eb1ca20010e76e54661e1f468b710a9e832489f9726100ebc2097645e6e66c83acb8832192d02efeaed4",
+            "id": "component-LoginPageComponent-d1dd4c6ae93d55e802085e1e292272ae0db4732c880ca9e13df438bccea0118279aff73b49ebaedcbd84f2dbab5f642e0b6e725f18f693241fd77459800fea5f",
             "file": "src/app/pages/login-page/login-page.component.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -1148,19 +1290,22 @@
             "standalone": true,
             "imports": [
                 {
-                    "name": "UserFormComponent",
+                    "name": "LoginFormComponent",
                     "type": "component"
+                },
+                {
+                    "name": "RouterLink"
                 }
             ],
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { Component } from '@angular/core';\nimport { UserFormComponent } from \"../../components/user-form/user-form.component\";\n\n@Component({\n  selector: 'app-login-page',\n  standalone: true,\n  imports: [UserFormComponent],\n  templateUrl: './login-page.component.html'\n})\nexport class LoginPageComponent {}\n",
+            "sourceCode": "import { Component } from '@angular/core';\nimport { RouterLink } from '@angular/router';\nimport { LoginFormComponent } from \"../../components/login-form/login-form.component\";\n\n@Component({\n  selector: 'app-login-page',\n  standalone: true,\n  imports: [LoginFormComponent, RouterLink],\n  templateUrl: './login-page.component.html'\n})\nexport class LoginPageComponent {}\n",
             "assetsDirs": [],
             "styleUrlsData": "",
             "stylesData": "",
             "extends": [],
-            "templateData": "<main class=\"p-16 max-w-7xl mx-auto\">\n  <section>\n    <h1 class=\"text-3xl my-4\">Login To Expense Tracker app</h1>\n  </section>\n\n  <section>\n    <p>\n      Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam similique\n      ducimus id, adipisci eveniet cum facere enim, sint delectus voluptate\n      reprehenderit rerum fugit vitae illo! Quis cupiditate eum dignissimos\n      sint?\n    </p>\n  </section>\n\n  <section>\n    <app-user-form></app-user-form>\n  </section>\n</main>"
+            "templateData": "<main class=\"p-16 max-w-7xl mx-auto\">\n  <section>\n    <h1 class=\"text-3xl my-4\">Login To Expense Tracker app</h1>\n  </section>\n\n  <section>\n    <p>\n      Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam similique\n      ducimus id, adipisci eveniet cum facere enim, sint delectus voluptate\n      reprehenderit rerum fugit vitae illo! Quis cupiditate eum dignissimos\n      sint?\n    </p>\n  </section>\n\n  <section>\n    <app-login-form></app-login-form>\n  </section>\n\n  <div class=\"pt-8\">\n    <a routerLink=\"/register\" class=\"text-blue-500 hover:underline cursor-pointer\">Don't have an account? Register here</a>\n  </div>\n</main>"
         },
         {
             "name": "NavbarComponent",
@@ -1354,8 +1499,46 @@
             "extends": []
         },
         {
+            "name": "RegisterFormComponent",
+            "id": "component-RegisterFormComponent-b5a24e9d3efbc30f7902204f31b333ace87a24d3ded92e19210ee8f985ba678a87e21f876bf1231a61dbcc0ead3430513c041c17b1f9858f9303f20a48e80a89",
+            "file": "src/app/components/register-form/register-form.component.ts",
+            "encapsulation": [],
+            "entryComponents": [],
+            "inputs": [],
+            "outputs": [],
+            "providers": [],
+            "selector": "app-register-form",
+            "styleUrls": [],
+            "styles": [],
+            "templateUrl": [
+                "./register-form.component.html"
+            ],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [],
+            "outputsClass": [],
+            "propertiesClass": [],
+            "methodsClass": [],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": true,
+            "imports": [],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import { Component } from '@angular/core';\n\n@Component({\n  selector: 'app-register-form',\n  standalone: true,\n  imports: [],\n  templateUrl: './register-form.component.html',\n  styleUrl: './register-form.component.css'\n})\nexport class RegisterFormComponent {\n\n}\n",
+            "styleUrl": "./register-form.component.css",
+            "assetsDirs": [],
+            "styleUrlsData": "",
+            "stylesData": "",
+            "extends": [],
+            "templateData": "<p>register-form works!</p>\n"
+        },
+        {
             "name": "RegisterPageComponent",
-            "id": "component-RegisterPageComponent-56855e34d1ba462b80edb1f71cfb97671dde7f3f676924eaa9edf118dd3d85b07b786e23bb76053d1562e5ddc6fbc6c5d9052438142fe6ff0d9addb7bf292983",
+            "id": "component-RegisterPageComponent-b234d115a07f2a79e243cbdfce736a0f219a2fa6bf1b3693effb77958c8b0df8b179908caa05cb2ad0edf6c3fcf0b21d6bab822ea6ac44b1df2128a6122f09a6",
             "file": "src/app/pages/register-page/register-page.component.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -1381,190 +1564,18 @@
             "standalone": true,
             "imports": [
                 {
-                    "name": "UserFormComponent",
-                    "type": "component"
+                    "name": "RouterLink"
                 }
             ],
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { Component } from '@angular/core';\nimport { UserFormComponent } from \"../../components/user-form/user-form.component\";\n\n@Component({\n  selector: 'app-register-page',\n  standalone: true,\n  imports: [UserFormComponent],\n  templateUrl: './register-page.component.html'\n})\nexport class RegisterPageComponent { }\n",
+            "sourceCode": "import { Component } from '@angular/core';\nimport { RouterLink } from '@angular/router';\n\n@Component({\n  selector: 'app-register-page',\n  standalone: true,\n  imports: [RouterLink],\n  templateUrl: './register-page.component.html'\n})\nexport class RegisterPageComponent { }\n",
             "assetsDirs": [],
             "styleUrlsData": "",
             "stylesData": "",
             "extends": [],
-            "templateData": "<main class=\"p-16 max-w-7xl mx-auto\">\n  <section>\n    <h1 class=\"text-3xl my-4\">Register To Expense Tracker app</h1>\n  </section>\n\n  <section>\n    <p>\n      Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam similique\n      ducimus id, adipisci eveniet cum facere enim, sint delectus voluptate\n      reprehenderit rerum fugit vitae illo! Quis cupiditate eum dignissimos\n      sint?\n    </p>\n  </section>\n\n  <section>\n    <app-user-form [variant]=\"'register'\"></app-user-form>\n  </section>\n</main>\n"
-        },
-        {
-            "name": "UserFormComponent",
-            "id": "component-UserFormComponent-cfd36b296a6a397e5dbb56e980814e7c69557d7dc79fd29824e5885552107c022a17519f3628ad237a4136ca6843c12ee2215a695792723175060ce7c34a093e",
-            "file": "src/app/components/user-form/user-form.component.ts",
-            "changeDetection": "ChangeDetectionStrategy.OnPush",
-            "encapsulation": [],
-            "entryComponents": [],
-            "inputs": [],
-            "outputs": [],
-            "providers": [],
-            "selector": "app-user-form",
-            "styleUrls": [],
-            "styles": [],
-            "templateUrl": [
-                "./user-form.component.html"
-            ],
-            "viewProviders": [],
-            "hostDirectives": [],
-            "inputsClass": [
-                {
-                    "name": "variant",
-                    "defaultValue": "'login'",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "line": 27,
-                    "type": "\"login\" | \"register\"",
-                    "decorators": []
-                }
-            ],
-            "outputsClass": [],
-            "propertiesClass": [
-                {
-                    "name": "authService",
-                    "defaultValue": "inject(AuthService)",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 24,
-                    "modifierKind": [
-                        123,
-                        148
-                    ]
-                },
-                {
-                    "name": "errorMessage$",
-                    "defaultValue": "new BehaviorSubject<string | null>(null)",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 50
-                },
-                {
-                    "name": "router",
-                    "defaultValue": "inject(Router)",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 25,
-                    "modifierKind": [
-                        123
-                    ]
-                },
-                {
-                    "name": "userForm",
-                    "defaultValue": "new FormGroup<UserFormType>({\n    email: new FormControl<string>('', {\n      nonNullable: true,\n      validators: [Validators.required, Validators.email],\n    }),\n    password: new FormControl<string>('', {\n      nonNullable: true,\n      validators: [Validators.required, Validators.minLength(6)],\n    }),\n    passwordConfirm: new FormControl<string | null>('', {\n      nonNullable: this.isRegisterForm,\n      validators: [Validators.required],\n    })\n  },{\n    validators: matchingPasswords('password', 'passwordConfirm'),\n    updateOn: 'blur'\n  })",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 32
-                }
-            ],
-            "methodsClass": [
-                {
-                    "name": "submitForm",
-                    "args": [],
-                    "optional": false,
-                    "returnType": "void",
-                    "typeParameters": [],
-                    "line": 76,
-                    "deprecated": false,
-                    "deprecationMessage": ""
-                }
-            ],
-            "deprecated": false,
-            "deprecationMessage": "",
-            "hostBindings": [],
-            "hostListeners": [],
-            "standalone": true,
-            "imports": [
-                {
-                    "name": "CommonModule",
-                    "type": "module"
-                },
-                {
-                    "name": "FormsModule",
-                    "type": "module"
-                },
-                {
-                    "name": "ReactiveFormsModule",
-                    "type": "module"
-                }
-            ],
-            "description": "",
-            "rawdescription": "\n",
-            "type": "component",
-            "sourceCode": "import { CommonModule } from '@angular/common';\nimport { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core';\nimport { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';\nimport { Router } from '@angular/router';\nimport { BehaviorSubject, take } from 'rxjs';\nimport { AuthService } from '../../auth/auth.service';\nimport { HttpErrorResponse } from '@angular/common/http';\nimport { matchingPasswords } from '../../pages/register-page/matching-passwords.validator';\n\ninterface UserFormType {\n  email: FormControl<string>;\n  password: FormControl<string>;\n  passwordConfirm: FormControl<string | null>;\n}\n\n@Component({\n  selector: 'app-user-form',\n  standalone: true,\n  imports: [CommonModule, FormsModule, ReactiveFormsModule],\n  templateUrl: './user-form.component.html',\n  changeDetection: ChangeDetectionStrategy.OnPush,\n})\nexport class UserFormComponent {\n  private readonly authService = inject(AuthService);\n  private router = inject(Router);\n\n  @Input() variant: 'login' | 'register' = 'login'\n  get isRegisterForm() {\n    return this.variant === 'register'\n  }\n\n  userForm = new FormGroup<UserFormType>({\n    email: new FormControl<string>('', {\n      nonNullable: true,\n      validators: [Validators.required, Validators.email],\n    }),\n    password: new FormControl<string>('', {\n      nonNullable: true,\n      validators: [Validators.required, Validators.minLength(6)],\n    }),\n    passwordConfirm: new FormControl<string | null>('', {\n      nonNullable: this.isRegisterForm,\n      validators: [Validators.required],\n    })\n  },{\n    validators: matchingPasswords('password', 'passwordConfirm'),\n    updateOn: 'blur'\n  })\n\n  errorMessage$ = new BehaviorSubject<string | null>(null);\n\n  get emailInvalidAndTouched(): boolean {\n    return (\n      this.userForm.controls.email.invalid &&\n      this.userForm.controls.email.touched\n    )\n  }\n\n  get fEmail(): FormControl {\n    return this.userForm.controls.email;\n  }\n\n  get passwordInvalidAndTouched(): boolean {\n    return (\n      this.userForm.controls.password.invalid &&\n      this.userForm.controls.password.touched\n    )\n  }\n\n  get fPassword(): FormControl {\n    return this.userForm.controls.password;\n  }\n\n  // get passwordConfirmInvalidAndTouched(): boolean { }\n\n  submitForm() {\n    if (this.userForm.valid && this.userForm.dirty) {\n      this.errorMessage$.next(null);\n      const { email, password } = this.userForm.getRawValue();\n      this.authService.loginUser({ email, password }).pipe(take(1)).subscribe({\n        next: () => {\n          console.log(`[LoginFormComponent] submitForm - success`);\n          this.router.navigate(['/expenses']);\n        },\n        error: (err) => {\n          if (err instanceof HttpErrorResponse) {\n            this.errorMessage$.next(err.error.message);\n          } else {\n            this.errorMessage$.next('An error occurred. Please try again later.');\n          }\n          console.error(`[LoginFormComponent] submitForm - error: ${err?.message}`);\n        }\n      });\n    }\n  }\n}\n",
-            "assetsDirs": [],
-            "styleUrlsData": "",
-            "stylesData": "",
-            "extends": [],
-            "accessors": {
-                "isRegisterForm": {
-                    "name": "isRegisterForm",
-                    "getSignature": {
-                        "name": "isRegisterForm",
-                        "type": "",
-                        "returnType": "",
-                        "line": 28
-                    }
-                },
-                "emailInvalidAndTouched": {
-                    "name": "emailInvalidAndTouched",
-                    "getSignature": {
-                        "name": "emailInvalidAndTouched",
-                        "type": "boolean",
-                        "returnType": "boolean",
-                        "line": 52
-                    }
-                },
-                "fEmail": {
-                    "name": "fEmail",
-                    "getSignature": {
-                        "name": "fEmail",
-                        "type": "",
-                        "returnType": "FormControl",
-                        "line": 59
-                    }
-                },
-                "passwordInvalidAndTouched": {
-                    "name": "passwordInvalidAndTouched",
-                    "getSignature": {
-                        "name": "passwordInvalidAndTouched",
-                        "type": "boolean",
-                        "returnType": "boolean",
-                        "line": 63
-                    }
-                },
-                "fPassword": {
-                    "name": "fPassword",
-                    "getSignature": {
-                        "name": "fPassword",
-                        "type": "",
-                        "returnType": "FormControl",
-                        "line": 70
-                    }
-                }
-            },
-            "templateData": "<form [formGroup]=\"userForm\" (ngSubmit)=\"submitForm()\">\n  <fieldset class=\"mb-4\">\n    <label for=\"email-input\" id=\"email-label\" class=\"flex flex-col gap-2 py-2\">\n      Email\n      <input type=\"email\" formControlName=\"email\" autocomplete=\"email\" id=\"email-input\" aria-labelledby=\"email-label\"\n        class=\"px-4 py-2 border border-slate-500 rounded-lg\" [ngClass]=\"{'border-red-500': emailInvalidAndTouched}\" />\n        <small *ngIf=\"fEmail.hasError('email') && fEmail.touched\" class=\"text-red-500\">Not a valid email address</small>\n        <small *ngIf=\"fEmail.hasError('required') && fEmail.touched\" class=\"text-red-500\">Email address is required</small>\n    </label>\n    <label for=\"password-input\" id=\"password-label\" class=\"flex flex-col gap-2 py-2\">\n      Password\n      <input type=\"password\" formControlName=\"password\" autocomplete=\"current-password\" id=\"password-input\"\n        aria-labelledby=\"password-label\" class=\"px-4 py-2 border border-slate-500 rounded-lg\"\n        [ngClass]=\"{'border-red-500': passwordInvalidAndTouched}\" />\n        <small *ngIf=\"fPassword.hasError('required') && fPassword.touched\" class=\"text-red-500\">Password is required</small>\n        <small *ngIf=\"fPassword.hasError('minlength') && fPassword.touched\" class=\"text-red-500\">Password must be at least 6 characters</small>\n    </label>\n    <label *ngIf=\"isRegisterForm\" for=\"password-confirm-input\" id=\"password-confirm-label\" class=\"flex flex-col gap-2 py-2\">\n      Confirm password\n      <input type=\"password\" formControlName=\"password-confirm\" id=\"password-confirm-input\"\n        aria-labelledby=\"password-confirm-label\" class=\"px-4 py-2 border border-slate-500 rounded-lg\"\n        [ngClass]=\"{'border-red-500': passwordInvalidAndTouched}\" />\n        <!-- <small *ngIf=\"fPassword.hasError('required') && fPassword.touched\" class=\"text-red-500\">Password is required</small>\n        <small *ngIf=\"fPassword.hasError('minlength') && fPassword.touched\" class=\"text-red-500\">Password must be at least 6 characters</small> -->\n    </label>\n  </fieldset>\n  <p *ngIf=\"errorMessage$ | async as err\" class=\"text-red-500\">{{ err }}</p>\n  <button type=\"submit\" class=\"text-slate-950 bg-blue-300 hover:bg-blue-400 active:bg-blue-300 px-4 py-2 rounded-lg border-none\">Submit</button>\n</form>"
+            "templateData": "<main class=\"p-16 max-w-7xl mx-auto\">\n  <section>\n    <h1 class=\"text-3xl my-4\">Register To Expense Tracker app</h1>\n  </section>\n\n  <section>\n    <p>\n      Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam similique\n      ducimus id, adipisci eveniet cum facere enim, sint delectus voluptate\n      reprehenderit rerum fugit vitae illo! Quis cupiditate eum dignissimos\n      sint?\n    </p>\n  </section>\n\n  <section>\n  </section>\n\n  <div class=\"pt-8\">\n    <a routerLink=\"/login\" class=\"text-blue-500 hover:underline cursor-pointer\">Already have an account? Login here</a>\n  </div>\n</main>\n"
         }
     ],
     "modules": [],
@@ -1621,7 +1632,7 @@
                 "defaultValue": "'passwordsMatch'"
             },
             {
-                "name": "matchingPasswords",
+                "name": "MatchingPasswords",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
                 "file": "src/app/pages/register-page/matching-passwords.validator.ts",
@@ -1705,7 +1716,7 @@
                     "defaultValue": "'passwordsMatch'"
                 },
                 {
-                    "name": "matchingPasswords",
+                    "name": "MatchingPasswords",
                     "ctype": "miscellaneous",
                     "subtype": "variable",
                     "file": "src/app/pages/register-page/matching-passwords.validator.ts",
@@ -1823,6 +1834,24 @@
                 "status": "low"
             },
             {
+                "filePath": "src/app/components/login-form/login-form.component.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "LoginFormComponent",
+                "coveragePercent": 0,
+                "coverageCount": "0/6",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/components/login-form/login-form.component.ts",
+                "type": "interface",
+                "linktype": "interface",
+                "name": "LoginFormType",
+                "coveragePercent": 0,
+                "coverageCount": "0/3",
+                "status": "low"
+            },
+            {
                 "filePath": "src/app/components/navbar/navbar.component.ts",
                 "type": "component",
                 "linktype": "component",
@@ -1832,21 +1861,12 @@
                 "status": "low"
             },
             {
-                "filePath": "src/app/components/user-form/user-form.component.ts",
+                "filePath": "src/app/components/register-form/register-form.component.ts",
                 "type": "component",
                 "linktype": "component",
-                "name": "UserFormComponent",
+                "name": "RegisterFormComponent",
                 "coveragePercent": 0,
-                "coverageCount": "0/7",
-                "status": "low"
-            },
-            {
-                "filePath": "src/app/components/user-form/user-form.component.ts",
-                "type": "interface",
-                "linktype": "interface",
-                "name": "UserFormType",
-                "coveragePercent": 0,
-                "coverageCount": "0/4",
+                "coverageCount": "0/1",
                 "status": "low"
             },
             {
@@ -1900,7 +1920,7 @@
                 "type": "variable",
                 "linktype": "miscellaneous",
                 "linksubtype": "variable",
-                "name": "matchingPasswords",
+                "name": "MatchingPasswords",
                 "coveragePercent": 0,
                 "coverageCount": "0/1",
                 "status": "low"

@@ -1,4 +1,4 @@
-<form [formGroup]="userForm" (ngSubmit)="submitForm()">
+<form [formGroup]="loginForm" (ngSubmit)="submitForm()">
   <fieldset class="mb-4">
     <label for="email-input" id="email-label" class="flex flex-col gap-2 py-2">
       Email
@@ -18,7 +18,7 @@
       <small *ngIf="fPassword.hasError('minlength') && fPassword.touched" class="text-red-500">Password must be at least
         6 characters</small>
     </label>
-    <label *ngIf="isRegisterForm" for="password-confirm-input" id="password-confirm-label"
+    <!-- <label for="password-confirm-input" id="password-confirm-label"
       class="flex flex-col gap-2 py-2">
       Confirm password
       <input type="password" formControlName="passwordConfirm" id="password-confirm-input"
@@ -26,8 +26,8 @@
         [ngClass]="{'border-red-500': passwordConfirmInvalidAndTouched}" />
       <small *ngIf="fPasswordConfirm.hasError('required') && fPasswordConfirm.touched" class="text-red-500">Password is
         required</small>
-      <small *ngIf="userForm.hasError('passwordsMatch')" class="text-red-500">Passwords do not match!</small>
-    </label>
+      <small *ngIf="loginForm.hasError('passwordsMatch')" class="text-red-500">Passwords do not match!</small>
+    </label> -->
   </fieldset>
   <p *ngIf="errorMessage$ | async as err" class="text-red-500">{{ err }}</p>
   <button type="submit"

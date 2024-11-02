@@ -7,29 +7,24 @@ import { AuthService } from '../../auth/auth.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatchingPasswords } from '../../pages/register-page/matching-passwords.validator';
 
-interface UserFormType {
+interface LoginFormType {
   email: FormControl<string>;
   password: FormControl<string>;
-  passwordConfirm: FormControl<string>;
+  // passwordConfirm: FormControl<string>;
 }
 
 @Component({
-  selector: 'app-user-form',
+  selector: 'app-login-form',
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule],
-  templateUrl: './user-form.component.html',
+  templateUrl: './login-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UserFormComponent {
+export class LoginFormComponent {
   private readonly authService = inject(AuthService);
   private router = inject(Router);
 
-  @Input() variant: 'login' | 'register' = 'login'
-  get isRegisterForm() {
-    return this.variant === 'register'
-  }
-
-  userForm = new FormGroup<UserFormType>({
+  loginForm = new FormGroup<LoginFormType>({
     email: new FormControl<string>('', {
       nonNullable: true,
       validators: [Validators.required, Validators.email],
@@ -38,54 +33,56 @@ export class UserFormComponent {
       nonNullable: true,
       validators: [Validators.required, Validators.minLength(6)],
     }),
-    passwordConfirm: new FormControl<string>('', {
-      nonNullable: true,
-      validators: [Validators.required],
-    })
-  }, {
-    validators: MatchingPasswords('password', 'passwordConfirm'),
-    updateOn: 'blur'
-  })
+    // passwordConfirm: new FormControl<string>('', {
+    //   nonNullable: true,
+    //   validators: [Validators.required],
+    // })
+  }
+  // , {
+  //   validators: MatchingPasswords('password', 'passwordConfirm'),
+  //   updateOn: 'blur'
+  // }
+)
 
   errorMessage$ = new BehaviorSubject<string | null>(null);
 
   get emailInvalidAndTouched(): boolean {
     return (
-      this.userForm.controls.email.invalid &&
-      this.userForm.controls.email.touched
+      this.loginForm.controls.email.invalid &&
+      this.loginForm.controls.email.touched
     )
   }
 
   get fEmail(): FormControl {
-    return this.userForm.controls.email;
+    return this.loginForm.controls.email;
   }
 
   get passwordInvalidAndTouched(): boolean {
     return (
-      this.userForm.controls.password.invalid &&
-      this.userForm.controls.password.touched
+      this.loginForm.controls.password.invalid &&
+      this.loginForm.controls.password.touched
     )
   }
 
   get fPassword(): FormControl {
-    return this.userForm.controls.password;
+    return this.loginForm.controls.password;
   }
 
-  get passwordConfirmInvalidAndTouched(): boolean {
-    return (
-      this.userForm.controls.passwordConfirm.invalid &&
-      this.userForm.controls.passwordConfirm.touched
-    )
-  }
+  // get passwordConfirmInvalidAndTouched(): boolean {
+  //   return (
+  //     this.loginForm.controls.passwordConfirm.invalid &&
+  //     this.loginForm.controls.passwordConfirm.touched
+  //   )
+  // }
 
-  get fPasswordConfirm(): FormControl {
-    return this.userForm.controls.passwordConfirm;
-  }
+  // get fPasswordConfirm(): FormControl {
+  //   return this.loginForm.controls.passwordConfirm;
+  // }
 
   submitForm() {
-    if (this.userForm.valid && this.userForm.dirty) {
+    if (this.loginForm.valid && this.loginForm.dirty) {
       this.errorMessage$.next(null);
-      const { email, password } = this.userForm.getRawValue();
+      const { email, password } = this.loginForm.getRawValue();
       this.authService.loginUser({ email, password }).pipe(take(1)).subscribe({
         next: () => {
           console.log(`[LoginFormComponent] submitForm - success`);
