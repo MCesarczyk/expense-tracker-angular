@@ -1,0 +1,18 @@
+<nav class="bg-slate-800 p-4 w-full shadow-md flex items-center justify-between h-20">
+  <h1 class="capitalize text-white text-3xl my-auto">
+    expense tracker
+  </h1>
+  <div class="flex items-center gap-4">
+    <ng-container *ngIf="user$ | async as user; else login">
+      <span class="text-white">
+        Hello, {{ user.email }}!
+      </span>
+      <button (click)="logout()" class="bg-green-500 text-white p-2 rounded">
+        Log out
+      </button>
+    </ng-container>
+    <ng-template #login>
+      <a href="#" class="text-white" [routerLink]="['/login']">Log in</a>
+    </ng-template>
+  </div>
+</nav>

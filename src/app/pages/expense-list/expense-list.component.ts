@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { ExpenseService } from '../services/expense.service';
+import { ExpenseService } from '../../expense/expense.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { NavbarComponent } from "../navbar/navbar.component"
 @Component({
     selector: 'app-expense-list',
     standalone: true,
-    imports: [CommonModule, FormsModule, NavbarComponent],
+    imports: [CommonModule, FormsModule],
     templateUrl: './expense-list.component.html',
     styleUrl: './expense-list.component.less'
 })

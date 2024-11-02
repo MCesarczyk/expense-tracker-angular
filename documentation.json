@@ -1,0 +1,1889 @@
+{
+    "pipes": [],
+    "interfaces": [
+        {
+            "name": "Expense",
+            "id": "interface-Expense-96cec9403b2d02eefa7dabff0ada8802306f9911340d67088d63af10b87e7883453331852fdec20c3b81b651b7af74f871452230439074707d586ecf4c72dd54",
+            "file": "src/app/expense/expense.service.ts",
+            "deprecated": false,
+            "deprecationMessage": "",
+            "type": "interface",
+            "sourceCode": "import { Injectable } from '@angular/core';\nimport { BehaviorSubject } from 'rxjs';\n\ninterface Expense {\n    name: string;\n    amount: number;\n    category: string;\n    account: string;\n}\n\n@Injectable({\n    providedIn: 'root'\n})\nexport class ExpenseService {\n    private expensesKey = 'expenses';\n    private expenses = new BehaviorSubject<Expense[]>(this.getExpenses());\n    expenses$ = this.expenses.asObservable();\n\n    private getExpenses(): Expense[] {\n        try {\n            const savedExpenses = localStorage.getItem(this.expensesKey);\n            return savedExpenses ? JSON.parse(savedExpenses) : [];\n        } catch (error) {\n            console.error('Failed to parse expenses from localStorage', error);\n            return [];\n        }\n    }\n\n    private saveExpenses(expenses: Expense[]) {\n        try {\n            localStorage.setItem(this.expensesKey, JSON.stringify(expenses));\n        } catch (error) {\n            console.error('Failed to save expenses to localStorage', error);\n        }\n    }\n\n    addExpense(expense: Expense) {\n        const currentExpenses = this.expenses.value;\n        currentExpenses.push(expense);\n        this.saveExpenses(currentExpenses);\n        this.expenses.next([...currentExpenses]);\n    }\n\n\n    deleteExpense(index: number) {\n        const currentExpenses = this.expenses.value;\n        if (index >= 0 && index < currentExpenses.length) {\n            currentExpenses.splice(index, 1);\n            this.saveExpenses(currentExpenses);\n            this.expenses.next([...currentExpenses]);\n        } else {\n            console.error('Invalid index for deletion');\n        }\n    }\n}\n",
+            "properties": [
+                {
+                    "name": "account",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 8
+                },
+                {
+                    "name": "amount",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "number",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 6
+                },
+                {
+                    "name": "category",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 7
+                },
+                {
+                    "name": "name",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 5
+                }
+            ],
+            "indexSignatures": [],
+            "kind": 171,
+            "methods": [],
+            "extends": []
+        },
+        {
+            "name": "IAccessTokenPayload",
+            "id": "interface-IAccessTokenPayload-7ec54f2e0f247f495497ac72c8f227bad55fd1a91f02d0d471021478883f759f435d89d329313a9287b3f8b605521c8797c5275aa3c38bb7bde42fc7ff46ef95",
+            "file": "src/app/auth/interfaces/token-payload.interface.ts",
+            "deprecated": false,
+            "deprecationMessage": "",
+            "type": "interface",
+            "sourceCode": "export interface IAccessTokenPayload {\n  email: string;\n  sub: string;\n  [key: string]: string | number | boolean | unknown;\n}\n",
+            "properties": [
+                {
+                    "name": "email",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 2
+                },
+                {
+                    "name": "sub",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 3
+                }
+            ],
+            "indexSignatures": [
+                {
+                    "id": "index-declaration-7ec54f2e0f247f495497ac72c8f227bad55fd1a91f02d0d471021478883f759f435d89d329313a9287b3f8b605521c8797c5275aa3c38bb7bde42fc7ff46ef95",
+                    "args": [
+                        {
+                            "name": "key",
+                            "type": "string",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "returnType": "string | number | boolean | ",
+                    "line": 3,
+                    "deprecated": false,
+                    "deprecationMessage": ""
+                }
+            ],
+            "kind": 181,
+            "methods": [],
+            "extends": []
+        },
+        {
+            "name": "ILoginPayload",
+            "id": "interface-ILoginPayload-d2362d5df4f38931f48d796506f589a83a4d1fc0c97d21c1da9e3268e8c6e54a2a135bc70c9358088192ea05a3b4bfda19982346804102069f5ffbeb1bd4753e",
+            "file": "src/app/auth/interfaces/login-payload.interface.ts",
+            "deprecated": false,
+            "deprecationMessage": "",
+            "type": "interface",
+            "sourceCode": "export interface ILoginPayload {\n  email: string;\n  password: string;\n}\n",
+            "properties": [
+                {
+                    "name": "email",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 2
+                },
+                {
+                    "name": "password",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 3
+                }
+            ],
+            "indexSignatures": [],
+            "kind": 171,
+            "methods": [],
+            "extends": []
+        },
+        {
+            "name": "ITokenResponse",
+            "id": "interface-ITokenResponse-3384a38619d1596108fbffb15d7e9a0f6adf1f3833d47965a53ffcc13156f92d259860c8b1406e2b29efc4f4d3a3afe6219f4d9cb16f5336eeafd771e6d99dff",
+            "file": "src/app/auth/interfaces/token-response.interface.ts",
+            "deprecated": false,
+            "deprecationMessage": "",
+            "type": "interface",
+            "sourceCode": "export interface ITokenResponse {\n  access_token: string;\n}\n",
+            "properties": [
+                {
+                    "name": "access_token",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 2
+                }
+            ],
+            "indexSignatures": [],
+            "kind": 171,
+            "methods": [],
+            "extends": []
+        },
+        {
+            "name": "LoginFormType",
+            "id": "interface-LoginFormType-2b014c815692714eb8c11092844a5316ad14241040425be36bbf1e2a9b83ddc2713375ced46675e3c746fa113b828389cad856d95a85ecc341d4a53b5bc44fac",
+            "file": "src/app/components/login-form/login-form.component.ts",
+            "deprecated": false,
+            "deprecationMessage": "",
+            "type": "interface",
+            "sourceCode": "import { CommonModule } from '@angular/common';\nimport { ChangeDetectionStrategy, Component, inject } from '@angular/core';\nimport { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';\nimport { Router } from '@angular/router';\nimport { take } from 'rxjs';\nimport { AuthService } from '../../auth/auth.service';\n\ninterface LoginFormType {\n  email: FormControl<string>;\n  password: FormControl<string>;\n}\n\n@Component({\n  selector: 'app-login-form',\n  standalone: true,\n  imports: [CommonModule, FormsModule, ReactiveFormsModule],\n  templateUrl: './login-form.component.html',\n  changeDetection: ChangeDetectionStrategy.OnPush,\n})\nexport class LoginFormComponent {\n  private readonly authService = inject(AuthService);\n  private router = inject(Router);\n\n  loginForm = new FormGroup<LoginFormType>({\n    email: new FormControl<string>('', {\n      nonNullable: true,\n      validators: [Validators.required, Validators.email],\n    }),\n    password: new FormControl<string>('', {\n      nonNullable: true,\n      validators: [Validators.required, Validators.minLength(6)],\n    }),\n  })\n\n  get emailInvalidAndTouched(): boolean {\n    return (\n      this.loginForm.controls.email.invalid &&\n      this.loginForm.controls.email.touched\n    )\n  }\n\n  get fEmail(): FormControl {\n    return this.loginForm.controls.email;\n  }\n\n  get passwordInvalidAndTouched(): boolean {\n    return (\n      this.loginForm.controls.password.invalid &&\n      this.loginForm.controls.password.touched\n    )\n  }\n\n  get fPassword(): FormControl {\n    return this.loginForm.controls.password;\n  }\n\n  submitForm() {\n    if (this.loginForm.valid && this.loginForm.dirty) {\n      const { email, password } = this.loginForm.getRawValue();\n      this.authService.loginUser({ email, password }).pipe(take(1)).subscribe({\n        next: () => {\n          this.router.navigate(['/expenses']);\n        },\n        error: (err) => {\n          console.error(`[LoginFormComponent] submitForm - error: ${err?.message}`);\n        }\n      });\n    }\n  }\n}\n",
+            "properties": [
+                {
+                    "name": "email",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "FormControl<string>",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 9
+                },
+                {
+                    "name": "password",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "FormControl<string>",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 10
+                }
+            ],
+            "indexSignatures": [],
+            "kind": 171,
+            "methods": [],
+            "extends": []
+        },
+        {
+            "name": "User",
+            "id": "interface-User-d4821beac0e4a852e513391b7470981c4353fdd95a18628bb68136c8695b489ee15b926e2e5031bc26cf30e1508e0a362c3ee13a06734702b4d15af140e485d5",
+            "file": "src/stories/user.ts",
+            "deprecated": false,
+            "deprecationMessage": "",
+            "type": "interface",
+            "sourceCode": "export interface User {\n  name: string;\n}\n",
+            "properties": [
+                {
+                    "name": "name",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 2
+                }
+            ],
+            "indexSignatures": [],
+            "kind": 171,
+            "methods": [],
+            "extends": []
+        }
+    ],
+    "injectables": [
+        {
+            "name": "AuthService",
+            "id": "injectable-AuthService-096e2ccfebb8633eeab409122ea84c6948d6a3b14c2c10a2083553b604a55aa92ae0a9647bd9cc990ecb50faaa2e1af48149fe50e8ee1bae65b5045887eca99b",
+            "file": "src/app/auth/auth.service.ts",
+            "properties": [
+                {
+                    "name": "accessToken$",
+                    "defaultValue": "this.accessToken$$.pipe()",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 19
+                },
+                {
+                    "name": "accessToken$$",
+                    "defaultValue": "new BehaviorSubject<string | null>(null)",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 16,
+                    "modifierKind": [
+                        123
+                    ]
+                },
+                {
+                    "name": "baseUrl",
+                    "defaultValue": "envs.getApiUrl()",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 14,
+                    "modifierKind": [
+                        123,
+                        148
+                    ]
+                },
+                {
+                    "name": "http",
+                    "defaultValue": "inject(HttpClient)",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 13,
+                    "modifierKind": [
+                        123,
+                        148
+                    ]
+                },
+                {
+                    "name": "userData$",
+                    "defaultValue": "this.userData$$.pipe()",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 20
+                },
+                {
+                    "name": "userData$$",
+                    "defaultValue": "new BehaviorSubject<IAccessTokenPayload | null>(null)",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 17,
+                    "modifierKind": [
+                        123
+                    ]
+                }
+            ],
+            "methods": [
+                {
+                    "name": "decodeToken",
+                    "args": [
+                        {
+                            "name": "token",
+                            "type": "string",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "IAccessTokenPayload | null",
+                    "typeParameters": [],
+                    "line": 61,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "modifierKind": [
+                        123
+                    ],
+                    "jsdoctags": [
+                        {
+                            "name": "token",
+                            "type": "string",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "isTokenExpired",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "boolean",
+                    "typeParameters": [],
+                    "line": 53,
+                    "deprecated": false,
+                    "deprecationMessage": ""
+                },
+                {
+                    "name": "loadToken",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 32,
+                    "deprecated": false,
+                    "deprecationMessage": ""
+                },
+                {
+                    "name": "loginUser",
+                    "args": [
+                        {
+                            "name": "data",
+                            "type": "ILoginPayload",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "Observable<ITokenResponse>",
+                    "typeParameters": [],
+                    "line": 41,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "jsdoctags": [
+                        {
+                            "name": "data",
+                            "type": "ILoginPayload",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "logoutUser",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 48,
+                    "deprecated": false,
+                    "deprecationMessage": ""
+                },
+                {
+                    "name": "removeToken",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 27,
+                    "deprecated": false,
+                    "deprecationMessage": ""
+                },
+                {
+                    "name": "setToken",
+                    "args": [
+                        {
+                            "name": "val",
+                            "type": "string",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 22,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "jsdoctags": [
+                        {
+                            "name": "val",
+                            "type": "string",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "description": "",
+            "rawdescription": "\n",
+            "sourceCode": "import { HttpClient } from '@angular/common/http';\nimport { inject, Injectable } from '@angular/core';\nimport { BehaviorSubject, Observable, tap } from 'rxjs';\nimport * as jwt_decode from 'jwt-decode';\nimport { TOKEN_STORAGE_KEY } from './constants';\nimport { IAccessTokenPayload, ILoginPayload, ITokenResponse } from './interfaces';\nimport { envs } from '../shared/envs';\n\n@Injectable({\n  providedIn: 'root'\n})\nexport class AuthService {\n  private readonly http = inject(HttpClient);\n  private readonly baseUrl = envs.getApiUrl();\n\n  private accessToken$$ = new BehaviorSubject<string | null>(null);\n  private userData$$ = new BehaviorSubject<IAccessTokenPayload | null>(null);\n\n  accessToken$ = this.accessToken$$.pipe();\n  userData$ = this.userData$$.pipe();\n\n  setToken(val: string) {\n    this.accessToken$$.next(null);\n    localStorage.setItem(TOKEN_STORAGE_KEY, val);\n  }\n\n  removeToken() {\n    this.accessToken$$.next(null);\n    localStorage.removeItem(TOKEN_STORAGE_KEY);\n  }\n\n  loadToken() {\n    console.log(`JwtTokenService#loadToken`);\n    const token = localStorage.getItem(TOKEN_STORAGE_KEY);\n    console.log(`JwtTokenService#loadToken - token: ${token}`);\n    if (token) {\n      this.accessToken$$.next(token);\n    }\n  }\n\n  loginUser(data: ILoginPayload): Observable<ITokenResponse> {\n    return this.http.post<ITokenResponse>(`${this.baseUrl}/auth/login`, data).pipe(tap(({access_token}) => {\n      this.setToken(access_token);\n      this.userData$$.next(this.decodeToken(access_token));\n    }));\n  }\n\n  logoutUser() {\n    this.removeToken();\n    this.userData$$.next(null);\n  }\n\n  isTokenExpired(): boolean {\n    const expiryTime = this.userData$$.value?.['exp'];\n    if (expiryTime) {\n      return 1000 * +expiryTime - new Date().getTime() < 5000;\n    }\n    return false;\n  }\n\n  private decodeToken(token: string): IAccessTokenPayload | null {\n    if (token) {\n      return jwt_decode.jwtDecode<IAccessTokenPayload>(token);\n    }\n    return null;\n  }\n}\n",
+            "extends": [],
+            "type": "injectable"
+        },
+        {
+            "name": "ExpenseService",
+            "id": "injectable-ExpenseService-96cec9403b2d02eefa7dabff0ada8802306f9911340d67088d63af10b87e7883453331852fdec20c3b81b651b7af74f871452230439074707d586ecf4c72dd54",
+            "file": "src/app/expense/expense.service.ts",
+            "properties": [
+                {
+                    "name": "expenses",
+                    "defaultValue": "new BehaviorSubject<Expense[]>(this.getExpenses())",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 16,
+                    "modifierKind": [
+                        123
+                    ]
+                },
+                {
+                    "name": "expenses$",
+                    "defaultValue": "this.expenses.asObservable()",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 17
+                },
+                {
+                    "name": "expensesKey",
+                    "defaultValue": "'expenses'",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 15,
+                    "modifierKind": [
+                        123
+                    ]
+                }
+            ],
+            "methods": [
+                {
+                    "name": "addExpense",
+                    "args": [
+                        {
+                            "name": "expense",
+                            "type": "Expense",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 37,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "jsdoctags": [
+                        {
+                            "name": "expense",
+                            "type": "Expense",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "deleteExpense",
+                    "args": [
+                        {
+                            "name": "index",
+                            "type": "number",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 45,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "jsdoctags": [
+                        {
+                            "name": "index",
+                            "type": "number",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "getExpenses",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "Expense[]",
+                    "typeParameters": [],
+                    "line": 19,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "modifierKind": [
+                        123
+                    ]
+                },
+                {
+                    "name": "saveExpenses",
+                    "args": [
+                        {
+                            "name": "expenses",
+                            "type": "Expense[]",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 29,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "modifierKind": [
+                        123
+                    ],
+                    "jsdoctags": [
+                        {
+                            "name": "expenses",
+                            "type": "Expense[]",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "description": "",
+            "rawdescription": "\n",
+            "sourceCode": "import { Injectable } from '@angular/core';\nimport { BehaviorSubject } from 'rxjs';\n\ninterface Expense {\n    name: string;\n    amount: number;\n    category: string;\n    account: string;\n}\n\n@Injectable({\n    providedIn: 'root'\n})\nexport class ExpenseService {\n    private expensesKey = 'expenses';\n    private expenses = new BehaviorSubject<Expense[]>(this.getExpenses());\n    expenses$ = this.expenses.asObservable();\n\n    private getExpenses(): Expense[] {\n        try {\n            const savedExpenses = localStorage.getItem(this.expensesKey);\n            return savedExpenses ? JSON.parse(savedExpenses) : [];\n        } catch (error) {\n            console.error('Failed to parse expenses from localStorage', error);\n            return [];\n        }\n    }\n\n    private saveExpenses(expenses: Expense[]) {\n        try {\n            localStorage.setItem(this.expensesKey, JSON.stringify(expenses));\n        } catch (error) {\n            console.error('Failed to save expenses to localStorage', error);\n        }\n    }\n\n    addExpense(expense: Expense) {\n        const currentExpenses = this.expenses.value;\n        currentExpenses.push(expense);\n        this.saveExpenses(currentExpenses);\n        this.expenses.next([...currentExpenses]);\n    }\n\n\n    deleteExpense(index: number) {\n        const currentExpenses = this.expenses.value;\n        if (index >= 0 && index < currentExpenses.length) {\n            currentExpenses.splice(index, 1);\n            this.saveExpenses(currentExpenses);\n            this.expenses.next([...currentExpenses]);\n        } else {\n            console.error('Invalid index for deletion');\n        }\n    }\n}\n",
+            "extends": [],
+            "type": "injectable"
+        },
+        {
+            "name": "UserService",
+            "id": "injectable-UserService-bef24bb4c35271eb0bfed0f41cdc82f8c3d9ebe2501181377c84364ff6b001ac8e870bc5822aca55be3a13c7ee7180dc8e71bcf8de4810297736e4edb77fa817",
+            "file": "src/app/user/user.service.ts",
+            "properties": [],
+            "methods": [],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "description": "",
+            "rawdescription": "\n",
+            "sourceCode": "import { Injectable } from '@angular/core';\n\n@Injectable({\n  providedIn: 'root'\n})\nexport class UserService {\n\n  constructor() { }\n}\n",
+            "constructorObj": {
+                "name": "constructor",
+                "description": "",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "args": [],
+                "line": 6
+            },
+            "extends": [],
+            "type": "injectable"
+        }
+    ],
+    "guards": [],
+    "interceptors": [],
+    "classes": [],
+    "directives": [],
+    "components": [
+        {
+            "name": "AppComponent",
+            "id": "component-AppComponent-fc79be78bbc05a9bad7ed035424ec49665be441a556226877d99698508c38790b96df30bf5c134428198e3b86fe2716b903b1d86024166aab2c375ce7b276870",
+            "file": "src/app/app.component.ts",
+            "encapsulation": [],
+            "entryComponents": [],
+            "inputs": [],
+            "outputs": [],
+            "providers": [],
+            "selector": "app-root",
+            "styleUrls": [],
+            "styles": [],
+            "templateUrl": [
+                "./app.component.html"
+            ],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [],
+            "outputsClass": [],
+            "propertiesClass": [
+                {
+                    "name": "title",
+                    "defaultValue": "'expense-tracker'",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 11
+                }
+            ],
+            "methodsClass": [],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": true,
+            "imports": [
+                {
+                    "name": "RouterOutlet"
+                }
+            ],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import { Component } from '@angular/core';\nimport { RouterOutlet } from '@angular/router';\n\n@Component({\n    selector: 'app-root',\n    standalone: true,\n    imports: [RouterOutlet],\n    templateUrl: './app.component.html',\n})\nexport class AppComponent {\n    title = 'expense-tracker';\n}\n",
+            "assetsDirs": [],
+            "styleUrlsData": "",
+            "stylesData": "",
+            "extends": [],
+            "templateData": "<router-outlet></router-outlet>\n"
+        },
+        {
+            "name": "ButtonComponent",
+            "id": "component-ButtonComponent-d7bf0323e6da130e2609e2af0117b4a8d7cd874132206af50bf43dfc37044485fe50f2867ea76525730dd195b9b95a43802a12dadc6ad5cd7bf2faa07f19f0da",
+            "file": "src/stories/button.component.ts",
+            "encapsulation": [],
+            "entryComponents": [],
+            "inputs": [],
+            "outputs": [],
+            "providers": [],
+            "selector": "storybook-button",
+            "styleUrls": [
+                "./button.css"
+            ],
+            "styles": [],
+            "template": " <button  type=\"button\"\n  (click)=\"onClick.emit($event)\"\n  [ngClass]=\"classes\"\n  [ngStyle]=\"{ 'background-color': backgroundColor }\"\n>\n  {{ label }}\n</button>",
+            "templateUrl": [],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [
+                {
+                    "name": "backgroundColor",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "rawdescription": "\nWhat background color to use",
+                    "description": "<p>What background color to use</p>\n",
+                    "line": 25,
+                    "type": "string",
+                    "decorators": []
+                },
+                {
+                    "name": "label",
+                    "defaultValue": "'Button'",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "jsdoctags": [
+                        {
+                            "pos": 760,
+                            "end": 773,
+                            "kind": 327,
+                            "id": 0,
+                            "flags": 16842752,
+                            "modifierFlagsCache": 0,
+                            "transformFlags": 0,
+                            "tagName": {
+                                "pos": 761,
+                                "end": 769,
+                                "kind": 80,
+                                "id": 0,
+                                "flags": 16842752,
+                                "transformFlags": 0,
+                                "escapedText": "required"
+                            },
+                            "comment": ""
+                        }
+                    ],
+                    "rawdescription": "\n\nButton contents\n\n",
+                    "description": "<p>Button contents</p>\n",
+                    "line": 37,
+                    "type": "string",
+                    "decorators": []
+                },
+                {
+                    "name": "primary",
+                    "defaultValue": "false",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "rawdescription": "\nIs this the principal call to action on the page?",
+                    "description": "<p>Is this the principal call to action on the page?</p>\n",
+                    "line": 21,
+                    "type": "boolean",
+                    "decorators": []
+                },
+                {
+                    "name": "size",
+                    "defaultValue": "'medium'",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "rawdescription": "\nHow large should the button be?",
+                    "description": "<p>How large should the button be?</p>\n",
+                    "line": 29,
+                    "type": "\"small\" | \"medium\" | \"large\"",
+                    "decorators": []
+                }
+            ],
+            "outputsClass": [
+                {
+                    "name": "onClick",
+                    "defaultValue": "new EventEmitter<Event>()",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "rawdescription": "\nOptional click handler",
+                    "description": "<p>Optional click handler</p>\n",
+                    "line": 41,
+                    "type": "EventEmitter"
+                }
+            ],
+            "propertiesClass": [],
+            "methodsClass": [],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": true,
+            "imports": [
+                {
+                    "name": "CommonModule",
+                    "type": "module"
+                }
+            ],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import { CommonModule } from '@angular/common';\nimport { Component, Input, Output, EventEmitter } from '@angular/core';\n\n@Component({\n  selector: 'storybook-button',\n  standalone: true,\n  imports: [CommonModule],\n  template: ` <button\n  type=\"button\"\n  (click)=\"onClick.emit($event)\"\n  [ngClass]=\"classes\"\n  [ngStyle]=\"{ 'background-color': backgroundColor }\"\n>\n  {{ label }}\n</button>`,\n  styleUrls: ['./button.css'],\n})\nexport class ButtonComponent {\n  /** Is this the principal call to action on the page? */\n  @Input()\n  primary = false;\n\n  /** What background color to use */\n  @Input()\n  backgroundColor?: string;\n\n  /** How large should the button be? */\n  @Input()\n  size: 'small' | 'medium' | 'large' = 'medium';\n\n  /**\n   * Button contents\n   *\n   * @required\n   */\n  @Input()\n  label = 'Button';\n\n  /** Optional click handler */\n  @Output()\n  onClick = new EventEmitter<Event>();\n\n  public get classes(): string[] {\n    const mode = this.primary ? 'storybook-button--primary' : 'storybook-button--secondary';\n\n    return ['storybook-button', `storybook-button--${this.size}`, mode];\n  }\n}\n",
+            "assetsDirs": [],
+            "styleUrlsData": [
+                {
+                    "data": ".storybook-button {\n  display: inline-block;\n  cursor: pointer;\n  border: 0;\n  border-radius: 3em;\n  font-weight: 700;\n  line-height: 1;\n  font-family: 'Nunito Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;\n}\n.storybook-button--primary {\n  background-color: #1ea7fd;\n  color: white;\n}\n.storybook-button--secondary {\n  box-shadow: rgba(0, 0, 0, 0.15) 0px 0px 0px 1px inset;\n  background-color: transparent;\n  color: #333;\n}\n.storybook-button--small {\n  padding: 10px 16px;\n  font-size: 12px;\n}\n.storybook-button--medium {\n  padding: 11px 20px;\n  font-size: 14px;\n}\n.storybook-button--large {\n  padding: 12px 24px;\n  font-size: 16px;\n}\n",
+                    "styleUrl": "./button.css"
+                }
+            ],
+            "stylesData": "",
+            "extends": [],
+            "accessors": {
+                "classes": {
+                    "name": "classes",
+                    "getSignature": {
+                        "name": "classes",
+                        "type": "[]",
+                        "returnType": "string[]",
+                        "line": 43
+                    }
+                }
+            }
+        },
+        {
+            "name": "ExpenseListComponent",
+            "id": "component-ExpenseListComponent-e52076757968a750045869edfd260146338bcbd3495ca53f6f0a5c93e401a2264ff348c65ec9e5a3dc9f8a0b1a6828af3cee46b571906e8101872e15c69eda5d",
+            "file": "src/app/pages/expense-list/expense-list.component.ts",
+            "encapsulation": [],
+            "entryComponents": [],
+            "inputs": [],
+            "outputs": [],
+            "providers": [],
+            "selector": "app-expense-list",
+            "styleUrls": [],
+            "styles": [],
+            "templateUrl": [
+                "./expense-list.component.html"
+            ],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [],
+            "outputsClass": [],
+            "propertiesClass": [
+                {
+                    "name": "accounts",
+                    "defaultValue": "['Savings', 'Cash', 'Card']",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "[]",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 21
+                },
+                {
+                    "name": "categories",
+                    "defaultValue": "['Baby', 'Beauty', 'Bills', 'Car', 'Clothing', 'Education',\n    'Electronic', 'Entertainment', 'Food', 'Health', 'Home', 'Insurance',\n    'Shopping', 'Social', 'Sport', 'Tax', 'Telephone', 'Transportation']",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "[]",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 17
+                },
+                {
+                    "name": "expenses",
+                    "defaultValue": "[]",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "any[]",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 14
+                },
+                {
+                    "name": "isFormVisible",
+                    "defaultValue": "false",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 15
+                },
+                {
+                    "name": "newExpense",
+                    "defaultValue": "{ name: '', amount: 0, category: '', account: '' }",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "object",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 16
+                }
+            ],
+            "methodsClass": [
+                {
+                    "name": "addExpense",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 40,
+                    "deprecated": false,
+                    "deprecationMessage": ""
+                },
+                {
+                    "name": "closeExpenseForm",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 35,
+                    "deprecated": false,
+                    "deprecationMessage": ""
+                },
+                {
+                    "name": "deleteExpense",
+                    "args": [
+                        {
+                            "name": "expense",
+                            "type": "any",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 48,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "jsdoctags": [
+                        {
+                            "name": "expense",
+                            "type": "any",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "ngOnInit",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 24,
+                    "deprecated": false,
+                    "deprecationMessage": ""
+                },
+                {
+                    "name": "openExpenseForm",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 31,
+                    "deprecated": false,
+                    "deprecationMessage": ""
+                }
+            ],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": true,
+            "imports": [
+                {
+                    "name": "CommonModule",
+                    "type": "module"
+                },
+                {
+                    "name": "FormsModule",
+                    "type": "module"
+                },
+                {
+                    "name": "NavbarComponent",
+                    "type": "component"
+                }
+            ],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import { Component, OnInit } from '@angular/core';\nimport { ExpenseService } from '../../expense/expense.service';\nimport { CommonModule } from '@angular/common';\nimport { FormsModule } from '@angular/forms';\nimport { NavbarComponent } from \"../../components/navbar/navbar.component\"\n@Component({\n    selector: 'app-expense-list',\n    standalone: true,\n    imports: [CommonModule, FormsModule, NavbarComponent],\n    templateUrl: './expense-list.component.html',\n    styleUrl: './expense-list.component.less'\n})\nexport class ExpenseListComponent {\n    expenses: any[] = [];\n    isFormVisible = false;\n    newExpense = { name: '', amount: 0, category: '', account: '' };\n    categories = ['Baby', 'Beauty', 'Bills', 'Car', 'Clothing', 'Education',\n    'Electronic', 'Entertainment', 'Food', 'Health', 'Home', 'Insurance',\n    'Shopping', 'Social', 'Sport', 'Tax', 'Telephone', 'Transportation'];\n    // Example categories\n    accounts = ['Savings', 'Cash', 'Card']\n    constructor(private expenseService: ExpenseService) { }\n\n    ngOnInit() {\n        // Subscribe to the expenses observable\n        this.expenseService.expenses$.subscribe(expenses => {\n            this.expenses = expenses;\n        });\n    }\n\n    openExpenseForm() {\n        this.isFormVisible = true;\n    }\n\n    closeExpenseForm() {\n        this.isFormVisible = false;\n        this.newExpense = { name: '', amount: 0, category: '', account: '' };\n    }\n\n    addExpense() {\n        if (this.newExpense.name && this.newExpense.amount && this.newExpense.category\n        && this.newExpense.account) {\n            this.expenseService.addExpense(this.newExpense);\n            this.closeExpenseForm();\n        }\n    }\n\n    deleteExpense(expense: any) {\n        const index = this.expenses.findIndex(e => e === expense);\n        // Find index based on the expense object\n        if (index >= 0) {\n            this.expenseService.deleteExpense(index);\n        } else {\n            console.error('Expense not found for deletion');\n        }\n    }\n\n}\n",
+            "styleUrl": "./expense-list.component.less",
+            "assetsDirs": [],
+            "styleUrlsData": "",
+            "stylesData": "",
+            "constructorObj": {
+                "name": "constructor",
+                "description": "",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "args": [
+                    {
+                        "name": "expenseService",
+                        "type": "ExpenseService",
+                        "deprecated": false,
+                        "deprecationMessage": ""
+                    }
+                ],
+                "line": 21,
+                "jsdoctags": [
+                    {
+                        "name": "expenseService",
+                        "type": "ExpenseService",
+                        "deprecated": false,
+                        "deprecationMessage": "",
+                        "tagName": {
+                            "text": "param"
+                        }
+                    }
+                ]
+            },
+            "extends": [],
+            "templateData": "<app-navbar></app-navbar>\n<!-- Add button to trigger expense form -->\n<button (click)=\"openExpenseForm()\" class=\"add-expense-button\">\n    <i class=\"fas fa-plus\"></i>\n</button>\n\n<!-- Display list of expenses -->\n<div class=\"p-4  flex justify-center\" *ngIf=\"expenses.length  > 0; else noExpenses\">\n    <div *ngIf=\"!isFormVisible\">\n        <div class=\" mt-20 grid grid-cols-5 gap-10 bg-orange-500 p-4 text-white rounded-md shadow-md\">\n            <span>Account</span>\n            <span>Category</span>\n            <span>Expense</span>\n            <span>Amount</span>\n            <span>Action</span>\n        </div>\n        <div class=\"bg-gray-100   shadow-md p-4  \" style=\"border-bottom-left-radius:6px;\n                                                          border-bottom-right-radius:6px\">\n            <div *ngFor=\"let expense of expenses\">\n                <div class=\"grid grid-cols-5 gap-10 \">\n                    <span>{{ expense.account }}</span>\n                    <span>{{ expense.category }}</span>\n                    <span> {{ expense.name }}</span>\n                    <span class=\"text-red-500\">- ₹ {{ expense.amount}}</span>\n                    <span>\n                        <button (click)=\"deleteExpense(expense)\">\n                            <svg xmlns=\"http://www.w3.org/2000/svg\" x=\"0px\" y=\"0px\" width=\"28\" height=\"28\"\n                                viewBox=\"0 0 48 48\">\n                                <linearGradient id=\"nyvBozV7VK1PdF3LtMmOna_pre7LivdxKxJ_gr1\" x1=\"18.405\" x2=\"33.814\"\n                                    y1=\"10.91\" y2=\"43.484\" gradientUnits=\"userSpaceOnUse\">\n                                    <stop offset=\"0\" stop-color=\"#32bdef\"></stop>\n                                    <stop offset=\"1\" stop-color=\"#1ea2e4\"></stop>\n                                </linearGradient>\n                                <path fill=\"url(#nyvBozV7VK1PdF3LtMmOna_pre7LivdxKxJ_gr1)\" d=\"M39,10l-2.835,31.181C36.072,42.211,35.208,43,34.174,43H13.826\n                                       c-1.034,0-1.898-0.789-1.992-1.819L9,10H39z\">\n                                </path>\n                                <path fill=\"#0176d0\" d=\"M32,7c0-1.105-0.895-2-2-2H18c-1.105,0-2,0.895-2,2c0,0,0,0.634,\n                                       0,1h16C32,7.634,32,7,32,7z\">\n                                </path>\n                                <path fill=\"#007ad9\" d=\"M7,9.886L7,9.886C7,9.363,7.358,8.912,7.868,8.8C10.173,8.293,16\n                                       .763,7,24,7s13.827,1.293,16.132,1.8\tC40.642,8.912,41,9.363,41,\n                                       9.886v0C41,10.501,40.501,11,39.886,11H8.114C7.499,11,7,10.501,\n                                       7,9.886z\">\n                                </path>\n                            </svg>\n                        </button>\n                    </span>\n\n\n\n                </div>\n                <div class=\"mt-2 mb-2\">\n                    <hr>\n                </div>\n            </div>\n        </div>\n\n    </div>\n</div>\n<ng-template #noExpenses>\n    <div class=\"fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]  \">\n        <div>\n            <img src=\"https://media.geeksforgeeks.org/wp-content/uploads/20240814111356/download.png\">\n        </div>\n    </div>\n\n</ng-template>\n\n<!-- Expense form -->\n<div *ngIf=\"isFormVisible\" class=\"expense-form shadow-md bg-white\">\n    <div>\n\n        <div class=\"flex justify-center font-bold text-gray-400\">\n            <h3>EXPENSE</h3>\n        </div>\n        <form (ngSubmit)=\"addExpense()\">\n\n            <div class=\"flex justify-between p-2\">\n                <label class=\"font-bold text-gray-400\">\n                    Expense Name:\n                </label>\n                <div>\n                    <input type=\"text\" [(ngModel)]=\"newExpense.name\" name=\"name\"\n                        placeholder=\"Enter your expense name...\" class=\"p-2 border rounded ml-2 w-full\">\n                </div>\n\n            </div>\n            <div class=\"flex justify-between p-2\">\n                <label class=\"font-bold text-gray-400\">\n                    Amount:\n                </label>\n                <div>\n                    <input type=\"number\" [(ngModel)]=\"newExpense.amount\" name=\"amount\" placeholder=\"Enter amount\"\n                        class=\"p-2 border rounded ml-2 w-full\" required>\n                </div>\n            </div>\n            <div class=\"flex justify-between p-2 w-full\">\n                <label class=\"font-bold text-gray-400\">\n                    Category:\n                </label>\n                <div>\n                    <select [(ngModel)]=\"newExpense.category\" name=\"category\" class=\"p-2 border\n                                                                                     rounded  \" required>\n\n                        <option *ngFor=\"let cat of categories\" [value]=\"cat\">{{ cat }}</option>\n                    </select>\n\n\n                </div>\n            </div>\n            <div class=\"flex justify-between p-2\">\n                <label class=\"font-bold text-gray-400\">\n                    Account:\n                </label>\n                <div>\n                    <select [(ngModel)]=\"newExpense.account\" name=\"account\" class=\"p-2 border\n                                                                                   rounded w-[100%]\" required>\n\n                        <option *ngFor=\"let acc of accounts\" [value]=\"acc\">{{ acc }}</option>\n                    </select>\n\n\n                </div>\n            </div>\n\n            <div class=\"flex justify-between p-4 gap-4\">\n                <button type=\"button\" (click)=\"closeExpenseForm() \"\n                    class=\"bg-red-600 shadow-md rounded-md text-white p-2 w-full\">Cancel</button>\n\n                <button type=\"submit\" class=\"bg-blue-600 shadow-md rounded-md text-white\n                                             p-2 w-full \">Save</button>\n\n            </div>\n\n        </form>\n    </div>\n</div>"
+        },
+        {
+            "name": "HeaderComponent",
+            "id": "component-HeaderComponent-48b9abe37706bc42f20cfa97ed9f943678344ea7d254c0c82183c657750c2191b43486fe730c778627b2ea6aa0e2f33a7abcf3ce08b68ad18b062ad99ea97acb",
+            "file": "src/stories/header.component.ts",
+            "encapsulation": [],
+            "entryComponents": [],
+            "inputs": [],
+            "outputs": [],
+            "providers": [],
+            "selector": "storybook-header",
+            "styleUrls": [
+                "./header.css"
+            ],
+            "styles": [],
+            "template": "<header>  <div class=\"storybook-header\">\n    <div>\n      <svg width=\"32\" height=\"32\" viewBox=\"0 0 32 32\" xmlns=\"http://www.w3.org/2000/svg\">\n        <g fill=\"none\" fillRule=\"evenodd\">\n          <path\n            d=\"M10 0h12a10 10 0 0110 10v12a10 10 0 01-10 10H10A10 10 0 010 22V10A10 10 0 0110 0z\"\n            fill=\"#FFF\"\n          />\n          <path\n            d=\"M5.3 10.6l10.4 6v11.1l-10.4-6v-11zm11.4-6.2l9.7 5.5-9.7 5.6V4.4z\"\n            fill=\"#555AB9\"\n          />\n          <path d=\"M27.2 10.6v11.2l-10.5 6V16.5l10.5-6zM15.7 4.4v11L6 10l9.7-5.5z\" fill=\"#91BAF8\" />\n        </g>\n      </svg>\n      <h1>Acme</h1>\n    </div>\n    <div>\n      <div *ngIf=\"user\">\n        <span class=\"welcome\">\n          Welcome, <b>{{ user.name }}</b\n          >!\n        </span>\n        <storybook-button\n          *ngIf=\"user\"\n          size=\"small\"\n          (onClick)=\"onLogout.emit($event)\"\n          label=\"Log out\"\n        ></storybook-button>\n      </div>\n      <div *ngIf=\"!user\">\n        <storybook-button\n          *ngIf=\"!user\"\n          size=\"small\"\n          class=\"margin-left\"\n          (onClick)=\"onLogin.emit($event)\"\n          label=\"Log in\"\n        ></storybook-button>\n        <storybook-button\n          *ngIf=\"!user\"\n          size=\"small\"\n          [primary]=\"true\"\n          class=\"margin-left\"\n          (onClick)=\"onCreateAccount.emit($event)\"\n          label=\"Sign up\"\n        ></storybook-button>\n      </div>\n    </div>\n  </div>\n</header>",
+            "templateUrl": [],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [
+                {
+                    "name": "user",
+                    "defaultValue": "null",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 66,
+                    "type": "User | null",
+                    "decorators": []
+                }
+            ],
+            "outputsClass": [
+                {
+                    "name": "onCreateAccount",
+                    "defaultValue": "new EventEmitter<Event>()",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 75,
+                    "type": "EventEmitter"
+                },
+                {
+                    "name": "onLogin",
+                    "defaultValue": "new EventEmitter<Event>()",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 69,
+                    "type": "EventEmitter"
+                },
+                {
+                    "name": "onLogout",
+                    "defaultValue": "new EventEmitter<Event>()",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 72,
+                    "type": "EventEmitter"
+                }
+            ],
+            "propertiesClass": [],
+            "methodsClass": [],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": true,
+            "imports": [
+                {
+                    "name": "CommonModule",
+                    "type": "module"
+                },
+                {
+                    "name": "ButtonComponent",
+                    "type": "component"
+                }
+            ],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import { Component, Input, Output, EventEmitter } from '@angular/core';\nimport { CommonModule } from '@angular/common';\n\nimport { ButtonComponent } from './button.component';\nimport type { User } from './user';\n\n@Component({\n  selector: 'storybook-header',\n  standalone: true,\n  imports: [CommonModule, ButtonComponent],\n  template: `<header>\n  <div class=\"storybook-header\">\n    <div>\n      <svg width=\"32\" height=\"32\" viewBox=\"0 0 32 32\" xmlns=\"http://www.w3.org/2000/svg\">\n        <g fill=\"none\" fillRule=\"evenodd\">\n          <path\n            d=\"M10 0h12a10 10 0 0110 10v12a10 10 0 01-10 10H10A10 10 0 010 22V10A10 10 0 0110 0z\"\n            fill=\"#FFF\"\n          />\n          <path\n            d=\"M5.3 10.6l10.4 6v11.1l-10.4-6v-11zm11.4-6.2l9.7 5.5-9.7 5.6V4.4z\"\n            fill=\"#555AB9\"\n          />\n          <path d=\"M27.2 10.6v11.2l-10.5 6V16.5l10.5-6zM15.7 4.4v11L6 10l9.7-5.5z\" fill=\"#91BAF8\" />\n        </g>\n      </svg>\n      <h1>Acme</h1>\n    </div>\n    <div>\n      <div *ngIf=\"user\">\n        <span class=\"welcome\">\n          Welcome, <b>{{ user.name }}</b\n          >!\n        </span>\n        <storybook-button\n          *ngIf=\"user\"\n          size=\"small\"\n          (onClick)=\"onLogout.emit($event)\"\n          label=\"Log out\"\n        ></storybook-button>\n      </div>\n      <div *ngIf=\"!user\">\n        <storybook-button\n          *ngIf=\"!user\"\n          size=\"small\"\n          class=\"margin-left\"\n          (onClick)=\"onLogin.emit($event)\"\n          label=\"Log in\"\n        ></storybook-button>\n        <storybook-button\n          *ngIf=\"!user\"\n          size=\"small\"\n          [primary]=\"true\"\n          class=\"margin-left\"\n          (onClick)=\"onCreateAccount.emit($event)\"\n          label=\"Sign up\"\n        ></storybook-button>\n      </div>\n    </div>\n  </div>\n</header>`,\n  styleUrls: ['./header.css'],\n})\nexport class HeaderComponent {\n  @Input()\n  user: User | null = null;\n\n  @Output()\n  onLogin = new EventEmitter<Event>();\n\n  @Output()\n  onLogout = new EventEmitter<Event>();\n\n  @Output()\n  onCreateAccount = new EventEmitter<Event>();\n}\n",
+            "assetsDirs": [],
+            "styleUrlsData": [
+                {
+                    "data": ".storybook-header {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  border-bottom: 1px solid rgba(0, 0, 0, 0.1);\n  padding: 15px 20px;\n  font-family: 'Nunito Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;\n}\n\n.storybook-header svg {\n  display: inline-block;\n  vertical-align: top;\n}\n\n.storybook-header h1 {\n  display: inline-block;\n  vertical-align: top;\n  margin: 6px 0 6px 10px;\n  font-weight: 700;\n  font-size: 20px;\n  line-height: 1;\n}\n\n.storybook-header button + button {\n  margin-left: 10px;\n}\n\n.storybook-header .welcome {\n  margin-right: 10px;\n  color: #333;\n  font-size: 14px;\n}\n",
+                    "styleUrl": "./header.css"
+                }
+            ],
+            "stylesData": "",
+            "extends": []
+        },
+        {
+            "name": "LoginFormComponent",
+            "id": "component-LoginFormComponent-2b014c815692714eb8c11092844a5316ad14241040425be36bbf1e2a9b83ddc2713375ced46675e3c746fa113b828389cad856d95a85ecc341d4a53b5bc44fac",
+            "file": "src/app/components/login-form/login-form.component.ts",
+            "changeDetection": "ChangeDetectionStrategy.OnPush",
+            "encapsulation": [],
+            "entryComponents": [],
+            "inputs": [],
+            "outputs": [],
+            "providers": [],
+            "selector": "app-login-form",
+            "styleUrls": [],
+            "styles": [],
+            "templateUrl": [
+                "./login-form.component.html"
+            ],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [],
+            "outputsClass": [],
+            "propertiesClass": [
+                {
+                    "name": "authService",
+                    "defaultValue": "inject(AuthService)",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 21,
+                    "modifierKind": [
+                        123,
+                        148
+                    ]
+                },
+                {
+                    "name": "loginForm",
+                    "defaultValue": "new FormGroup<LoginFormType>({\n    email: new FormControl<string>('', {\n      nonNullable: true,\n      validators: [Validators.required, Validators.email],\n    }),\n    password: new FormControl<string>('', {\n      nonNullable: true,\n      validators: [Validators.required, Validators.minLength(6)],\n    }),\n  })",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 24
+                },
+                {
+                    "name": "router",
+                    "defaultValue": "inject(Router)",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 22,
+                    "modifierKind": [
+                        123
+                    ]
+                }
+            ],
+            "methodsClass": [
+                {
+                    "name": "submitForm",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 57,
+                    "deprecated": false,
+                    "deprecationMessage": ""
+                }
+            ],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": true,
+            "imports": [
+                {
+                    "name": "CommonModule",
+                    "type": "module"
+                },
+                {
+                    "name": "FormsModule",
+                    "type": "module"
+                },
+                {
+                    "name": "ReactiveFormsModule",
+                    "type": "module"
+                }
+            ],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import { CommonModule } from '@angular/common';\nimport { ChangeDetectionStrategy, Component, inject } from '@angular/core';\nimport { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';\nimport { Router } from '@angular/router';\nimport { take } from 'rxjs';\nimport { AuthService } from '../../auth/auth.service';\n\ninterface LoginFormType {\n  email: FormControl<string>;\n  password: FormControl<string>;\n}\n\n@Component({\n  selector: 'app-login-form',\n  standalone: true,\n  imports: [CommonModule, FormsModule, ReactiveFormsModule],\n  templateUrl: './login-form.component.html',\n  changeDetection: ChangeDetectionStrategy.OnPush,\n})\nexport class LoginFormComponent {\n  private readonly authService = inject(AuthService);\n  private router = inject(Router);\n\n  loginForm = new FormGroup<LoginFormType>({\n    email: new FormControl<string>('', {\n      nonNullable: true,\n      validators: [Validators.required, Validators.email],\n    }),\n    password: new FormControl<string>('', {\n      nonNullable: true,\n      validators: [Validators.required, Validators.minLength(6)],\n    }),\n  })\n\n  get emailInvalidAndTouched(): boolean {\n    return (\n      this.loginForm.controls.email.invalid &&\n      this.loginForm.controls.email.touched\n    )\n  }\n\n  get fEmail(): FormControl {\n    return this.loginForm.controls.email;\n  }\n\n  get passwordInvalidAndTouched(): boolean {\n    return (\n      this.loginForm.controls.password.invalid &&\n      this.loginForm.controls.password.touched\n    )\n  }\n\n  get fPassword(): FormControl {\n    return this.loginForm.controls.password;\n  }\n\n  submitForm() {\n    if (this.loginForm.valid && this.loginForm.dirty) {\n      const { email, password } = this.loginForm.getRawValue();\n      this.authService.loginUser({ email, password }).pipe(take(1)).subscribe({\n        next: () => {\n          this.router.navigate(['/expenses']);\n        },\n        error: (err) => {\n          console.error(`[LoginFormComponent] submitForm - error: ${err?.message}`);\n        }\n      });\n    }\n  }\n}\n",
+            "assetsDirs": [],
+            "styleUrlsData": "",
+            "stylesData": "",
+            "extends": [],
+            "accessors": {
+                "emailInvalidAndTouched": {
+                    "name": "emailInvalidAndTouched",
+                    "getSignature": {
+                        "name": "emailInvalidAndTouched",
+                        "type": "boolean",
+                        "returnType": "boolean",
+                        "line": 35
+                    }
+                },
+                "fEmail": {
+                    "name": "fEmail",
+                    "getSignature": {
+                        "name": "fEmail",
+                        "type": "",
+                        "returnType": "FormControl",
+                        "line": 42
+                    }
+                },
+                "passwordInvalidAndTouched": {
+                    "name": "passwordInvalidAndTouched",
+                    "getSignature": {
+                        "name": "passwordInvalidAndTouched",
+                        "type": "boolean",
+                        "returnType": "boolean",
+                        "line": 46
+                    }
+                },
+                "fPassword": {
+                    "name": "fPassword",
+                    "getSignature": {
+                        "name": "fPassword",
+                        "type": "",
+                        "returnType": "FormControl",
+                        "line": 53
+                    }
+                }
+            },
+            "templateData": "<form [formGroup]=\"loginForm\" (ngSubmit)=\"submitForm()\">\n  <fieldset class=\"mb-4\">\n    <label for=\"email-input\" id=\"email-label\" class=\"flex flex-col gap-2 py-2\">\n      Email\n      <input type=\"email\" formControlName=\"email\" autocomplete=\"email\" id=\"email-input\" aria-labelledby=\"email-label\"\n        class=\"px-4 py-2 border border-slate-500 rounded-lg\" [ngClass]=\"{'border-red-500': emailInvalidAndTouched}\" />\n        <small *ngIf=\"fEmail.hasError('email') && fEmail.touched\" class=\"text-red-500\">Not a valid email address</small>\n        <small *ngIf=\"fEmail.hasError('required') && fEmail.touched\" class=\"text-red-500\">Email address is required</small>\n    </label>\n    <label for=\"password-input\" id=\"password-label\" class=\"flex flex-col gap-2 py-2\">\n      Password\n      <input type=\"password\" formControlName=\"password\" autocomplete=\"current-password\" id=\"password-input\"\n        aria-labelledby=\"password-label\" class=\"px-4 py-2 border border-slate-500 rounded-lg\"\n        [ngClass]=\"{'border-red-500': passwordInvalidAndTouched}\" />\n        <small *ngIf=\"fPassword.hasError('required') && fPassword.touched\" class=\"text-red-500\">Password is required</small>\n        <small *ngIf=\"fPassword.hasError('minlength') && fPassword.touched\" class=\"text-red-500\">Password must be at least 6 characters</small>\n    </label>\n  </fieldset>\n\n  <button type=\"submit\" class=\"text-slate-950 bg-blue-300 hover:bg-blue-400 active:bg-blue-300 px-4 py-2 rounded-lg border-none\">Submit</button>\n</form>"
+        },
+        {
+            "name": "LoginPageComponent",
+            "id": "component-LoginPageComponent-2d12e215ac40bfa64bcff8ef8c34ba3315944fef25f8a07733e36ba9548ed43d0e3c5e1fa01d846473365187a69890f9dfda03f2b9e28d01db96802e40a5ae3b",
+            "file": "src/app/pages/login-page/login-page.component.ts",
+            "encapsulation": [],
+            "entryComponents": [],
+            "inputs": [],
+            "outputs": [],
+            "providers": [],
+            "selector": "app-login-page",
+            "styleUrls": [],
+            "styles": [],
+            "templateUrl": [
+                "./login-page.component.html"
+            ],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [],
+            "outputsClass": [],
+            "propertiesClass": [],
+            "methodsClass": [],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": true,
+            "imports": [
+                {
+                    "name": "LoginFormComponent",
+                    "type": "component"
+                }
+            ],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import { Component } from '@angular/core';\nimport { LoginFormComponent } from \"../../components/login-form/login-form.component\";\n\n@Component({\n  selector: 'app-login-page',\n  standalone: true,\n  imports: [LoginFormComponent],\n  templateUrl: './login-page.component.html'\n})\nexport class LoginPageComponent {}\n",
+            "assetsDirs": [],
+            "styleUrlsData": "",
+            "stylesData": "",
+            "extends": [],
+            "templateData": "<main class=\"p-16 max-w-7xl mx-auto\">\n  <section>\n    <h1 class=\"text-3xl my-4\">Login To Expense Tracker app</h1>\n  </section>\n\n  <section>\n    <p>\n      Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam similique\n      ducimus id, adipisci eveniet cum facere enim, sint delectus voluptate\n      reprehenderit rerum fugit vitae illo! Quis cupiditate eum dignissimos\n      sint?\n    </p>\n  </section>\n\n  <section>\n    <app-login-form></app-login-form>\n  </section>\n</main>"
+        },
+        {
+            "name": "NavbarComponent",
+            "id": "component-NavbarComponent-46325602a7c2fb93a881a7b9ef8c5e774fd2117e9df7a7abe2af10884d388ea9c9c69716889b124b12d132c0a0079bf11c1a624714fd559b83097694527bc4fd",
+            "file": "src/app/components/navbar/navbar.component.ts",
+            "encapsulation": [],
+            "entryComponents": [],
+            "inputs": [],
+            "outputs": [],
+            "providers": [],
+            "selector": "app-navbar",
+            "styleUrls": [],
+            "styles": [],
+            "templateUrl": [
+                "./navbar.component.html"
+            ],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [],
+            "outputsClass": [],
+            "propertiesClass": [],
+            "methodsClass": [],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": true,
+            "imports": [],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import { Component } from '@angular/core';\n\n@Component({\n    selector: 'app-navbar',\n    standalone: true,\n    imports: [],\n    templateUrl: './navbar.component.html'\n})\nexport class NavbarComponent {\n\n}\n",
+            "assetsDirs": [],
+            "styleUrlsData": "",
+            "stylesData": "",
+            "extends": [],
+            "templateData": "<nav class=\"bg-slate-800 p-4 w-full shadow-md\">\n  <h1 class=\"flex justify-center capitalize text-white text-2xl\">\n      expense tracker\n  </h1>\n</nav>\n"
+        },
+        {
+            "name": "PageComponent",
+            "id": "component-PageComponent-21dd6eb370b4983b5c21c84d40e6f54d266a9d9af9889e6e76b35c43058bd53b3e451bad089d5adf4bea46647ba10265a2fa8cb15630398e75636307d4817fc6",
+            "file": "src/stories/page.component.ts",
+            "encapsulation": [],
+            "entryComponents": [],
+            "inputs": [],
+            "outputs": [],
+            "providers": [],
+            "selector": "storybook-page",
+            "styleUrls": [
+                "./page.css"
+            ],
+            "styles": [],
+            "template": "<article>  <storybook-header\n    [user]=\"user\"\n    (onLogout)=\"doLogout()\"\n    (onLogin)=\"doLogin()\"\n    (onCreateAccount)=\"doCreateAccount()\"\n  ></storybook-header>\n  <section class=\"storybook-page\">\n    <h2>Pages in Storybook</h2>\n    <p>\n      We recommend building UIs with a\n      <a href=\"https://componentdriven.org\" target=\"_blank\" rel=\"noopener noreferrer\">\n        <strong>component-driven</strong>\n      </a>\n      process starting with atomic components and ending with pages.\n    </p>\n    <p>\n      Render pages with mock data. This makes it easy to build and review page states without\n      needing to navigate to them in your app. Here are some handy patterns for managing page data\n      in Storybook:\n    </p>\n    <ul>\n      <li>\n        Use a higher-level connected component. Storybook helps you compose such data from the\n        \"args\" of child component stories\n      </li>\n      <li>\n        Assemble data in the page component from your services. You can mock these services out\n        using Storybook.\n      </li>\n    </ul>\n    <p>\n      Get a guided tutorial on component-driven development at\n      <a href=\"https://storybook.js.org/tutorials/\" target=\"_blank\" rel=\"noopener noreferrer\">\n        Storybook tutorials\n      </a>\n      . Read more in the\n      <a href=\"https://storybook.js.org/docs\" target=\"_blank\" rel=\"noopener noreferrer\"> docs </a>\n      .\n    </p>\n    <div class=\"tip-wrapper\">\n      <span class=\"tip\">Tip</span> Adjust the width of the canvas with the\n      <svg width=\"10\" height=\"10\" viewBox=\"0 0 12 12\" xmlns=\"http://www.w3.org/2000/svg\">\n        <g fill=\"none\" fillRule=\"evenodd\">\n          <path\n            d=\"M1.5 5.2h4.8c.3 0 .5.2.5.4v5.1c-.1.2-.3.3-.4.3H1.4a.5.5 0 01-.5-.4V5.7c0-.3.2-.5.5-.5zm0-2.1h6.9c.3 0 .5.2.5.4v7a.5.5 0 01-1 0V4H1.5a.5.5 0 010-1zm0-2.1h9c.3 0 .5.2.5.4v9.1a.5.5 0 01-1 0V2H1.5a.5.5 0 010-1zm4.3 5.2H2V10h3.8V6.2z\"\n            id=\"a\"\n            fill=\"#999\"\n          />\n        </g>\n      </svg>\n      Viewports addon in the toolbar\n    </div>\n  </section>\n</article>",
+            "templateUrl": [],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [],
+            "outputsClass": [],
+            "propertiesClass": [
+                {
+                    "name": "user",
+                    "defaultValue": "null",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "User | null",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 69
+                }
+            ],
+            "methodsClass": [
+                {
+                    "name": "doCreateAccount",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 79,
+                    "deprecated": false,
+                    "deprecationMessage": ""
+                },
+                {
+                    "name": "doLogin",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 75,
+                    "deprecated": false,
+                    "deprecationMessage": ""
+                },
+                {
+                    "name": "doLogout",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 71,
+                    "deprecated": false,
+                    "deprecationMessage": ""
+                }
+            ],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": true,
+            "imports": [
+                {
+                    "name": "CommonModule",
+                    "type": "module"
+                },
+                {
+                    "name": "HeaderComponent",
+                    "type": "component"
+                }
+            ],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import { Component } from '@angular/core';\nimport { CommonModule } from '@angular/common';\n\nimport { HeaderComponent } from './header.component';\nimport type { User } from './user';\n\n@Component({\n  selector: 'storybook-page',\n  standalone: true,\n  imports: [CommonModule, HeaderComponent],\n  template: `<article>\n  <storybook-header\n    [user]=\"user\"\n    (onLogout)=\"doLogout()\"\n    (onLogin)=\"doLogin()\"\n    (onCreateAccount)=\"doCreateAccount()\"\n  ></storybook-header>\n  <section class=\"storybook-page\">\n    <h2>Pages in Storybook</h2>\n    <p>\n      We recommend building UIs with a\n      <a href=\"https://componentdriven.org\" target=\"_blank\" rel=\"noopener noreferrer\">\n        <strong>component-driven</strong>\n      </a>\n      process starting with atomic components and ending with pages.\n    </p>\n    <p>\n      Render pages with mock data. This makes it easy to build and review page states without\n      needing to navigate to them in your app. Here are some handy patterns for managing page data\n      in Storybook:\n    </p>\n    <ul>\n      <li>\n        Use a higher-level connected component. Storybook helps you compose such data from the\n        \"args\" of child component stories\n      </li>\n      <li>\n        Assemble data in the page component from your services. You can mock these services out\n        using Storybook.\n      </li>\n    </ul>\n    <p>\n      Get a guided tutorial on component-driven development at\n      <a href=\"https://storybook.js.org/tutorials/\" target=\"_blank\" rel=\"noopener noreferrer\">\n        Storybook tutorials\n      </a>\n      . Read more in the\n      <a href=\"https://storybook.js.org/docs\" target=\"_blank\" rel=\"noopener noreferrer\"> docs </a>\n      .\n    </p>\n    <div class=\"tip-wrapper\">\n      <span class=\"tip\">Tip</span> Adjust the width of the canvas with the\n      <svg width=\"10\" height=\"10\" viewBox=\"0 0 12 12\" xmlns=\"http://www.w3.org/2000/svg\">\n        <g fill=\"none\" fillRule=\"evenodd\">\n          <path\n            d=\"M1.5 5.2h4.8c.3 0 .5.2.5.4v5.1c-.1.2-.3.3-.4.3H1.4a.5.5 0 01-.5-.4V5.7c0-.3.2-.5.5-.5zm0-2.1h6.9c.3 0 .5.2.5.4v7a.5.5 0 01-1 0V4H1.5a.5.5 0 010-1zm0-2.1h9c.3 0 .5.2.5.4v9.1a.5.5 0 01-1 0V2H1.5a.5.5 0 010-1zm4.3 5.2H2V10h3.8V6.2z\"\n            id=\"a\"\n            fill=\"#999\"\n          />\n        </g>\n      </svg>\n      Viewports addon in the toolbar\n    </div>\n  </section>\n</article>`,\n  styleUrls: ['./page.css'],\n})\nexport class PageComponent {\n  user: User | null = null;\n\n  doLogout() {\n    this.user = null;\n  }\n\n  doLogin() {\n    this.user = { name: 'Jane Doe' };\n  }\n\n  doCreateAccount() {\n    this.user = { name: 'Jane Doe' };\n  }\n}\n",
+            "assetsDirs": [],
+            "styleUrlsData": [
+                {
+                    "data": ".storybook-page {\n  margin: 0 auto;\n  padding: 48px 20px;\n  max-width: 600px;\n  color: #333;\n  font-size: 14px;\n  line-height: 24px;\n  font-family: 'Nunito Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;\n}\n\n.storybook-page h2 {\n  display: inline-block;\n  vertical-align: top;\n  margin: 0 0 4px;\n  font-weight: 700;\n  font-size: 32px;\n  line-height: 1;\n}\n\n.storybook-page p {\n  margin: 1em 0;\n}\n\n.storybook-page a {\n  color: #1ea7fd;\n  text-decoration: none;\n}\n\n.storybook-page ul {\n  margin: 1em 0;\n  padding-left: 30px;\n}\n\n.storybook-page li {\n  margin-bottom: 8px;\n}\n\n.storybook-page .tip {\n  display: inline-block;\n  vertical-align: top;\n  margin-right: 10px;\n  border-radius: 1em;\n  background: #e7fdd8;\n  padding: 4px 12px;\n  color: #66bf3c;\n  font-weight: 700;\n  font-size: 11px;\n  line-height: 12px;\n}\n\n.storybook-page .tip-wrapper {\n  margin-top: 40px;\n  margin-bottom: 40px;\n  font-size: 13px;\n  line-height: 20px;\n}\n\n.storybook-page .tip-wrapper svg {\n  display: inline-block;\n  vertical-align: top;\n  margin-top: 3px;\n  margin-right: 4px;\n  width: 12px;\n  height: 12px;\n}\n\n.storybook-page .tip-wrapper svg path {\n  fill: #1ea7fd;\n}\n",
+                    "styleUrl": "./page.css"
+                }
+            ],
+            "stylesData": "",
+            "extends": []
+        }
+    ],
+    "modules": [],
+    "miscellaneous": {
+        "variables": [
+            {
+                "name": "appConfig",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/app.config.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "ApplicationConfig",
+                "defaultValue": "{\n  providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes), provideHttpClient(withInterceptors([jtwInterceptor]))]\n}"
+            },
+            {
+                "name": "authGuard",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/auth/auth.guard.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "CanActivateFn",
+                "defaultValue": "(route, state) => {\n  const authService = inject(AuthService);\n  const router = inject(Router);\n  const expired = authService.isTokenExpired();\n  console.log(`[AuthGuard] canActivate - expired: ${expired}`);\n  if (expired) {\n    router.navigate(['/login'], { queryParams: { returnUrl: state.url } });\n    return false;\n  }\n  return true;\n}"
+            },
+            {
+                "name": "envs",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/shared/envs.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "object",
+                "defaultValue": "{\ngetApiUrl: () => 'http://localhost:4000/api/v1',\n}"
+            },
+            {
+                "name": "jtwInterceptor",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/auth/jwt-interceptor.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "HttpInterceptorFn",
+                "defaultValue": "(req, next) => {\n  const authService = inject(AuthService);\n  return authService.accessToken$.pipe(\n    map((token) => {\n      if (token) {\n        return req.clone({\n          url: req.url,\n          setHeaders: {\n            Authorization: `Bearer ${token}`\n          }\n        });\n      }\n      return req;\n    }),\n    switchMap((req) => next(req))\n  )\n}"
+            },
+            {
+                "name": "LoggedIn",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/pages/login-page/login-page.storiesy.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Story",
+                "defaultValue": "{}"
+            },
+            {
+                "name": "LoggedOut",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/pages/login-page/login-page.storiesy.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Story",
+                "defaultValue": "{}"
+            },
+            {
+                "name": "meta",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/pages/login-page/login-page.storiesy.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Meta<LoginPageComponent>",
+                "defaultValue": "{\n  title: 'Pages/LoginPage',\n  component: LoginPageComponent,\n  decorators: [\n    componentWrapperDecorator((story) => `<div style=\"width: 100%; height: 100vh\">${story}</div>`),\n    applicationConfig({\n      providers: [importProvidersFrom(HttpClient)],\n    }),\n  ],\n  parameters: {\n    layout: 'fullscreen',\n  },\n}"
+            },
+            {
+                "name": "TOKEN_STORAGE_KEY",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/auth/constants.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "string",
+                "defaultValue": "'et-token-storage'"
+            }
+        ],
+        "functions": [],
+        "typealiases": [
+            {
+                "name": "Story",
+                "ctype": "miscellaneous",
+                "subtype": "typealias",
+                "rawtype": "StoryObj<LoginPageComponent>",
+                "file": "src/app/pages/login-page/login-page.storiesy.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "description": "",
+                "kind": 183
+            }
+        ],
+        "enumerations": [],
+        "groupedVariables": {
+            "src/app/app.config.ts": [
+                {
+                    "name": "appConfig",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/app.config.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "ApplicationConfig",
+                    "defaultValue": "{\n  providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes), provideHttpClient(withInterceptors([jtwInterceptor]))]\n}"
+                }
+            ],
+            "src/app/auth/auth.guard.ts": [
+                {
+                    "name": "authGuard",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/auth/auth.guard.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "CanActivateFn",
+                    "defaultValue": "(route, state) => {\n  const authService = inject(AuthService);\n  const router = inject(Router);\n  const expired = authService.isTokenExpired();\n  console.log(`[AuthGuard] canActivate - expired: ${expired}`);\n  if (expired) {\n    router.navigate(['/login'], { queryParams: { returnUrl: state.url } });\n    return false;\n  }\n  return true;\n}"
+                }
+            ],
+            "src/app/shared/envs.ts": [
+                {
+                    "name": "envs",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/shared/envs.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "object",
+                    "defaultValue": "{\ngetApiUrl: () => 'http://localhost:4000/api/v1',\n}"
+                }
+            ],
+            "src/app/auth/jwt-interceptor.ts": [
+                {
+                    "name": "jtwInterceptor",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/auth/jwt-interceptor.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "HttpInterceptorFn",
+                    "defaultValue": "(req, next) => {\n  const authService = inject(AuthService);\n  return authService.accessToken$.pipe(\n    map((token) => {\n      if (token) {\n        return req.clone({\n          url: req.url,\n          setHeaders: {\n            Authorization: `Bearer ${token}`\n          }\n        });\n      }\n      return req;\n    }),\n    switchMap((req) => next(req))\n  )\n}"
+                }
+            ],
+            "src/app/pages/login-page/login-page.storiesy.ts": [
+                {
+                    "name": "LoggedIn",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/pages/login-page/login-page.storiesy.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Story",
+                    "defaultValue": "{}"
+                },
+                {
+                    "name": "LoggedOut",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/pages/login-page/login-page.storiesy.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Story",
+                    "defaultValue": "{}"
+                },
+                {
+                    "name": "meta",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/pages/login-page/login-page.storiesy.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Meta<LoginPageComponent>",
+                    "defaultValue": "{\n  title: 'Pages/LoginPage',\n  component: LoginPageComponent,\n  decorators: [\n    componentWrapperDecorator((story) => `<div style=\"width: 100%; height: 100vh\">${story}</div>`),\n    applicationConfig({\n      providers: [importProvidersFrom(HttpClient)],\n    }),\n  ],\n  parameters: {\n    layout: 'fullscreen',\n  },\n}"
+                }
+            ],
+            "src/app/auth/constants.ts": [
+                {
+                    "name": "TOKEN_STORAGE_KEY",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/auth/constants.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "defaultValue": "'et-token-storage'"
+                }
+            ]
+        },
+        "groupedFunctions": {},
+        "groupedEnumerations": {},
+        "groupedTypeAliases": {
+            "src/app/pages/login-page/login-page.storiesy.ts": [
+                {
+                    "name": "Story",
+                    "ctype": "miscellaneous",
+                    "subtype": "typealias",
+                    "rawtype": "StoryObj<LoginPageComponent>",
+                    "file": "src/app/pages/login-page/login-page.storiesy.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "description": "",
+                    "kind": 183
+                }
+            ]
+        }
+    },
+    "routes": [],
+    "coverage": {
+        "count": 3,
+        "status": "low",
+        "files": [
+            {
+                "filePath": "src/app/app.component.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "AppComponent",
+                "coveragePercent": 0,
+                "coverageCount": "0/2",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/app.config.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "appConfig",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/auth/auth.guard.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "authGuard",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/auth/auth.service.ts",
+                "type": "injectable",
+                "linktype": "injectable",
+                "name": "AuthService",
+                "coveragePercent": 0,
+                "coverageCount": "0/14",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/auth/constants.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "TOKEN_STORAGE_KEY",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/auth/interfaces/login-payload.interface.ts",
+                "type": "interface",
+                "linktype": "interface",
+                "name": "ILoginPayload",
+                "coveragePercent": 0,
+                "coverageCount": "0/3",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/auth/interfaces/token-payload.interface.ts",
+                "type": "interface",
+                "linktype": "interface",
+                "name": "IAccessTokenPayload",
+                "coveragePercent": 0,
+                "coverageCount": "0/3",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/auth/interfaces/token-response.interface.ts",
+                "type": "interface",
+                "linktype": "interface",
+                "name": "ITokenResponse",
+                "coveragePercent": 0,
+                "coverageCount": "0/2",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/auth/jwt-interceptor.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "jtwInterceptor",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/components/login-form/login-form.component.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "LoginFormComponent",
+                "coveragePercent": 0,
+                "coverageCount": "0/5",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/components/login-form/login-form.component.ts",
+                "type": "interface",
+                "linktype": "interface",
+                "name": "LoginFormType",
+                "coveragePercent": 0,
+                "coverageCount": "0/3",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/components/navbar/navbar.component.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "NavbarComponent",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/expense/expense.service.ts",
+                "type": "injectable",
+                "linktype": "injectable",
+                "name": "ExpenseService",
+                "coveragePercent": 0,
+                "coverageCount": "0/8",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/expense/expense.service.ts",
+                "type": "interface",
+                "linktype": "interface",
+                "name": "Expense",
+                "coveragePercent": 0,
+                "coverageCount": "0/5",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/pages/expense-list/expense-list.component.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "ExpenseListComponent",
+                "coveragePercent": 0,
+                "coverageCount": "0/12",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/pages/login-page/login-page.component.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "LoginPageComponent",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/pages/login-page/login-page.storiesy.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "LoggedIn",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/pages/login-page/login-page.storiesy.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "LoggedOut",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/pages/login-page/login-page.storiesy.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "meta",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/pages/login-page/login-page.storiesy.ts",
+                "type": "type alias",
+                "linktype": "miscellaneous",
+                "linksubtype": "typealias",
+                "name": "Story",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/shared/envs.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "envs",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/user/user.service.ts",
+                "type": "injectable",
+                "linktype": "injectable",
+                "name": "UserService",
+                "coveragePercent": 0,
+                "coverageCount": "0/2",
+                "status": "low"
+            },
+            {
+                "filePath": "src/stories/button.component.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "ButtonComponent",
+                "coveragePercent": 83,
+                "coverageCount": "5/6",
+                "status": "very-good"
+            },
+            {
+                "filePath": "src/stories/header.component.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "HeaderComponent",
+                "coveragePercent": 0,
+                "coverageCount": "0/5",
+                "status": "low"
+            },
+            {
+                "filePath": "src/stories/page.component.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "PageComponent",
+                "coveragePercent": 0,
+                "coverageCount": "0/5",
+                "status": "low"
+            },
+            {
+                "filePath": "src/stories/user.ts",
+                "type": "interface",
+                "linktype": "interface",
+                "name": "User",
+                "coveragePercent": 0,
+                "coverageCount": "0/2",
+                "status": "low"
+            }
+        ]
+    }
+}
