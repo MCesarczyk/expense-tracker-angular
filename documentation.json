@@ -169,12 +169,12 @@
         },
         {
             "name": "LoginFormType",
-            "id": "interface-LoginFormType-2b014c815692714eb8c11092844a5316ad14241040425be36bbf1e2a9b83ddc2713375ced46675e3c746fa113b828389cad856d95a85ecc341d4a53b5bc44fac",
+            "id": "interface-LoginFormType-1fd7788d548de8a646bf0af6f8c4a1b09e5c6b0532ba2669776306fcc5210754385222960ab801cb63a9894adc0c94860b28d880f94ed46b0834f5bb27662bde",
             "file": "src/app/components/login-form/login-form.component.ts",
             "deprecated": false,
             "deprecationMessage": "",
             "type": "interface",
-            "sourceCode": "import { CommonModule } from '@angular/common';\nimport { ChangeDetectionStrategy, Component, inject } from '@angular/core';\nimport { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';\nimport { Router } from '@angular/router';\nimport { take } from 'rxjs';\nimport { AuthService } from '../../auth/auth.service';\n\ninterface LoginFormType {\n  email: FormControl<string>;\n  password: FormControl<string>;\n}\n\n@Component({\n  selector: 'app-login-form',\n  standalone: true,\n  imports: [CommonModule, FormsModule, ReactiveFormsModule],\n  templateUrl: './login-form.component.html',\n  changeDetection: ChangeDetectionStrategy.OnPush,\n})\nexport class LoginFormComponent {\n  private readonly authService = inject(AuthService);\n  private router = inject(Router);\n\n  loginForm = new FormGroup<LoginFormType>({\n    email: new FormControl<string>('', {\n      nonNullable: true,\n      validators: [Validators.required, Validators.email],\n    }),\n    password: new FormControl<string>('', {\n      nonNullable: true,\n      validators: [Validators.required, Validators.minLength(6)],\n    }),\n  })\n\n  get emailInvalidAndTouched(): boolean {\n    return (\n      this.loginForm.controls.email.invalid &&\n      this.loginForm.controls.email.touched\n    )\n  }\n\n  get fEmail(): FormControl {\n    return this.loginForm.controls.email;\n  }\n\n  get passwordInvalidAndTouched(): boolean {\n    return (\n      this.loginForm.controls.password.invalid &&\n      this.loginForm.controls.password.touched\n    )\n  }\n\n  get fPassword(): FormControl {\n    return this.loginForm.controls.password;\n  }\n\n  submitForm() {\n    if (this.loginForm.valid && this.loginForm.dirty) {\n      const { email, password } = this.loginForm.getRawValue();\n      this.authService.loginUser({ email, password }).pipe(take(1)).subscribe({\n        next: () => {\n          this.router.navigate(['/expenses']);\n        },\n        error: (err) => {\n          console.error(`[LoginFormComponent] submitForm - error: ${err?.message}`);\n        }\n      });\n    }\n  }\n}\n",
+            "sourceCode": "import { CommonModule } from '@angular/common';\nimport { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core';\nimport { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';\nimport { Router } from '@angular/router';\nimport { BehaviorSubject, take } from 'rxjs';\nimport { AuthService } from '../../auth/auth.service';\nimport { HttpErrorResponse } from '@angular/common/http';\nimport { MatchingPasswords } from '../../pages/register-page/matching-passwords.validator';\n\ninterface LoginFormType {\n  email: FormControl<string>;\n  password: FormControl<string>;\n  // passwordConfirm: FormControl<string>;\n}\n\n@Component({\n  selector: 'app-login-form',\n  standalone: true,\n  imports: [CommonModule, FormsModule, ReactiveFormsModule],\n  templateUrl: './login-form.component.html',\n  changeDetection: ChangeDetectionStrategy.OnPush,\n})\nexport class LoginFormComponent {\n  private readonly authService = inject(AuthService);\n  private router = inject(Router);\n\n  loginForm = new FormGroup<LoginFormType>({\n    email: new FormControl<string>('', {\n      nonNullable: true,\n      validators: [Validators.required, Validators.email],\n    }),\n    password: new FormControl<string>('', {\n      nonNullable: true,\n      validators: [Validators.required, Validators.minLength(6)],\n    }),\n    // passwordConfirm: new FormControl<string>('', {\n    //   nonNullable: true,\n    //   validators: [Validators.required],\n    // })\n  }, {\n    validators: MatchingPasswords('password', 'passwordConfirm'),\n    updateOn: 'blur'\n  })\n\n  errorMessage$ = new BehaviorSubject<string | null>(null);\n\n  get emailInvalidAndTouched(): boolean {\n    return (\n      this.loginForm.controls.email.invalid &&\n      this.loginForm.controls.email.touched\n    )\n  }\n\n  get fEmail(): FormControl {\n    return this.loginForm.controls.email;\n  }\n\n  get passwordInvalidAndTouched(): boolean {\n    return (\n      this.loginForm.controls.password.invalid &&\n      this.loginForm.controls.password.touched\n    )\n  }\n\n  get fPassword(): FormControl {\n    return this.loginForm.controls.password;\n  }\n\n  // get passwordConfirmInvalidAndTouched(): boolean {\n  //   return (\n  //     this.loginForm.controls.passwordConfirm.invalid &&\n  //     this.loginForm.controls.passwordConfirm.touched\n  //   )\n  // }\n\n  // get fPasswordConfirm(): FormControl {\n  //   return this.loginForm.controls.passwordConfirm;\n  // }\n\n  submitForm() {\n    if (this.loginForm.valid && this.loginForm.dirty) {\n      this.errorMessage$.next(null);\n      const { email, password } = this.loginForm.getRawValue();\n      this.authService.loginUser({ email, password }).pipe(take(1)).subscribe({\n        next: () => {\n          console.log(`[LoginFormComponent] submitForm - success`);\n          this.router.navigate(['/expenses']);\n        },\n        error: (err) => {\n          if (err instanceof HttpErrorResponse) {\n            this.errorMessage$.next(err.error.message);\n          } else {\n            this.errorMessage$.next('An error occurred. Please try again later.');\n          }\n          console.error(`[LoginFormComponent] submitForm - error: ${err?.message}`);\n        }\n      });\n    }\n  }\n}\n",
             "properties": [
                 {
                     "name": "email",
@@ -184,7 +184,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 9
+                    "line": 11
                 },
                 {
                     "name": "password",
@@ -194,7 +194,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 10
+                    "line": 12
                 }
             ],
             "indexSignatures": [],
@@ -637,7 +637,7 @@
     "components": [
         {
             "name": "AppComponent",
-            "id": "component-AppComponent-fc79be78bbc05a9bad7ed035424ec49665be441a556226877d99698508c38790b96df30bf5c134428198e3b86fe2716b903b1d86024166aab2c375ce7b276870",
+            "id": "component-AppComponent-9de1a47691c12eed43fc27be246231a6cf4e2e6275a5d8ea6c3f2a8fe35b4edf24ed8c2bbbdbe7f950c4c6f791ebe60a08471fc8ca20ce55c48b20c4cd77bda1",
             "file": "src/app/app.component.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -664,7 +664,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 11
+                    "line": 12
                 }
             ],
             "methodsClass": [],
@@ -676,17 +676,21 @@
             "imports": [
                 {
                     "name": "RouterOutlet"
+                },
+                {
+                    "name": "NavbarComponent",
+                    "type": "component"
                 }
             ],
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { Component } from '@angular/core';\nimport { RouterOutlet } from '@angular/router';\n\n@Component({\n    selector: 'app-root',\n    standalone: true,\n    imports: [RouterOutlet],\n    templateUrl: './app.component.html',\n})\nexport class AppComponent {\n    title = 'expense-tracker';\n}\n",
+            "sourceCode": "import { Component } from '@angular/core';\nimport { RouterOutlet } from '@angular/router';\nimport { NavbarComponent } from './components/navbar/navbar.component';\n\n@Component({\n    selector: 'app-root',\n    standalone: true,\n    imports: [RouterOutlet, NavbarComponent],\n    templateUrl: './app.component.html',\n})\nexport class AppComponent {\n    title = 'expense-tracker';\n}\n",
             "assetsDirs": [],
             "styleUrlsData": "",
             "stylesData": "",
             "extends": [],
-            "templateData": "<router-outlet></router-outlet>\n"
+            "templateData": "<app-navbar></app-navbar>\n<router-outlet></router-outlet>\n"
         },
         {
             "name": "ButtonComponent",
@@ -824,7 +828,7 @@
         },
         {
             "name": "ExpenseListComponent",
-            "id": "component-ExpenseListComponent-e52076757968a750045869edfd260146338bcbd3495ca53f6f0a5c93e401a2264ff348c65ec9e5a3dc9f8a0b1a6828af3cee46b571906e8101872e15c69eda5d",
+            "id": "component-ExpenseListComponent-b0b026e788f172c249f15d04702d8a075c4fcc51972a1edf76fe117a6fd0bd5d2b4a18ad3468db11fc23d67379efcd65661576b456f68439584c4b250efd7f1f",
             "file": "src/app/pages/expense-list/expense-list.component.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -851,7 +855,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 21
+                    "line": 20
                 },
                 {
                     "name": "categories",
@@ -862,7 +866,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 17
+                    "line": 16
                 },
                 {
                     "name": "expenses",
@@ -873,7 +877,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 14
+                    "line": 13
                 },
                 {
                     "name": "isFormVisible",
@@ -884,7 +888,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 15
+                    "line": 14
                 },
                 {
                     "name": "newExpense",
@@ -895,7 +899,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 16
+                    "line": 15
                 }
             ],
             "methodsClass": [
@@ -905,7 +909,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 40,
+                    "line": 39,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -915,7 +919,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 35,
+                    "line": 34,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -932,7 +936,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 48,
+                    "line": 47,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -953,7 +957,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 24,
+                    "line": 23,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -963,7 +967,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 31,
+                    "line": 30,
                     "deprecated": false,
                     "deprecationMessage": ""
                 }
@@ -981,16 +985,12 @@
                 {
                     "name": "FormsModule",
                     "type": "module"
-                },
-                {
-                    "name": "NavbarComponent",
-                    "type": "component"
                 }
             ],
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { Component, OnInit } from '@angular/core';\nimport { ExpenseService } from '../../expense/expense.service';\nimport { CommonModule } from '@angular/common';\nimport { FormsModule } from '@angular/forms';\nimport { NavbarComponent } from \"../../components/navbar/navbar.component\"\n@Component({\n    selector: 'app-expense-list',\n    standalone: true,\n    imports: [CommonModule, FormsModule, NavbarComponent],\n    templateUrl: './expense-list.component.html',\n    styleUrl: './expense-list.component.less'\n})\nexport class ExpenseListComponent {\n    expenses: any[] = [];\n    isFormVisible = false;\n    newExpense = { name: '', amount: 0, category: '', account: '' };\n    categories = ['Baby', 'Beauty', 'Bills', 'Car', 'Clothing', 'Education',\n    'Electronic', 'Entertainment', 'Food', 'Health', 'Home', 'Insurance',\n    'Shopping', 'Social', 'Sport', 'Tax', 'Telephone', 'Transportation'];\n    // Example categories\n    accounts = ['Savings', 'Cash', 'Card']\n    constructor(private expenseService: ExpenseService) { }\n\n    ngOnInit() {\n        // Subscribe to the expenses observable\n        this.expenseService.expenses$.subscribe(expenses => {\n            this.expenses = expenses;\n        });\n    }\n\n    openExpenseForm() {\n        this.isFormVisible = true;\n    }\n\n    closeExpenseForm() {\n        this.isFormVisible = false;\n        this.newExpense = { name: '', amount: 0, category: '', account: '' };\n    }\n\n    addExpense() {\n        if (this.newExpense.name && this.newExpense.amount && this.newExpense.category\n        && this.newExpense.account) {\n            this.expenseService.addExpense(this.newExpense);\n            this.closeExpenseForm();\n        }\n    }\n\n    deleteExpense(expense: any) {\n        const index = this.expenses.findIndex(e => e === expense);\n        // Find index based on the expense object\n        if (index >= 0) {\n            this.expenseService.deleteExpense(index);\n        } else {\n            console.error('Expense not found for deletion');\n        }\n    }\n\n}\n",
+            "sourceCode": "import { Component, OnInit } from '@angular/core';\nimport { ExpenseService } from '../../expense/expense.service';\nimport { CommonModule } from '@angular/common';\nimport { FormsModule } from '@angular/forms';\n@Component({\n    selector: 'app-expense-list',\n    standalone: true,\n    imports: [CommonModule, FormsModule],\n    templateUrl: './expense-list.component.html',\n    styleUrl: './expense-list.component.less'\n})\nexport class ExpenseListComponent {\n    expenses: any[] = [];\n    isFormVisible = false;\n    newExpense = { name: '', amount: 0, category: '', account: '' };\n    categories = ['Baby', 'Beauty', 'Bills', 'Car', 'Clothing', 'Education',\n    'Electronic', 'Entertainment', 'Food', 'Health', 'Home', 'Insurance',\n    'Shopping', 'Social', 'Sport', 'Tax', 'Telephone', 'Transportation'];\n    // Example categories\n    accounts = ['Savings', 'Cash', 'Card']\n    constructor(private expenseService: ExpenseService) { }\n\n    ngOnInit() {\n        // Subscribe to the expenses observable\n        this.expenseService.expenses$.subscribe(expenses => {\n            this.expenses = expenses;\n        });\n    }\n\n    openExpenseForm() {\n        this.isFormVisible = true;\n    }\n\n    closeExpenseForm() {\n        this.isFormVisible = false;\n        this.newExpense = { name: '', amount: 0, category: '', account: '' };\n    }\n\n    addExpense() {\n        if (this.newExpense.name && this.newExpense.amount && this.newExpense.category\n        && this.newExpense.account) {\n            this.expenseService.addExpense(this.newExpense);\n            this.closeExpenseForm();\n        }\n    }\n\n    deleteExpense(expense: any) {\n        const index = this.expenses.findIndex(e => e === expense);\n        // Find index based on the expense object\n        if (index >= 0) {\n            this.expenseService.deleteExpense(index);\n        } else {\n            console.error('Expense not found for deletion');\n        }\n    }\n\n}\n",
             "styleUrl": "./expense-list.component.less",
             "assetsDirs": [],
             "styleUrlsData": "",
@@ -1008,7 +1008,7 @@
                         "deprecationMessage": ""
                     }
                 ],
-                "line": 21,
+                "line": 20,
                 "jsdoctags": [
                     {
                         "name": "expenseService",
@@ -1022,7 +1022,7 @@
                 ]
             },
             "extends": [],
-            "templateData": "<app-navbar></app-navbar>\n<!-- Add button to trigger expense form -->\n<button (click)=\"openExpenseForm()\" class=\"add-expense-button\">\n    <i class=\"fas fa-plus\"></i>\n</button>\n\n<!-- Display list of expenses -->\n<div class=\"p-4  flex justify-center\" *ngIf=\"expenses.length  > 0; else noExpenses\">\n    <div *ngIf=\"!isFormVisible\">\n        <div class=\" mt-20 grid grid-cols-5 gap-10 bg-orange-500 p-4 text-white rounded-md shadow-md\">\n            <span>Account</span>\n            <span>Category</span>\n            <span>Expense</span>\n            <span>Amount</span>\n            <span>Action</span>\n        </div>\n        <div class=\"bg-gray-100   shadow-md p-4  \" style=\"border-bottom-left-radius:6px;\n                                                          border-bottom-right-radius:6px\">\n            <div *ngFor=\"let expense of expenses\">\n                <div class=\"grid grid-cols-5 gap-10 \">\n                    <span>{{ expense.account }}</span>\n                    <span>{{ expense.category }}</span>\n                    <span> {{ expense.name }}</span>\n                    <span class=\"text-red-500\">- ₹ {{ expense.amount}}</span>\n                    <span>\n                        <button (click)=\"deleteExpense(expense)\">\n                            <svg xmlns=\"http://www.w3.org/2000/svg\" x=\"0px\" y=\"0px\" width=\"28\" height=\"28\"\n                                viewBox=\"0 0 48 48\">\n                                <linearGradient id=\"nyvBozV7VK1PdF3LtMmOna_pre7LivdxKxJ_gr1\" x1=\"18.405\" x2=\"33.814\"\n                                    y1=\"10.91\" y2=\"43.484\" gradientUnits=\"userSpaceOnUse\">\n                                    <stop offset=\"0\" stop-color=\"#32bdef\"></stop>\n                                    <stop offset=\"1\" stop-color=\"#1ea2e4\"></stop>\n                                </linearGradient>\n                                <path fill=\"url(#nyvBozV7VK1PdF3LtMmOna_pre7LivdxKxJ_gr1)\" d=\"M39,10l-2.835,31.181C36.072,42.211,35.208,43,34.174,43H13.826\n                                       c-1.034,0-1.898-0.789-1.992-1.819L9,10H39z\">\n                                </path>\n                                <path fill=\"#0176d0\" d=\"M32,7c0-1.105-0.895-2-2-2H18c-1.105,0-2,0.895-2,2c0,0,0,0.634,\n                                       0,1h16C32,7.634,32,7,32,7z\">\n                                </path>\n                                <path fill=\"#007ad9\" d=\"M7,9.886L7,9.886C7,9.363,7.358,8.912,7.868,8.8C10.173,8.293,16\n                                       .763,7,24,7s13.827,1.293,16.132,1.8\tC40.642,8.912,41,9.363,41,\n                                       9.886v0C41,10.501,40.501,11,39.886,11H8.114C7.499,11,7,10.501,\n                                       7,9.886z\">\n                                </path>\n                            </svg>\n                        </button>\n                    </span>\n\n\n\n                </div>\n                <div class=\"mt-2 mb-2\">\n                    <hr>\n                </div>\n            </div>\n        </div>\n\n    </div>\n</div>\n<ng-template #noExpenses>\n    <div class=\"fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]  \">\n        <div>\n            <img src=\"https://media.geeksforgeeks.org/wp-content/uploads/20240814111356/download.png\">\n        </div>\n    </div>\n\n</ng-template>\n\n<!-- Expense form -->\n<div *ngIf=\"isFormVisible\" class=\"expense-form shadow-md bg-white\">\n    <div>\n\n        <div class=\"flex justify-center font-bold text-gray-400\">\n            <h3>EXPENSE</h3>\n        </div>\n        <form (ngSubmit)=\"addExpense()\">\n\n            <div class=\"flex justify-between p-2\">\n                <label class=\"font-bold text-gray-400\">\n                    Expense Name:\n                </label>\n                <div>\n                    <input type=\"text\" [(ngModel)]=\"newExpense.name\" name=\"name\"\n                        placeholder=\"Enter your expense name...\" class=\"p-2 border rounded ml-2 w-full\">\n                </div>\n\n            </div>\n            <div class=\"flex justify-between p-2\">\n                <label class=\"font-bold text-gray-400\">\n                    Amount:\n                </label>\n                <div>\n                    <input type=\"number\" [(ngModel)]=\"newExpense.amount\" name=\"amount\" placeholder=\"Enter amount\"\n                        class=\"p-2 border rounded ml-2 w-full\" required>\n                </div>\n            </div>\n            <div class=\"flex justify-between p-2 w-full\">\n                <label class=\"font-bold text-gray-400\">\n                    Category:\n                </label>\n                <div>\n                    <select [(ngModel)]=\"newExpense.category\" name=\"category\" class=\"p-2 border\n                                                                                     rounded  \" required>\n\n                        <option *ngFor=\"let cat of categories\" [value]=\"cat\">{{ cat }}</option>\n                    </select>\n\n\n                </div>\n            </div>\n            <div class=\"flex justify-between p-2\">\n                <label class=\"font-bold text-gray-400\">\n                    Account:\n                </label>\n                <div>\n                    <select [(ngModel)]=\"newExpense.account\" name=\"account\" class=\"p-2 border\n                                                                                   rounded w-[100%]\" required>\n\n                        <option *ngFor=\"let acc of accounts\" [value]=\"acc\">{{ acc }}</option>\n                    </select>\n\n\n                </div>\n            </div>\n\n            <div class=\"flex justify-between p-4 gap-4\">\n                <button type=\"button\" (click)=\"closeExpenseForm() \"\n                    class=\"bg-red-600 shadow-md rounded-md text-white p-2 w-full\">Cancel</button>\n\n                <button type=\"submit\" class=\"bg-blue-600 shadow-md rounded-md text-white\n                                             p-2 w-full \">Save</button>\n\n            </div>\n\n        </form>\n    </div>\n</div>"
+            "templateData": "<!-- Add button to trigger expense form -->\n<button (click)=\"openExpenseForm()\" class=\"add-expense-button\">\n    <i class=\"fas fa-plus\"></i>\n</button>\n\n<!-- Display list of expenses -->\n<div class=\"p-4  flex justify-center\" *ngIf=\"expenses.length  > 0; else noExpenses\">\n    <div *ngIf=\"!isFormVisible\">\n        <div class=\" mt-20 grid grid-cols-5 gap-10 bg-orange-500 p-4 text-white rounded-md shadow-md\">\n            <span>Account</span>\n            <span>Category</span>\n            <span>Expense</span>\n            <span>Amount</span>\n            <span>Action</span>\n        </div>\n        <div class=\"bg-gray-100   shadow-md p-4  \" style=\"border-bottom-left-radius:6px;\n                                                          border-bottom-right-radius:6px\">\n            <div *ngFor=\"let expense of expenses\">\n                <div class=\"grid grid-cols-5 gap-10 \">\n                    <span>{{ expense.account }}</span>\n                    <span>{{ expense.category }}</span>\n                    <span> {{ expense.name }}</span>\n                    <span class=\"text-red-500\">- ₹ {{ expense.amount}}</span>\n                    <span>\n                        <button (click)=\"deleteExpense(expense)\">\n                            <svg xmlns=\"http://www.w3.org/2000/svg\" x=\"0px\" y=\"0px\" width=\"28\" height=\"28\"\n                                viewBox=\"0 0 48 48\">\n                                <linearGradient id=\"nyvBozV7VK1PdF3LtMmOna_pre7LivdxKxJ_gr1\" x1=\"18.405\" x2=\"33.814\"\n                                    y1=\"10.91\" y2=\"43.484\" gradientUnits=\"userSpaceOnUse\">\n                                    <stop offset=\"0\" stop-color=\"#32bdef\"></stop>\n                                    <stop offset=\"1\" stop-color=\"#1ea2e4\"></stop>\n                                </linearGradient>\n                                <path fill=\"url(#nyvBozV7VK1PdF3LtMmOna_pre7LivdxKxJ_gr1)\" d=\"M39,10l-2.835,31.181C36.072,42.211,35.208,43,34.174,43H13.826\n                                       c-1.034,0-1.898-0.789-1.992-1.819L9,10H39z\">\n                                </path>\n                                <path fill=\"#0176d0\" d=\"M32,7c0-1.105-0.895-2-2-2H18c-1.105,0-2,0.895-2,2c0,0,0,0.634,\n                                       0,1h16C32,7.634,32,7,32,7z\">\n                                </path>\n                                <path fill=\"#007ad9\" d=\"M7,9.886L7,9.886C7,9.363,7.358,8.912,7.868,8.8C10.173,8.293,16\n                                       .763,7,24,7s13.827,1.293,16.132,1.8\tC40.642,8.912,41,9.363,41,\n                                       9.886v0C41,10.501,40.501,11,39.886,11H8.114C7.499,11,7,10.501,\n                                       7,9.886z\">\n                                </path>\n                            </svg>\n                        </button>\n                    </span>\n\n\n\n                </div>\n                <div class=\"mt-2 mb-2\">\n                    <hr>\n                </div>\n            </div>\n        </div>\n\n    </div>\n</div>\n<ng-template #noExpenses>\n    <div class=\"fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]  \">\n        <div>\n            <img src=\"https://media.geeksforgeeks.org/wp-content/uploads/20240814111356/download.png\">\n        </div>\n    </div>\n\n</ng-template>\n\n<!-- Expense form -->\n<div *ngIf=\"isFormVisible\" class=\"expense-form shadow-md bg-white\">\n    <div>\n\n        <div class=\"flex justify-center font-bold text-gray-400\">\n            <h3>EXPENSE</h3>\n        </div>\n        <form (ngSubmit)=\"addExpense()\">\n\n            <div class=\"flex justify-between p-2\">\n                <label class=\"font-bold text-gray-400\">\n                    Expense Name:\n                </label>\n                <div>\n                    <input type=\"text\" [(ngModel)]=\"newExpense.name\" name=\"name\"\n                        placeholder=\"Enter your expense name...\" class=\"p-2 border rounded ml-2 w-full\">\n                </div>\n\n            </div>\n            <div class=\"flex justify-between p-2\">\n                <label class=\"font-bold text-gray-400\">\n                    Amount:\n                </label>\n                <div>\n                    <input type=\"number\" [(ngModel)]=\"newExpense.amount\" name=\"amount\" placeholder=\"Enter amount\"\n                        class=\"p-2 border rounded ml-2 w-full\" required>\n                </div>\n            </div>\n            <div class=\"flex justify-between p-2 w-full\">\n                <label class=\"font-bold text-gray-400\">\n                    Category:\n                </label>\n                <div>\n                    <select [(ngModel)]=\"newExpense.category\" name=\"category\" class=\"p-2 border\n                                                                                     rounded  \" required>\n\n                        <option *ngFor=\"let cat of categories\" [value]=\"cat\">{{ cat }}</option>\n                    </select>\n\n\n                </div>\n            </div>\n            <div class=\"flex justify-between p-2\">\n                <label class=\"font-bold text-gray-400\">\n                    Account:\n                </label>\n                <div>\n                    <select [(ngModel)]=\"newExpense.account\" name=\"account\" class=\"p-2 border\n                                                                                   rounded w-[100%]\" required>\n\n                        <option *ngFor=\"let acc of accounts\" [value]=\"acc\">{{ acc }}</option>\n                    </select>\n\n\n                </div>\n            </div>\n\n            <div class=\"flex justify-between p-4 gap-4\">\n                <button type=\"button\" (click)=\"closeExpenseForm() \"\n                    class=\"bg-red-600 shadow-md rounded-md text-white p-2 w-full\">Cancel</button>\n\n                <button type=\"submit\" class=\"bg-blue-600 shadow-md rounded-md text-white\n                                             p-2 w-full \">Save</button>\n\n            </div>\n\n        </form>\n    </div>\n</div>"
         },
         {
             "name": "HeaderComponent",
@@ -1112,7 +1112,7 @@
         },
         {
             "name": "LoginFormComponent",
-            "id": "component-LoginFormComponent-2b014c815692714eb8c11092844a5316ad14241040425be36bbf1e2a9b83ddc2713375ced46675e3c746fa113b828389cad856d95a85ecc341d4a53b5bc44fac",
+            "id": "component-LoginFormComponent-1fd7788d548de8a646bf0af6f8c4a1b09e5c6b0532ba2669776306fcc5210754385222960ab801cb63a9894adc0c94860b28d880f94ed46b0834f5bb27662bde",
             "file": "src/app/components/login-form/login-form.component.ts",
             "changeDetection": "ChangeDetectionStrategy.OnPush",
             "encapsulation": [],
@@ -1140,22 +1140,33 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 21,
+                    "line": 24,
                     "modifierKind": [
                         123,
                         148
                     ]
                 },
                 {
-                    "name": "loginForm",
-                    "defaultValue": "new FormGroup<LoginFormType>({\n    email: new FormControl<string>('', {\n      nonNullable: true,\n      validators: [Validators.required, Validators.email],\n    }),\n    password: new FormControl<string>('', {\n      nonNullable: true,\n      validators: [Validators.required, Validators.minLength(6)],\n    }),\n  })",
+                    "name": "errorMessage$",
+                    "defaultValue": "new BehaviorSubject<string | null>(null)",
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "",
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 24
+                    "line": 45
+                },
+                {
+                    "name": "loginForm",
+                    "defaultValue": "new FormGroup<LoginFormType>({\n    email: new FormControl<string>('', {\n      nonNullable: true,\n      validators: [Validators.required, Validators.email],\n    }),\n    password: new FormControl<string>('', {\n      nonNullable: true,\n      validators: [Validators.required, Validators.minLength(6)],\n    }),\n    // passwordConfirm: new FormControl<string>('', {\n    //   nonNullable: true,\n    //   validators: [Validators.required],\n    // })\n  }, {\n    validators: MatchingPasswords('password', 'passwordConfirm'),\n    updateOn: 'blur'\n  })",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 27
                 },
                 {
                     "name": "router",
@@ -1166,7 +1177,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 22,
+                    "line": 25,
                     "modifierKind": [
                         123
                     ]
@@ -1179,7 +1190,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 57,
+                    "line": 80,
                     "deprecated": false,
                     "deprecationMessage": ""
                 }
@@ -1206,7 +1217,7 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { CommonModule } from '@angular/common';\nimport { ChangeDetectionStrategy, Component, inject } from '@angular/core';\nimport { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';\nimport { Router } from '@angular/router';\nimport { take } from 'rxjs';\nimport { AuthService } from '../../auth/auth.service';\n\ninterface LoginFormType {\n  email: FormControl<string>;\n  password: FormControl<string>;\n}\n\n@Component({\n  selector: 'app-login-form',\n  standalone: true,\n  imports: [CommonModule, FormsModule, ReactiveFormsModule],\n  templateUrl: './login-form.component.html',\n  changeDetection: ChangeDetectionStrategy.OnPush,\n})\nexport class LoginFormComponent {\n  private readonly authService = inject(AuthService);\n  private router = inject(Router);\n\n  loginForm = new FormGroup<LoginFormType>({\n    email: new FormControl<string>('', {\n      nonNullable: true,\n      validators: [Validators.required, Validators.email],\n    }),\n    password: new FormControl<string>('', {\n      nonNullable: true,\n      validators: [Validators.required, Validators.minLength(6)],\n    }),\n  })\n\n  get emailInvalidAndTouched(): boolean {\n    return (\n      this.loginForm.controls.email.invalid &&\n      this.loginForm.controls.email.touched\n    )\n  }\n\n  get fEmail(): FormControl {\n    return this.loginForm.controls.email;\n  }\n\n  get passwordInvalidAndTouched(): boolean {\n    return (\n      this.loginForm.controls.password.invalid &&\n      this.loginForm.controls.password.touched\n    )\n  }\n\n  get fPassword(): FormControl {\n    return this.loginForm.controls.password;\n  }\n\n  submitForm() {\n    if (this.loginForm.valid && this.loginForm.dirty) {\n      const { email, password } = this.loginForm.getRawValue();\n      this.authService.loginUser({ email, password }).pipe(take(1)).subscribe({\n        next: () => {\n          this.router.navigate(['/expenses']);\n        },\n        error: (err) => {\n          console.error(`[LoginFormComponent] submitForm - error: ${err?.message}`);\n        }\n      });\n    }\n  }\n}\n",
+            "sourceCode": "import { CommonModule } from '@angular/common';\nimport { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core';\nimport { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';\nimport { Router } from '@angular/router';\nimport { BehaviorSubject, take } from 'rxjs';\nimport { AuthService } from '../../auth/auth.service';\nimport { HttpErrorResponse } from '@angular/common/http';\nimport { MatchingPasswords } from '../../pages/register-page/matching-passwords.validator';\n\ninterface LoginFormType {\n  email: FormControl<string>;\n  password: FormControl<string>;\n  // passwordConfirm: FormControl<string>;\n}\n\n@Component({\n  selector: 'app-login-form',\n  standalone: true,\n  imports: [CommonModule, FormsModule, ReactiveFormsModule],\n  templateUrl: './login-form.component.html',\n  changeDetection: ChangeDetectionStrategy.OnPush,\n})\nexport class LoginFormComponent {\n  private readonly authService = inject(AuthService);\n  private router = inject(Router);\n\n  loginForm = new FormGroup<LoginFormType>({\n    email: new FormControl<string>('', {\n      nonNullable: true,\n      validators: [Validators.required, Validators.email],\n    }),\n    password: new FormControl<string>('', {\n      nonNullable: true,\n      validators: [Validators.required, Validators.minLength(6)],\n    }),\n    // passwordConfirm: new FormControl<string>('', {\n    //   nonNullable: true,\n    //   validators: [Validators.required],\n    // })\n  }, {\n    validators: MatchingPasswords('password', 'passwordConfirm'),\n    updateOn: 'blur'\n  })\n\n  errorMessage$ = new BehaviorSubject<string | null>(null);\n\n  get emailInvalidAndTouched(): boolean {\n    return (\n      this.loginForm.controls.email.invalid &&\n      this.loginForm.controls.email.touched\n    )\n  }\n\n  get fEmail(): FormControl {\n    return this.loginForm.controls.email;\n  }\n\n  get passwordInvalidAndTouched(): boolean {\n    return (\n      this.loginForm.controls.password.invalid &&\n      this.loginForm.controls.password.touched\n    )\n  }\n\n  get fPassword(): FormControl {\n    return this.loginForm.controls.password;\n  }\n\n  // get passwordConfirmInvalidAndTouched(): boolean {\n  //   return (\n  //     this.loginForm.controls.passwordConfirm.invalid &&\n  //     this.loginForm.controls.passwordConfirm.touched\n  //   )\n  // }\n\n  // get fPasswordConfirm(): FormControl {\n  //   return this.loginForm.controls.passwordConfirm;\n  // }\n\n  submitForm() {\n    if (this.loginForm.valid && this.loginForm.dirty) {\n      this.errorMessage$.next(null);\n      const { email, password } = this.loginForm.getRawValue();\n      this.authService.loginUser({ email, password }).pipe(take(1)).subscribe({\n        next: () => {\n          console.log(`[LoginFormComponent] submitForm - success`);\n          this.router.navigate(['/expenses']);\n        },\n        error: (err) => {\n          if (err instanceof HttpErrorResponse) {\n            this.errorMessage$.next(err.error.message);\n          } else {\n            this.errorMessage$.next('An error occurred. Please try again later.');\n          }\n          console.error(`[LoginFormComponent] submitForm - error: ${err?.message}`);\n        }\n      });\n    }\n  }\n}\n",
             "assetsDirs": [],
             "styleUrlsData": "",
             "stylesData": "",
@@ -1218,7 +1229,7 @@
                         "name": "emailInvalidAndTouched",
                         "type": "boolean",
                         "returnType": "boolean",
-                        "line": 35
+                        "line": 47
                     }
                 },
                 "fEmail": {
@@ -1227,7 +1238,7 @@
                         "name": "fEmail",
                         "type": "",
                         "returnType": "FormControl",
-                        "line": 42
+                        "line": 54
                     }
                 },
                 "passwordInvalidAndTouched": {
@@ -1236,7 +1247,7 @@
                         "name": "passwordInvalidAndTouched",
                         "type": "boolean",
                         "returnType": "boolean",
-                        "line": 46
+                        "line": 58
                     }
                 },
                 "fPassword": {
@@ -1245,15 +1256,15 @@
                         "name": "fPassword",
                         "type": "",
                         "returnType": "FormControl",
-                        "line": 53
+                        "line": 65
                     }
                 }
             },
-            "templateData": "<form [formGroup]=\"loginForm\" (ngSubmit)=\"submitForm()\">\n  <fieldset class=\"mb-4\">\n    <label for=\"email-input\" id=\"email-label\" class=\"flex flex-col gap-2 py-2\">\n      Email\n      <input type=\"email\" formControlName=\"email\" autocomplete=\"email\" id=\"email-input\" aria-labelledby=\"email-label\"\n        class=\"px-4 py-2 border border-slate-500 rounded-lg\" [ngClass]=\"{'border-red-500': emailInvalidAndTouched}\" />\n        <small *ngIf=\"fEmail.hasError('email') && fEmail.touched\" class=\"text-red-500\">Not a valid email address</small>\n        <small *ngIf=\"fEmail.hasError('required') && fEmail.touched\" class=\"text-red-500\">Email address is required</small>\n    </label>\n    <label for=\"password-input\" id=\"password-label\" class=\"flex flex-col gap-2 py-2\">\n      Password\n      <input type=\"password\" formControlName=\"password\" autocomplete=\"current-password\" id=\"password-input\"\n        aria-labelledby=\"password-label\" class=\"px-4 py-2 border border-slate-500 rounded-lg\"\n        [ngClass]=\"{'border-red-500': passwordInvalidAndTouched}\" />\n        <small *ngIf=\"fPassword.hasError('required') && fPassword.touched\" class=\"text-red-500\">Password is required</small>\n        <small *ngIf=\"fPassword.hasError('minlength') && fPassword.touched\" class=\"text-red-500\">Password must be at least 6 characters</small>\n    </label>\n  </fieldset>\n\n  <button type=\"submit\" class=\"text-slate-950 bg-blue-300 hover:bg-blue-400 active:bg-blue-300 px-4 py-2 rounded-lg border-none\">Submit</button>\n</form>"
+            "templateData": "<form [formGroup]=\"loginForm\" (ngSubmit)=\"submitForm()\">\n  <fieldset class=\"mb-4\">\n    <label for=\"email-input\" id=\"email-label\" class=\"flex flex-col gap-2 py-2\">\n      Email\n      <input type=\"email\" formControlName=\"email\" autocomplete=\"email\" id=\"email-input\" aria-labelledby=\"email-label\"\n        class=\"px-4 py-2 border border-slate-500 rounded-lg\" [ngClass]=\"{'border-red-500': emailInvalidAndTouched}\" />\n      <small *ngIf=\"fEmail.hasError('email') && fEmail.touched\" class=\"text-red-500\">Not a valid email address</small>\n      <small *ngIf=\"fEmail.hasError('required') && fEmail.touched\" class=\"text-red-500\">Email address is\n        required</small>\n    </label>\n    <label for=\"password-input\" id=\"password-label\" class=\"flex flex-col gap-2 py-2\">\n      Password\n      <input type=\"password\" formControlName=\"password\" autocomplete=\"current-password\" id=\"password-input\"\n        aria-labelledby=\"password-label\" class=\"px-4 py-2 border border-slate-500 rounded-lg\"\n        [ngClass]=\"{'border-red-500': passwordInvalidAndTouched}\" />\n      <small *ngIf=\"fPassword.hasError('required') && fPassword.touched\" class=\"text-red-500\">Password is\n        required</small>\n      <small *ngIf=\"fPassword.hasError('minlength') && fPassword.touched\" class=\"text-red-500\">Password must be at least\n        6 characters</small>\n    </label>\n    <!-- <label for=\"password-confirm-input\" id=\"password-confirm-label\"\n      class=\"flex flex-col gap-2 py-2\">\n      Confirm password\n      <input type=\"password\" formControlName=\"passwordConfirm\" id=\"password-confirm-input\"\n        aria-labelledby=\"password-confirm-label\" class=\"px-4 py-2 border border-slate-500 rounded-lg\"\n        [ngClass]=\"{'border-red-500': passwordConfirmInvalidAndTouched}\" />\n      <small *ngIf=\"fPasswordConfirm.hasError('required') && fPasswordConfirm.touched\" class=\"text-red-500\">Password is\n        required</small>\n      <small *ngIf=\"loginForm.hasError('passwordsMatch')\" class=\"text-red-500\">Passwords do not match!</small>\n    </label> -->\n  </fieldset>\n  <p *ngIf=\"errorMessage$ | async as err\" class=\"text-red-500\">{{ err }}</p>\n  <button type=\"submit\"\n    class=\"text-slate-950 bg-blue-300 hover:bg-blue-400 active:bg-blue-300 px-4 py-2 rounded-lg border-none\">Submit</button>\n</form>"
         },
         {
             "name": "LoginPageComponent",
-            "id": "component-LoginPageComponent-2d12e215ac40bfa64bcff8ef8c34ba3315944fef25f8a07733e36ba9548ed43d0e3c5e1fa01d846473365187a69890f9dfda03f2b9e28d01db96802e40a5ae3b",
+            "id": "component-LoginPageComponent-d1dd4c6ae93d55e802085e1e292272ae0db4732c880ca9e13df438bccea0118279aff73b49ebaedcbd84f2dbab5f642e0b6e725f18f693241fd77459800fea5f",
             "file": "src/app/pages/login-page/login-page.component.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -1281,21 +1292,24 @@
                 {
                     "name": "LoginFormComponent",
                     "type": "component"
+                },
+                {
+                    "name": "RouterLink"
                 }
             ],
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { Component } from '@angular/core';\nimport { LoginFormComponent } from \"../../components/login-form/login-form.component\";\n\n@Component({\n  selector: 'app-login-page',\n  standalone: true,\n  imports: [LoginFormComponent],\n  templateUrl: './login-page.component.html'\n})\nexport class LoginPageComponent {}\n",
+            "sourceCode": "import { Component } from '@angular/core';\nimport { RouterLink } from '@angular/router';\nimport { LoginFormComponent } from \"../../components/login-form/login-form.component\";\n\n@Component({\n  selector: 'app-login-page',\n  standalone: true,\n  imports: [LoginFormComponent, RouterLink],\n  templateUrl: './login-page.component.html'\n})\nexport class LoginPageComponent {}\n",
             "assetsDirs": [],
             "styleUrlsData": "",
             "stylesData": "",
             "extends": [],
-            "templateData": "<main class=\"p-16 max-w-7xl mx-auto\">\n  <section>\n    <h1 class=\"text-3xl my-4\">Login To Expense Tracker app</h1>\n  </section>\n\n  <section>\n    <p>\n      Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam similique\n      ducimus id, adipisci eveniet cum facere enim, sint delectus voluptate\n      reprehenderit rerum fugit vitae illo! Quis cupiditate eum dignissimos\n      sint?\n    </p>\n  </section>\n\n  <section>\n    <app-login-form></app-login-form>\n  </section>\n</main>"
+            "templateData": "<main class=\"p-16 max-w-7xl mx-auto\">\n  <section>\n    <h1 class=\"text-3xl my-4\">Login To Expense Tracker app</h1>\n  </section>\n\n  <section>\n    <p>\n      Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam similique\n      ducimus id, adipisci eveniet cum facere enim, sint delectus voluptate\n      reprehenderit rerum fugit vitae illo! Quis cupiditate eum dignissimos\n      sint?\n    </p>\n  </section>\n\n  <section>\n    <app-login-form></app-login-form>\n  </section>\n\n  <div class=\"pt-8\">\n    <a routerLink=\"/register\" class=\"text-blue-500 hover:underline cursor-pointer\">Don't have an account? Register here</a>\n  </div>\n</main>"
         },
         {
             "name": "NavbarComponent",
-            "id": "component-NavbarComponent-46325602a7c2fb93a881a7b9ef8c5e774fd2117e9df7a7abe2af10884d388ea9c9c69716889b124b12d132c0a0079bf11c1a624714fd559b83097694527bc4fd",
+            "id": "component-NavbarComponent-0179c9a71fb0bd309bc62b11cbde9bcdcd09a12ca413ab4406af22c004b41adec53b64ce0b8c6abb9d304a811f901b04feb668e7f6a2052eb39393770909a29d",
             "file": "src/app/components/navbar/navbar.component.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -1312,23 +1326,83 @@
             "hostDirectives": [],
             "inputsClass": [],
             "outputsClass": [],
-            "propertiesClass": [],
-            "methodsClass": [],
+            "propertiesClass": [
+                {
+                    "name": "authService",
+                    "defaultValue": "inject(AuthService)",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 13,
+                    "modifierKind": [
+                        148
+                    ]
+                },
+                {
+                    "name": "router",
+                    "defaultValue": "inject(Router)",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 14,
+                    "modifierKind": [
+                        148
+                    ]
+                },
+                {
+                    "name": "user$",
+                    "defaultValue": "this.authService.userData$",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 16
+                }
+            ],
+            "methodsClass": [
+                {
+                    "name": "logout",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 18,
+                    "deprecated": false,
+                    "deprecationMessage": ""
+                }
+            ],
             "deprecated": false,
             "deprecationMessage": "",
             "hostBindings": [],
             "hostListeners": [],
             "standalone": true,
-            "imports": [],
+            "imports": [
+                {
+                    "name": "CommonModule",
+                    "type": "module"
+                },
+                {
+                    "name": "RouterModule",
+                    "type": "module"
+                }
+            ],
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { Component } from '@angular/core';\n\n@Component({\n    selector: 'app-navbar',\n    standalone: true,\n    imports: [],\n    templateUrl: './navbar.component.html'\n})\nexport class NavbarComponent {\n\n}\n",
+            "sourceCode": "import { Component, inject } from '@angular/core';\nimport { AuthService } from '../../auth/auth.service';\nimport { Router, RouterModule } from '@angular/router';\nimport { CommonModule } from '@angular/common';\n\n@Component({\n    selector: 'app-navbar',\n    standalone: true,\n    imports: [CommonModule, RouterModule],\n    templateUrl: './navbar.component.html'\n})\nexport class NavbarComponent {\n    readonly authService = inject(AuthService);\n    readonly router = inject(Router);\n\n    user$ = this.authService.userData$;\n\n    logout() {\n        this.authService.logoutUser();\n        this.router.navigate(['/login']);\n    }\n}\n",
             "assetsDirs": [],
             "styleUrlsData": "",
             "stylesData": "",
             "extends": [],
-            "templateData": "<nav class=\"bg-slate-800 p-4 w-full shadow-md\">\n  <h1 class=\"flex justify-center capitalize text-white text-2xl\">\n      expense tracker\n  </h1>\n</nav>\n"
+            "templateData": "<nav class=\"bg-slate-800 p-4 w-full shadow-md flex items-center justify-between h-20\">\n  <h1 class=\"capitalize text-white text-3xl my-auto\">\n    expense tracker\n  </h1>\n  <div class=\"flex items-center gap-4\">\n    <ng-container *ngIf=\"user$ | async as user; else login\">\n      <span class=\"text-white\">\n        Hello, {{ user.email }}!\n      </span>\n      <button (click)=\"logout()\" class=\"bg-green-500 text-white p-2 rounded\">\n        Log out\n      </button>\n    </ng-container>\n    <ng-template #login>\n      <a href=\"#\" class=\"text-white\" [routerLink]=\"['/login']\">Log in</a>\n    </ng-template>\n  </div>\n</nav>"
         },
         {
             "name": "PageComponent",
@@ -1423,6 +1497,85 @@
             ],
             "stylesData": "",
             "extends": []
+        },
+        {
+            "name": "RegisterFormComponent",
+            "id": "component-RegisterFormComponent-b5a24e9d3efbc30f7902204f31b333ace87a24d3ded92e19210ee8f985ba678a87e21f876bf1231a61dbcc0ead3430513c041c17b1f9858f9303f20a48e80a89",
+            "file": "src/app/components/register-form/register-form.component.ts",
+            "encapsulation": [],
+            "entryComponents": [],
+            "inputs": [],
+            "outputs": [],
+            "providers": [],
+            "selector": "app-register-form",
+            "styleUrls": [],
+            "styles": [],
+            "templateUrl": [
+                "./register-form.component.html"
+            ],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [],
+            "outputsClass": [],
+            "propertiesClass": [],
+            "methodsClass": [],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": true,
+            "imports": [],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import { Component } from '@angular/core';\n\n@Component({\n  selector: 'app-register-form',\n  standalone: true,\n  imports: [],\n  templateUrl: './register-form.component.html',\n  styleUrl: './register-form.component.css'\n})\nexport class RegisterFormComponent {\n\n}\n",
+            "styleUrl": "./register-form.component.css",
+            "assetsDirs": [],
+            "styleUrlsData": "",
+            "stylesData": "",
+            "extends": [],
+            "templateData": "<p>register-form works!</p>\n"
+        },
+        {
+            "name": "RegisterPageComponent",
+            "id": "component-RegisterPageComponent-b234d115a07f2a79e243cbdfce736a0f219a2fa6bf1b3693effb77958c8b0df8b179908caa05cb2ad0edf6c3fcf0b21d6bab822ea6ac44b1df2128a6122f09a6",
+            "file": "src/app/pages/register-page/register-page.component.ts",
+            "encapsulation": [],
+            "entryComponents": [],
+            "inputs": [],
+            "outputs": [],
+            "providers": [],
+            "selector": "app-register-page",
+            "styleUrls": [],
+            "styles": [],
+            "templateUrl": [
+                "./register-page.component.html"
+            ],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [],
+            "outputsClass": [],
+            "propertiesClass": [],
+            "methodsClass": [],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": true,
+            "imports": [
+                {
+                    "name": "RouterLink"
+                }
+            ],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import { Component } from '@angular/core';\nimport { RouterLink } from '@angular/router';\n\n@Component({\n  selector: 'app-register-page',\n  standalone: true,\n  imports: [RouterLink],\n  templateUrl: './register-page.component.html'\n})\nexport class RegisterPageComponent { }\n",
+            "assetsDirs": [],
+            "styleUrlsData": "",
+            "stylesData": "",
+            "extends": [],
+            "templateData": "<main class=\"p-16 max-w-7xl mx-auto\">\n  <section>\n    <h1 class=\"text-3xl my-4\">Register To Expense Tracker app</h1>\n  </section>\n\n  <section>\n    <p>\n      Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam similique\n      ducimus id, adipisci eveniet cum facere enim, sint delectus voluptate\n      reprehenderit rerum fugit vitae illo! Quis cupiditate eum dignissimos\n      sint?\n    </p>\n  </section>\n\n  <section>\n  </section>\n\n  <div class=\"pt-8\">\n    <a routerLink=\"/login\" class=\"text-blue-500 hover:underline cursor-pointer\">Already have an account? Login here</a>\n  </div>\n</main>\n"
         }
     ],
     "modules": [],
@@ -1469,34 +1622,24 @@
                 "defaultValue": "(req, next) => {\n  const authService = inject(AuthService);\n  return authService.accessToken$.pipe(\n    map((token) => {\n      if (token) {\n        return req.clone({\n          url: req.url,\n          setHeaders: {\n            Authorization: `Bearer ${token}`\n          }\n        });\n      }\n      return req;\n    }),\n    switchMap((req) => next(req))\n  )\n}"
             },
             {
-                "name": "LoggedIn",
+                "name": "MATCHING_ERROR_KEY",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
-                "file": "src/app/pages/login-page/login-page.storiesy.ts",
+                "file": "src/app/pages/register-page/matching-passwords.validator.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
-                "type": "Story",
-                "defaultValue": "{}"
+                "type": "string",
+                "defaultValue": "'passwordsMatch'"
             },
             {
-                "name": "LoggedOut",
+                "name": "MatchingPasswords",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
-                "file": "src/app/pages/login-page/login-page.storiesy.ts",
+                "file": "src/app/pages/register-page/matching-passwords.validator.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
-                "type": "Story",
-                "defaultValue": "{}"
-            },
-            {
-                "name": "meta",
-                "ctype": "miscellaneous",
-                "subtype": "variable",
-                "file": "src/app/pages/login-page/login-page.storiesy.ts",
-                "deprecated": false,
-                "deprecationMessage": "",
-                "type": "Meta<LoginPageComponent>",
-                "defaultValue": "{\n  title: 'Pages/LoginPage',\n  component: LoginPageComponent,\n  decorators: [\n    componentWrapperDecorator((story) => `<div style=\"width: 100%; height: 100vh\">${story}</div>`),\n    applicationConfig({\n      providers: [importProvidersFrom(HttpClient)],\n    }),\n  ],\n  parameters: {\n    layout: 'fullscreen',\n  },\n}"
+                "type": "",
+                "defaultValue": "(controlName: string, matchingControlName: string): ValidatorFn => {\n  return (fg: AbstractControl):ValidationErrors|null => {\n    if (!(fg instanceof FormGroup)) {\n      throw new Error('matchingPasswords must be used on a FormGroup');\n    }\n\n    const passwordControl = fg.controls[controlName];\n    const matchingControl = fg.controls[matchingControlName];\n\n    if(!passwordControl.touched && !matchingControl.touched) {\n      return null;\n    }\n\n    if(passwordControl.value !== matchingControl.value) {\n      return {[MATCHING_ERROR_KEY]: true};\n    }\n\n    return null;\n  };\n}"
             },
             {
                 "name": "TOKEN_STORAGE_KEY",
@@ -1510,19 +1653,7 @@
             }
         ],
         "functions": [],
-        "typealiases": [
-            {
-                "name": "Story",
-                "ctype": "miscellaneous",
-                "subtype": "typealias",
-                "rawtype": "StoryObj<LoginPageComponent>",
-                "file": "src/app/pages/login-page/login-page.storiesy.ts",
-                "deprecated": false,
-                "deprecationMessage": "",
-                "description": "",
-                "kind": 183
-            }
-        ],
+        "typealiases": [],
         "enumerations": [],
         "groupedVariables": {
             "src/app/app.config.ts": [
@@ -1573,36 +1704,26 @@
                     "defaultValue": "(req, next) => {\n  const authService = inject(AuthService);\n  return authService.accessToken$.pipe(\n    map((token) => {\n      if (token) {\n        return req.clone({\n          url: req.url,\n          setHeaders: {\n            Authorization: `Bearer ${token}`\n          }\n        });\n      }\n      return req;\n    }),\n    switchMap((req) => next(req))\n  )\n}"
                 }
             ],
-            "src/app/pages/login-page/login-page.storiesy.ts": [
+            "src/app/pages/register-page/matching-passwords.validator.ts": [
                 {
-                    "name": "LoggedIn",
+                    "name": "MATCHING_ERROR_KEY",
                     "ctype": "miscellaneous",
                     "subtype": "variable",
-                    "file": "src/app/pages/login-page/login-page.storiesy.ts",
+                    "file": "src/app/pages/register-page/matching-passwords.validator.ts",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "Story",
-                    "defaultValue": "{}"
+                    "type": "string",
+                    "defaultValue": "'passwordsMatch'"
                 },
                 {
-                    "name": "LoggedOut",
+                    "name": "MatchingPasswords",
                     "ctype": "miscellaneous",
                     "subtype": "variable",
-                    "file": "src/app/pages/login-page/login-page.storiesy.ts",
+                    "file": "src/app/pages/register-page/matching-passwords.validator.ts",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "Story",
-                    "defaultValue": "{}"
-                },
-                {
-                    "name": "meta",
-                    "ctype": "miscellaneous",
-                    "subtype": "variable",
-                    "file": "src/app/pages/login-page/login-page.storiesy.ts",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "Meta<LoginPageComponent>",
-                    "defaultValue": "{\n  title: 'Pages/LoginPage',\n  component: LoginPageComponent,\n  decorators: [\n    componentWrapperDecorator((story) => `<div style=\"width: 100%; height: 100vh\">${story}</div>`),\n    applicationConfig({\n      providers: [importProvidersFrom(HttpClient)],\n    }),\n  ],\n  parameters: {\n    layout: 'fullscreen',\n  },\n}"
+                    "type": "",
+                    "defaultValue": "(controlName: string, matchingControlName: string): ValidatorFn => {\n  return (fg: AbstractControl):ValidationErrors|null => {\n    if (!(fg instanceof FormGroup)) {\n      throw new Error('matchingPasswords must be used on a FormGroup');\n    }\n\n    const passwordControl = fg.controls[controlName];\n    const matchingControl = fg.controls[matchingControlName];\n\n    if(!passwordControl.touched && !matchingControl.touched) {\n      return null;\n    }\n\n    if(passwordControl.value !== matchingControl.value) {\n      return {[MATCHING_ERROR_KEY]: true};\n    }\n\n    return null;\n  };\n}"
                 }
             ],
             "src/app/auth/constants.ts": [
@@ -1620,21 +1741,7 @@
         },
         "groupedFunctions": {},
         "groupedEnumerations": {},
-        "groupedTypeAliases": {
-            "src/app/pages/login-page/login-page.storiesy.ts": [
-                {
-                    "name": "Story",
-                    "ctype": "miscellaneous",
-                    "subtype": "typealias",
-                    "rawtype": "StoryObj<LoginPageComponent>",
-                    "file": "src/app/pages/login-page/login-page.storiesy.ts",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "description": "",
-                    "kind": 183
-                }
-            ]
-        }
+        "groupedTypeAliases": {}
     },
     "routes": [],
     "coverage": {
@@ -1732,7 +1839,7 @@
                 "linktype": "component",
                 "name": "LoginFormComponent",
                 "coveragePercent": 0,
-                "coverageCount": "0/5",
+                "coverageCount": "0/6",
                 "status": "low"
             },
             {
@@ -1749,6 +1856,15 @@
                 "type": "component",
                 "linktype": "component",
                 "name": "NavbarComponent",
+                "coveragePercent": 0,
+                "coverageCount": "0/5",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/components/register-form/register-form.component.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "RegisterFormComponent",
                 "coveragePercent": 0,
                 "coverageCount": "0/1",
                 "status": "low"
@@ -1790,41 +1906,30 @@
                 "status": "low"
             },
             {
-                "filePath": "src/app/pages/login-page/login-page.storiesy.ts",
+                "filePath": "src/app/pages/register-page/matching-passwords.validator.ts",
                 "type": "variable",
                 "linktype": "miscellaneous",
                 "linksubtype": "variable",
-                "name": "LoggedIn",
+                "name": "MATCHING_ERROR_KEY",
                 "coveragePercent": 0,
                 "coverageCount": "0/1",
                 "status": "low"
             },
             {
-                "filePath": "src/app/pages/login-page/login-page.storiesy.ts",
+                "filePath": "src/app/pages/register-page/matching-passwords.validator.ts",
                 "type": "variable",
                 "linktype": "miscellaneous",
                 "linksubtype": "variable",
-                "name": "LoggedOut",
+                "name": "MatchingPasswords",
                 "coveragePercent": 0,
                 "coverageCount": "0/1",
                 "status": "low"
             },
             {
-                "filePath": "src/app/pages/login-page/login-page.storiesy.ts",
-                "type": "variable",
-                "linktype": "miscellaneous",
-                "linksubtype": "variable",
-                "name": "meta",
-                "coveragePercent": 0,
-                "coverageCount": "0/1",
-                "status": "low"
-            },
-            {
-                "filePath": "src/app/pages/login-page/login-page.storiesy.ts",
-                "type": "type alias",
-                "linktype": "miscellaneous",
-                "linksubtype": "typealias",
-                "name": "Story",
+                "filePath": "src/app/pages/register-page/register-page.component.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "RegisterPageComponent",
                 "coveragePercent": 0,
                 "coverageCount": "0/1",
                 "status": "low"
