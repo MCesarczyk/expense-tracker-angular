@@ -1,11 +1,11 @@
 import { applicationConfig, componentWrapperDecorator, type Meta, type StoryObj } from '@storybook/angular';
 
-import { LoginPageComponent } from './login-page.component';
 import { provideHttpClient } from '@angular/common/http';
+import { RegisterPageComponent } from './register-page.component';
 
-const meta: Meta<LoginPageComponent> = {
-  title: 'Pages/LoginPage',
-  component: LoginPageComponent,
+const meta: Meta<RegisterPageComponent> = {
+  title: 'Pages/RegisterPage',
+  component: RegisterPageComponent,
   decorators: [
     componentWrapperDecorator((story) => `<div style="width: 100%; height: 100vh">${story}</div>`),
     applicationConfig({
@@ -18,6 +18,6 @@ const meta: Meta<LoginPageComponent> = {
 };
 
 export default meta;
-type Story = StoryObj<LoginPageComponent>;
+type Story = StoryObj<RegisterPageComponent>;
 
-export const LoginPage: Story = {};
+export const RegisterPage: Story = {};
