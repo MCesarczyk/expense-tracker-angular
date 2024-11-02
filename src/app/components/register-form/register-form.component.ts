@@ -3,26 +3,33 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BehaviorSubject, take } from 'rxjs';
-import { AuthService } from '../../auth/auth.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { MatchingPasswords } from '../../pages/register-page/matching-passwords.validator';
+import { UserService } from '../../user/user.service';
 
-interface LoginFormType {
+interface RegisterFormType {
+  name: FormControl<string>;
   email: FormControl<string>;
   password: FormControl<string>;
+  passwordConfirm: FormControl<string>;
 }
 
 @Component({
-  selector: 'app-login-form',
+  selector: 'app-register-form',
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule],
-  templateUrl: './login-form.component.html',
+  templateUrl: './register-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LoginFormComponent {
-  private readonly authService = inject(AuthService);
+export class RegisterFormComponent {
+  private readonly userService = inject(UserService);
   private router = inject(Router);
 
-  loginForm = new FormGroup<LoginFormType>({
+  loginForm = new FormGroup<RegisterFormType>({
+    name: new FormControl<string>('', {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
     email: new FormControl<string>('', {
       nonNullable: true,
       validators: [Validators.required, Validators.email],
@@ -30,11 +37,30 @@ export class LoginFormComponent {
     password: new FormControl<string>('', {
       nonNullable: true,
       validators: [Validators.required, Validators.minLength(6)],
+    }),
+    passwordConfirm: new FormControl<string>('', {
+      nonNullable: true,
+      validators: [Validators.required],
     })
-  }
-)
+  },
+    {
+      validators: MatchingPasswords('password', 'passwordConfirm'),
+      updateOn: 'blur'
+    }
+  )
 
   errorMessage$ = new BehaviorSubject<string | null>(null);
+
+  get nameInvalidAndTouched(): boolean {
+    return (
+      this.loginForm.controls.name.invalid &&
+      this.loginForm.controls.name.touched
+    )
+  }
+
+  get fName(): FormControl {
+    return this.loginForm.controls.name;
+  }
 
   get emailInvalidAndTouched(): boolean {
     return (
@@ -58,13 +84,24 @@ export class LoginFormComponent {
     return this.loginForm.controls.password;
   }
 
+  get passwordConfirmInvalidAndTouched(): boolean {
+    return (
+      this.loginForm.controls.passwordConfirm.invalid &&
+      this.loginForm.controls.passwordConfirm.touched
+    )
+  }
+
+  get fPasswordConfirm(): FormControl {
+    return this.loginForm.controls.passwordConfirm;
+  }
+
   submitForm() {
     if (this.loginForm.valid && this.loginForm.dirty) {
       this.errorMessage$.next(null);
-      const { email, password } = this.loginForm.getRawValue();
-      this.authService.loginUser({ email, password }).pipe(take(1)).subscribe({
+      const { name, email, password } = this.loginForm.getRawValue();
+      this.userService.createUser({ name, email, password }).pipe(take(1)).subscribe({
         next: () => {
-          console.log(`[LoginFormComponent] submitForm - success`);
+          console.log(`[RegisterFormComponent] submitForm - success`);
           this.router.navigate(['/expenses']);
         },
         error: (err) => {
@@ -73,7 +110,7 @@ export class LoginFormComponent {
           } else {
             this.errorMessage$.next('An error occurred. Please try again later.');
           }
-          console.error(`[LoginFormComponent] submitForm - error: ${err?.message}`);
+          console.error(`[RegisterFormComponent] submitForm - error: ${err?.message}`);
         }
       });
     }
