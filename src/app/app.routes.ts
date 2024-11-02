@@ -9,5 +9,4 @@ export const routes: Routes = [
     { path: 'login', component: LoginPageComponent },
     { path: 'register', component: RegisterPageComponent },
     { path: 'expenses', component: ExpenseListComponent, canActivate: [authGuard] },
-
 ];
