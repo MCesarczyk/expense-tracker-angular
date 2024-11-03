@@ -20,8 +20,12 @@ export class AuthService {
   userData$ = this.userData$$.pipe();
 
   setToken(val: string) {
-    this.accessToken$$.next(null);
+    // this.accessToken$$.next(null);
     localStorage.setItem(TOKEN_STORAGE_KEY, val);
+  }
+
+  getToken() {
+    return this.accessToken$$.value;
   }
 
   removeToken() {

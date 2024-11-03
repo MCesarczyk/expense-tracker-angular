@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ExpenseService } from '../../expense/expense.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { BehaviorSubject, take } from 'rxjs';
+import { IExpense } from '../../expense/expense.interface';
+import { AuthService } from '../../auth/auth.service';
 @Component({
     selector: 'app-expense-list',
     standalone: true,
@@ -10,20 +13,24 @@ import { FormsModule } from '@angular/forms';
     styleUrl: './expense-list.component.less'
 })
 export class ExpenseListComponent {
-    expenses: any[] = [];
+    private readonly expenseService = inject(ExpenseService);
+    private readonly authService = inject(AuthService);
+    expenses$ = new BehaviorSubject<IExpense[]>([]);
     isFormVisible = false;
     newExpense = { name: '', amount: 0, category: '', account: '' };
     categories = ['Baby', 'Beauty', 'Bills', 'Car', 'Clothing', 'Education',
-    'Electronic', 'Entertainment', 'Food', 'Health', 'Home', 'Insurance',
-    'Shopping', 'Social', 'Sport', 'Tax', 'Telephone', 'Transportation'];
-    // Example categories
+        'Electronic', 'Entertainment', 'Food', 'Health', 'Home', 'Insurance',
+        'Shopping', 'Social', 'Sport', 'Tax', 'Telephone', 'Transportation'];
     accounts = ['Savings', 'Cash', 'Card']
-    constructor(private expenseService: ExpenseService) { }
 
     ngOnInit() {
-        // Subscribe to the expenses observable
-        this.expenseService.expenses$.subscribe(expenses => {
-            this.expenses = expenses;
+        this.authService.loadToken();
+        this.refreshItems();
+    }
+
+    refreshItems() {
+        this.expenseService.getAllExpenses().pipe(take(1)).subscribe(expenses => {
+            this.expenses$.next(expenses);
         });
     }
 
@@ -36,22 +43,22 @@ export class ExpenseListComponent {
         this.newExpense = { name: '', amount: 0, category: '', account: '' };
     }
 
-    addExpense() {
-        if (this.newExpense.name && this.newExpense.amount && this.newExpense.category
-        && this.newExpense.account) {
-            this.expenseService.addExpense(this.newExpense);
-            this.closeExpenseForm();
-        }
-    }
+    // addExpense() {
+    //     if (this.newExpense.name && this.newExpense.amount && this.newExpense.category
+    //     && this.newExpense.account) {
+    //         this.expenseService.addExpense(this.newExpense);
+    //         this.closeExpenseForm();
+    //     }
+    // }
 
-    deleteExpense(expense: any) {
-        const index = this.expenses.findIndex(e => e === expense);
-        // Find index based on the expense object
-        if (index >= 0) {
-            this.expenseService.deleteExpense(index);
-        } else {
-            console.error('Expense not found for deletion');
-        }
-    }
+    // deleteExpense(expense: any) {
+    //     const index = this.expenses.findIndex(e => e === expense);
+    //     // Find index based on the expense object
+    //     if (index >= 0) {
+    //         this.expenseService.deleteExpense(index);
+    //     } else {
+    //         console.error('Expense not found for deletion');
+    //     }
+    // }
 
 }
