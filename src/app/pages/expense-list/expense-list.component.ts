@@ -17,7 +17,9 @@ export class ExpenseListComponent {
     private readonly authService = inject(AuthService);
     expenses$ = new BehaviorSubject<ExpenseDto[]>([]);
     userId$ = new BehaviorSubject<string | null>(null);
+    expenseId$ = new BehaviorSubject<string | null>(null);
     isFormVisible = false;
+    isConfirmationModalVisible = false;
     newExpense = { name: '', amount: 0, category: '', account: '' };
     categories = ['Baby', 'Beauty', 'Bills', 'Car', 'Clothing', 'Education',
         'Electronic', 'Entertainment', 'Food', 'Health', 'Home', 'Insurance',
@@ -46,6 +48,19 @@ export class ExpenseListComponent {
         this.newExpense = { name: '', amount: 0, category: '', account: '' };
     }
 
+    openConfirmationModal() {
+        this.isConfirmationModalVisible = true;
+    }
+
+    askForConfirmation(expenseId: string) {
+        this.openConfirmationModal();
+        this.expenseId$.next(expenseId);
+    }
+
+    closeConfirmationModal() {
+        this.isConfirmationModalVisible = false;
+    }
+
     addExpense() {
         const userId = this.authService.getUserId();
         if (this.newExpense.name && this.newExpense.amount && this.newExpense.category
@@ -58,19 +73,20 @@ export class ExpenseListComponent {
                 userId
             }).pipe(take(1)).subscribe({
                 next: () => this.refreshItems(),
+                error: (err) => console.error(err)
             });
             this.closeExpenseForm();
         }
     }
 
-    // deleteExpense(expense: any) {
-    //     const index = this.expenses.findIndex(e => e === expense);
-    //     // Find index based on the expense object
-    //     if (index >= 0) {
-    //         this.expenseService.deleteExpense(index);
-    //     } else {
-    //         console.error('Expense not found for deletion');
-    //     }
-    // }
-
+    deleteExpense(expenseId: string | null) {
+        if (!expenseId) return;
+        this.expenseService.deleteExpense(expenseId).pipe(take(1)).subscribe({
+            next: () => {
+                this.refreshItems();
+                this.closeConfirmationModal();
+            },
+            error: (err) => console.error(err)
+        });
+    }
 }
