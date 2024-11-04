@@ -2,9 +2,10 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import * as jwt_decode from 'jwt-decode';
-import { TOKEN_STORAGE_KEY } from './constants';
+import { TOKEN_STORAGE_KEY, USER_ID_STORAGE_KEY } from './constants';
 import { IAccessTokenPayload, ILoginPayload, ITokenResponse } from './interfaces';
 import { envs } from '../shared/envs';
+import { UserDataDto } from '../user/dtos/user-data.dto';
 
 @Injectable({
   providedIn: 'root'
@@ -15,9 +16,11 @@ export class AuthService {
 
   private accessToken$$ = new BehaviorSubject<string | null>(null);
   private userData$$ = new BehaviorSubject<IAccessTokenPayload | null>(null);
+  private userId$$ = new BehaviorSubject<string | null>(null);
 
   accessToken$ = this.accessToken$$.pipe();
   userData$ = this.userData$$.pipe();
+  userId$ = this.userId$$.pipe();
 
   setToken(val: string) {
     // this.accessToken$$.next(null);
@@ -33,6 +36,14 @@ export class AuthService {
     localStorage.removeItem(TOKEN_STORAGE_KEY);
   }
 
+  setUserId(val: string) {
+    localStorage.setItem(USER_ID_STORAGE_KEY, val);
+  }
+
+  getUserId(){
+    return this.userId$$.value;
+  }
+
   loadToken() {
     console.log(`JwtTokenService#loadToken`);
     const token = localStorage.getItem(TOKEN_STORAGE_KEY);
@@ -43,7 +54,7 @@ export class AuthService {
   }
 
   loginUser(data: ILoginPayload): Observable<ITokenResponse> {
-    return this.http.post<ITokenResponse>(`${this.baseUrl}/auth/login`, data).pipe(tap(({access_token}) => {
+    return this.http.post<ITokenResponse>(`${this.baseUrl}/auth/login`, data).pipe(tap(({ access_token }) => {
       this.setToken(access_token);
       this.userData$$.next(this.decodeToken(access_token));
     }));
@@ -52,6 +63,17 @@ export class AuthService {
   logoutUser() {
     this.removeToken();
     this.userData$$.next(null);
+  }
+
+  identifyUser() {
+    const userEmail = this.userData$$.value?.['email'];
+    if(!userEmail){
+      return null;
+    }
+    return this.http.post<UserDataDto>(`${this.baseUrl}/auth/identify`, { email: userEmail }).pipe(tap((user) => {
+      this.setUserId(user.id)
+      this.userId$$.next(user.id)
+    }))
   }
 
   isTokenExpired(): boolean {

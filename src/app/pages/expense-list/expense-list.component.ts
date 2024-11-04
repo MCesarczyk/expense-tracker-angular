@@ -3,7 +3,7 @@ import { ExpenseService } from '../../expense/expense.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BehaviorSubject, take } from 'rxjs';
-import { IExpense } from '../../expense/expense.interface';
+import { ExpenseDto } from '../../expense/dtos/expense.dto';
 import { AuthService } from '../../auth/auth.service';
 @Component({
     selector: 'app-expense-list',
@@ -15,7 +15,7 @@ import { AuthService } from '../../auth/auth.service';
 export class ExpenseListComponent {
     private readonly expenseService = inject(ExpenseService);
     private readonly authService = inject(AuthService);
-    expenses$ = new BehaviorSubject<IExpense[]>([]);
+    expenses$ = new BehaviorSubject<ExpenseDto[]>([]);
     isFormVisible = false;
     newExpense = { name: '', amount: 0, category: '', account: '' };
     categories = ['Baby', 'Beauty', 'Bills', 'Car', 'Clothing', 'Education',
@@ -26,6 +26,7 @@ export class ExpenseListComponent {
     ngOnInit() {
         this.authService.loadToken();
         this.refreshItems();
+        this.authService.identifyUser()?.pipe(take(1)).subscribe();
     }
 
     refreshItems() {
@@ -43,13 +44,22 @@ export class ExpenseListComponent {
         this.newExpense = { name: '', amount: 0, category: '', account: '' };
     }
 
-    // addExpense() {
-    //     if (this.newExpense.name && this.newExpense.amount && this.newExpense.category
-    //     && this.newExpense.account) {
-    //         this.expenseService.addExpense(this.newExpense);
-    //         this.closeExpenseForm();
-    //     }
-    // }
+    addExpense() {
+        const userId = this.authService.getUserId();
+        if (this.newExpense.name && this.newExpense.amount && this.newExpense.category
+            && this.newExpense.account && userId) {
+            this.expenseService.addExpense({
+                ...this.newExpense,
+                description: 'test',
+                completed: false,
+                date: new Date().toISOString(),
+                userId
+            }).pipe(take(1)).subscribe({
+                next: () => console.log(this.newExpense)
+            });
+            this.closeExpenseForm();
+        }
+    }
 
     // deleteExpense(expense: any) {
     //     const index = this.expenses.findIndex(e => e === expense);

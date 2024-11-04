@@ -1,9 +1,7 @@
-<!-- Add button to trigger expense form -->
 <button (click)="openExpenseForm()" class="add-expense-button">
     <i class="fas fa-plus"></i>
 </button>
 
-<!-- Display list of expenses -->
 <div class="p-4  flex justify-center" *ngIf="expenses$ | async as expenses; else noExpenses">
     <div *ngIf="!isFormVisible">
         <div class=" mt-20 grid grid-cols-5 gap-10 bg-orange-500 p-4 text-white rounded-md shadow-md">
@@ -72,9 +70,7 @@
         <div class="flex justify-center font-bold text-gray-400">
             <h3>EXPENSE</h3>
         </div>
-        <!-- <form (ngSubmit)="addExpense()"> -->
-        <form>
-
+        <form (ngSubmit)="addExpense()">
             <div class="flex justify-between p-2">
                 <label class="font-bold text-gray-400">
                     Expense Name:
@@ -91,7 +87,7 @@
                 </label>
                 <div>
                     <input type="number" [(ngModel)]="newExpense.amount" name="amount" placeholder="Enter amount"
-                        class="p-2 border rounded ml-2 w-full" required>
+                    class="p-2 border rounded ml-2 w-full" required>
                 </div>
             </div>
             <div class="flex justify-between p-2 w-full">
