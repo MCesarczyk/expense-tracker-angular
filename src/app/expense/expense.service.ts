@@ -1,55 +1,37 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-
-interface Expense {
-    name: string;
-    amount: number;
-    category: string;
-    account: string;
-}
+import { inject, Injectable } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { ExpenseDto } from './dtos/expense.dto';
+import { HttpClient } from '@angular/common/http';
+import { envs } from '../shared/envs';
 
 @Injectable({
     providedIn: 'root'
 })
 export class ExpenseService {
-    private expensesKey = 'expenses';
-    private expenses = new BehaviorSubject<Expense[]>(this.getExpenses());
-    expenses$ = this.expenses.asObservable();
+    private readonly http = inject(HttpClient);
+    private readonly baseUrl = envs.getApiUrl();
 
-    private getExpenses(): Expense[] {
-        try {
-            const savedExpenses = localStorage.getItem(this.expensesKey);
-            return savedExpenses ? JSON.parse(savedExpenses) : [];
-        } catch (error) {
-            console.error('Failed to parse expenses from localStorage', error);
-            return [];
-        }
+    getAllExpenses(): Observable<ExpenseDto[]> {
+        return this.http.get<ExpenseDto[]>(`${this.baseUrl}/expense`);
     }
 
-    private saveExpenses(expenses: Expense[]) {
-        try {
-            localStorage.setItem(this.expensesKey, JSON.stringify(expenses));
-        } catch (error) {
-            console.error('Failed to save expenses to localStorage', error);
-        }
+    getExpenseById(id: string): Observable<ExpenseDto> {
+        return this.http.get<ExpenseDto>(`${this.baseUrl}/expense/${id}`);
     }
 
-    addExpense(expense: Expense) {
-        const currentExpenses = this.expenses.value;
-        currentExpenses.push(expense);
-        this.saveExpenses(currentExpenses);
-        this.expenses.next([...currentExpenses]);
+    addExpense(expense: ExpenseDto) {
+        return this.http.post<ExpenseDto>(`${this.baseUrl}/expense`, expense)
     }
 
 
-    deleteExpense(index: number) {
-        const currentExpenses = this.expenses.value;
-        if (index >= 0 && index < currentExpenses.length) {
-            currentExpenses.splice(index, 1);
-            this.saveExpenses(currentExpenses);
-            this.expenses.next([...currentExpenses]);
-        } else {
-            console.error('Invalid index for deletion');
-        }
-    }
+    // deleteExpense(index: number) {
+    //     const currentExpenses = this.expenses.value;
+    //     if (index >= 0 && index < currentExpenses.length) {
+    //         currentExpenses.splice(index, 1);
+    //         this.saveExpenses(currentExpenses);
+    //         this.expenses.next([...currentExpenses]);
+    //     } else {
+    //         console.error('Invalid index for deletion');
+    //     }
+    // }
 }
