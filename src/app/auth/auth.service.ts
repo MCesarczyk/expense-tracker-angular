@@ -23,7 +23,6 @@ export class AuthService {
   userId$ = this.userId$$.pipe();
 
   setToken(val: string) {
-    // this.accessToken$$.next(null);
     localStorage.setItem(TOKEN_STORAGE_KEY, val);
   }
 
@@ -42,6 +41,7 @@ export class AuthService {
     console.log(`JwtTokenService#loadToken - token: ${token}`);
     if (token) {
       this.accessToken$$.next(token);
+      this.userData$$.next(this.decodeToken(token));
     }
   }
 
