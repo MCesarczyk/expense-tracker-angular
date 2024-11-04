@@ -16,6 +16,7 @@ export class ExpenseListComponent {
     private readonly expenseService = inject(ExpenseService);
     private readonly authService = inject(AuthService);
     expenses$ = new BehaviorSubject<ExpenseDto[]>([]);
+    userId$ = new BehaviorSubject<string | null>(null);
     isFormVisible = false;
     newExpense = { name: '', amount: 0, category: '', account: '' };
     categories = ['Baby', 'Beauty', 'Bills', 'Car', 'Clothing', 'Education',
@@ -37,6 +38,7 @@ export class ExpenseListComponent {
 
     openExpenseForm() {
         this.isFormVisible = true;
+        this.authService.loadUserId();
     }
 
     closeExpenseForm() {
@@ -55,7 +57,7 @@ export class ExpenseListComponent {
                 date: new Date().toISOString(),
                 userId
             }).pipe(take(1)).subscribe({
-                next: () => console.log(this.newExpense)
+                next: () => this.refreshItems(),
             });
             this.closeExpenseForm();
         }
