@@ -117,7 +117,12 @@
 </div>
 
 <!-- Confirmation Modal -->
-<div *ngIf="isConfirmationModalVisible" class="m-auto w-72 h-24 rounded-lg bg-slate-300 text-slate-950 grid place-content-center">Are you sure?
-    <button (click)="deleteExpense(expenseId$.value)" class="bg-red-500 text-white p-2 rounded">Yes</button>
-    <button (click)="closeConfirmationModal()" class="bg-green-500 text-white p-2 rounded">No</button>
+<div *ngIf="isConfirmationModalVisible" class="m-auto w-full h-24 bg-transparent text-slate-950 grid place-content-center">
+    <div class="w-full h-full py-2 px-4 bg-slate-300 rounded-lg">
+        Are you sure?
+        <div class="flex gap-4 justify-between w-full mt-2">
+            <button (click)="deleteExpense(expenseId$.value)" class="bg-red-500 text-white py-2 px-4 rounded-lg">Yes</button>
+            <button (click)="closeConfirmationModal()" class="bg-green-500 text-white py-2 px-4 rounded-lg">No</button>
+        </div>
+    </div>
 </div>
