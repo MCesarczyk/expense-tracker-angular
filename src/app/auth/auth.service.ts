@@ -23,7 +23,6 @@ export class AuthService {
   userId$ = this.userId$$.pipe();
 
   setToken(val: string) {
-    // this.accessToken$$.next(null);
     localStorage.setItem(TOKEN_STORAGE_KEY, val);
   }
 
@@ -36,20 +35,30 @@ export class AuthService {
     localStorage.removeItem(TOKEN_STORAGE_KEY);
   }
 
-  setUserId(val: string) {
-    localStorage.setItem(USER_ID_STORAGE_KEY, val);
-  }
-
-  getUserId(){
-    return this.userId$$.value;
-  }
-
   loadToken() {
     console.log(`JwtTokenService#loadToken`);
     const token = localStorage.getItem(TOKEN_STORAGE_KEY);
     console.log(`JwtTokenService#loadToken - token: ${token}`);
     if (token) {
       this.accessToken$$.next(token);
+      this.userData$$.next(this.decodeToken(token));
+    }
+  }
+
+  setUserId(val: string) {
+    localStorage.setItem(USER_ID_STORAGE_KEY, val);
+  }
+
+  getUserId() {
+    return this.userId$$.value;
+  }
+
+  loadUserId() {
+    console.log(`JwtTokenService#loadUserId`);
+    const userId = localStorage.getItem(USER_ID_STORAGE_KEY);
+    console.log(`JwtTokenService#loadUserId - userId: ${userId}`);
+    if (userId) {
+      this.userId$$.next(userId);
     }
   }
 
@@ -57,6 +66,7 @@ export class AuthService {
     return this.http.post<ITokenResponse>(`${this.baseUrl}/auth/login`, data).pipe(tap(({ access_token }) => {
       this.setToken(access_token);
       this.userData$$.next(this.decodeToken(access_token));
+      this.identifyUser()?.subscribe();
     }));
   }
 
@@ -67,7 +77,7 @@ export class AuthService {
 
   identifyUser() {
     const userEmail = this.userData$$.value?.['email'];
-    if(!userEmail){
+    if (!userEmail) {
       return null;
     }
     return this.http.post<UserDataDto>(`${this.baseUrl}/auth/identify`, { email: userEmail }).pipe(tap((user) => {
